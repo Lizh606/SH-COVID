@@ -2,7 +2,7 @@
   <div>
     <div id="map"></div>
     <!-- <div id="instruction" class="esri-widget">点击任意位置获取街道名称</div> -->
-    <Locate :view="view" />
+    <Locate />
   </div>
 </template>
 
@@ -30,9 +30,6 @@ export default {
   },
   methods: {
     createMap() {
-      const locatorUrl =
-        " https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer";
-
       const tiledLayer = new WebTileLayer({
         urlTemplate:
           "http://{subDomain}.tianditu.gov.cn/DataServer?T=vec_w&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1",
@@ -60,10 +57,11 @@ export default {
         center: [121.607331, 31.1879], // Longitude, latitude
         zoom: 11, // Zoom level
       });
+      console.log(view.popup);
       view.ui.components = [];
       //取消下面esri标志
       view.ui.remove("attribution");
-      this.view = view;
+      window.view = view;
       // console.log(view);
     },
   },

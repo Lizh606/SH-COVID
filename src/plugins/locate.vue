@@ -8,42 +8,52 @@ import * as locator from "@arcgis/core/rest/locator";
 import Search from "@arcgis/core/widgets/Search";
 export default {
   name: "locate",
-  props: {
-    view: Object,
-  },
+  //   props: ["view"],
   data() {
     return {};
   },
   mounted() {
-    // const view = this.view;
-    view.popup.autoOpenEnabled = false;
-    view.on("click", (event) => {
-      const lat = Math.round(event.mapPoint.latitude * 1000) / 1000;
-      const lon = Math.round(event.mapPoint.longitude * 1000) / 1000;
-      view.popup.open({
-        title: "坐标:[" + lon + "," + lat + "]",
-        location: event.mapPoint,
-      });
-      const params = {
-        location: event.mapPoint,
-      };
-      locator
-        .locationToAddress(locatorUrl, params)
-        .then((response) => {
-          view.popup.content = response.address;
-        })
-        .catch(() => {
-          view.popup.content = "未找到位置";
-        });
-    });
-    const searchWidgets = new Search({
-      view: view,
-    });
-    view.ui.add(searchWidgets, {
-      position: "top-left",
+    this.$nextTick(() => {
+      this.view = window.view;
+      //   console.log(view);
+      this.locate();
     });
   },
-  methods: {},
+  methods: {
+    locate() {
+      let view = window.view;
+
+      view.popup.autoOpenEnabled = false;
+      view.on("click", (event) => {
+        const lat = Math.round(event.mapPoint.latitude * 1000) / 1000;
+        const lon = Math.round(event.mapPoint.longitude * 1000) / 1000;
+        view.popup.open({
+          title: "坐标:[" + lon + "," + lat + "]",
+          location: event.mapPoint,
+        });
+        const params = {
+          location: event.mapPoint,
+        };
+        const locatorUrl =
+          " https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer";
+
+        locator
+          .locationToAddress(locatorUrl, params)
+          .then((response) => {
+            view.popup.content = response.address;
+          })
+          .catch(() => {
+            view.popup.content = "未找到位置";
+          });
+      });
+      const searchWidgets = new Search({
+        view: view,
+      });
+      view.ui.add(searchWidgets, {
+        position: "top-left",
+      });
+    },
+  },
 };
 </script>
 

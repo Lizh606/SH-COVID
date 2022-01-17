@@ -16,50 +16,78 @@ const routes = [
   {
     path: "/",
     component: layout,
+
     children: [
       {
         path: "Map",
         name: "Map",
         component: Map,
+        meta: {
+          title: "二维地图",
+        },
       },
       {
         path: "SceneMap",
         name: "SceneMap",
         component: SceneMap,
+        meta: {
+          title: "三维地图",
+        },
       },
       {
         path: "TianDiTu",
         name: "TianDiTu",
         component: TianDiTu,
+        meta: {
+          title: "天地图",
+        },
       },
       {
         path: "Locator",
         name: "Locator",
         component: Locator,
+        meta: {
+          title: "定位",
+        },
       },
       {
         path: "Swapmap",
         name: "Swapmap",
         component: Swapmap,
+        meta: {
+          title: "切换地图",
+        },
       },
       {
         path: "Weather",
         name: "Weather",
         component: Weather,
+        meta: {
+          title: "切换天气",
+        },
       },
       {
         path: "ChangeView",
         name: "ChangeView",
         component: ChangeView,
+        meta: {
+          title: "二维切换三维",
+        },
       },
       {
         path: "FeatureAffect",
         name: "FeatureAffect",
         component: FeatureAffect,
+        meta: {
+          title: "特征影响",
+        },
       },
       {
         path: "",
         component: Map,
+        meta: {
+          title: "首页",
+        },
       },
     ],
   },
@@ -71,5 +99,7 @@ const routes = [
 const router = new VueRouter({
   routes,
 });
-
+router.afterEach((to, from) => {
+  window.document.title = to.meta.title;
+});
 export default router;
