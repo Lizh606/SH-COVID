@@ -5,19 +5,20 @@
       <Header>
         <Menu mode="horizontal" theme="primary">
           <MenuItem name="user" class="user-item">
-            <Icon custom="iconfont icon-yonghu" class="menu-item-icon" />
-            <span class="menu-item-word">DIST</span>
+            <Icon custom="iconfont icon-bangzhuyushuoming" class="menu-item-icon" />
+            <span class="menu-item-word">系统说明</span>
           </MenuItem>
           <MenuItem name="feedback" class="feedback-item">
             <Icon custom="iconfont icon-wentifankui" class="menu-item-icon" />
             <span class="menu-item-word">问题反馈</span>
           </MenuItem>
           <MenuItem name="logout" class="logout-item">
-            <Icon custom="iconfont icon-tuichu" class="menu-item-icon" />
-            <span class="menu-item-word">退出</span>
+            <Icon custom="iconfont icon-yonghu" class="menu-item-icon" />
+            <span class="menu-item-word">个人中心</span>
           </MenuItem>
           <MenuItem name="system" class="system-item">
-            <span class="system-name">基于xxx的一张图系统</span>
+            <img src="../../public/老虎.png" class="system-icon" @click="GoHome" />
+            <span class="system-name">上海市新冠疫情一张图系统</span>
           </MenuItem>
         </Menu>
       </Header>
@@ -35,21 +36,15 @@
                 <span class="sider-item-word">地图展示</span>
               </template>
               <MenuItem name="mapgroup" @click.native="tomap">
-                <Icon custom="iconfont icon-ditu" class="sider-item-icon-son" />
-                <span class="sider-item-word-son">2D</span>
+                <Icon custom="iconfont icon-erweiditu" class="sider-item-icon-son" />
+                <span class="sider-item-word-son">二维地图</span>
               </MenuItem>
               <MenuItem name="gaodemap" @click.native="togaode">
-                <Icon
-                  custom="iconfont icon-mapOfGaud"
-                  class="sider-item-icon-son"
-                />
-                <span class="sider-item-word-son">3D</span>
+                <Icon custom="iconfont icon-sanweiditu" class="sider-item-icon-son" />
+                <span class="sider-item-word-son">三维地图</span>
               </MenuItem>
               <MenuItem name="tiandutu" @click.native="totianditu">
-                <Icon
-                  custom="iconfont icon-mapOfGaud"
-                  class="sider-item-icon-son"
-                />
+                <Icon custom="iconfont icon-mapOfGaud" class="sider-item-icon-son" />
                 <span class="sider-item-word-son">天地图 </span>
               </MenuItem>
             </Submenu>
@@ -59,36 +54,27 @@
                 <span class="sider-item-word">功能列表</span>
               </template>
               <MenuItem name="locator" @click.native="tolocator">
-                <Icon
-                  custom="iconfont icon-mapOfGaud"
-                  class="sider-item-icon-son"
-                />
+                <Icon custom="iconfont icon-dingwei-" class="sider-item-icon-son" />
                 <span class="sider-item-word-son">定位道路</span>
               </MenuItem>
               <MenuItem name="Swapmap" @click.native="toswapmap">
-                <Icon custom="iconfont icon-ditu" class="sider-item-icon-son" />
+                <Icon custom="iconfont icon-qiehuan" class="sider-item-icon-son" />
                 <span class="sider-item-word-son">切换底图</span>
               </MenuItem>
               <MenuItem name="sidetable3" @click.native="toweather">
-                <Icon
-                  custom="iconfont icon-relitu"
-                  class="sider-item-icon-son"
-                />
-                <span class="sider-item-word-son">切换天气</span>
+                <Icon custom="iconfont icon-tianqi" class="sider-item-icon-son" />
+                <span class="sider-item-word-son">天气可视化</span>
               </MenuItem>
               <MenuItem name="changeview" @click.native="tochangeview">
-                <Icon
-                  custom="iconfont icon-relitu"
-                  class="sider-item-icon-son"
-                />
+                <Icon custom="iconfont icon-relitu" class="sider-item-icon-son" />
                 <span class="sider-item-word-son">23D切换</span>
               </MenuItem>
               <MenuItem name="featureaffect" @click.native="tofeatureaffect">
                 <Icon
-                  custom="iconfont icon-relitu"
+                  custom="iconfont icon-sanweihuanchongqu"
                   class="sider-item-icon-son"
                 />
-                <span class="sider-item-word-son">特征效果</span>
+                <span class="sider-item-word-son">缓冲区</span>
               </MenuItem>
             </Submenu>
           </Menu>
@@ -128,6 +114,9 @@ export default {
     },
   },
   methods: {
+    GoHome() {
+      this.$router.push("/Welcome");
+    },
     changeActiveName(path) {
       let length = path.length;
       let name = path[length - 1];
@@ -140,9 +129,7 @@ export default {
     tomap() {
       // 避免跳转到当前页面
       if (this.$route.path == "/Map") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
         return;
       }
       this.$router.push("/Map");
@@ -150,9 +137,7 @@ export default {
     togaode() {
       // 避免跳转到当前页面
       if (this.$route.path == "/SceneMap") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
         return;
       }
       this.$router.push("/SceneMap");
@@ -160,9 +145,7 @@ export default {
     totianditu() {
       // 避免跳转到当前页面
       if (this.$route.path == "/TianDiTu") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
         return;
       }
       this.$router.push("/TianDiTu");
@@ -170,9 +153,7 @@ export default {
     tolocator() {
       // 避免跳转到当前页面
       if (this.$route.path == "/Locator") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
         return;
       }
       this.$router.push("/Locator");
@@ -180,9 +161,7 @@ export default {
     toswapmap() {
       // 避免跳转到当前页面
       if (this.$route.path == "/Swapmap") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
         return;
       }
       this.$router.push("/Swapmap");
@@ -190,9 +169,7 @@ export default {
     toweather() {
       // 避免跳转到当前页面
       if (this.$route.path == "/Weather") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
         return;
       }
       this.$router.push("/Weather");
@@ -200,9 +177,7 @@ export default {
     tochangeview() {
       // 避免跳转到当前页面
       if (this.$route.path == "/ChangeView") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
         return;
       }
       this.$router.push("/ChangeView");
@@ -210,9 +185,7 @@ export default {
     tofeatureaffect() {
       // 避免跳转到当前页面
       if (this.$route.path == "/FeatureAffect") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
         return;
       }
       this.$router.push("/FeatureAffect");
@@ -257,18 +230,22 @@ export default {
   margin: 0 auto;
   position: relative;
   display: block;
-  font-size: 20px;
+  font-size: 30px;
 }
 .menu-item-word {
   text-align: center;
   color: white;
-  line-height: 30px;
+  line-height: 40px;
   display: block;
 }
 
 .system-item {
   left: 0px;
-  height: 60px;
+  height: 70px;
+}
+&/deep/.ivu-menu-horizontal {
+  height: 70px;
+  line-height: 70px;
 }
 .system-icon {
   width: 50px;
@@ -278,7 +255,7 @@ export default {
   overflow: hidden;
 }
 .system-name {
-  left: 20px;
+  left: 10px;
   position: relative;
   font-size: 24px;
   font-weight: bold;
@@ -298,9 +275,9 @@ export default {
 }
 .sider:hover {
   background: white;
-  width: 200px !important;
-  min-width: 200px !important;
-  max-width: 200px !important;
+  width: 170px !important;
+  min-width: 170px !important;
+  max-width: 170px !important;
   flex-basis: 100% !important;
 }
 .sider-menu {
@@ -309,7 +286,7 @@ export default {
 }
 
 .sider-menu:hover {
-  width: 200px !important;
+  width: 170px !important;
   .sider-item-word,
   .sider-item-word-son {
     display: inline-block;

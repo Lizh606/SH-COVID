@@ -10,6 +10,7 @@ import Weather from "../plugins/Weather.vue";
 import ChangeView from "../plugins/ChangeView.vue";
 import FeatureAffect from "../plugins/FeatureAffect.vue";
 import TianDiTu from "../components/TianDiTu.vue";
+import Welcome from "../layout/Welcome.vue";
 
 Vue.use(Router);
 const routes = [
@@ -24,6 +25,7 @@ const routes = [
         component: Map,
         meta: {
           title: "二维地图",
+          icon: "iconfont icon-ditu",
         },
       },
       {
@@ -83,8 +85,16 @@ const routes = [
         },
       },
       {
+        path: "Welcome",
+        name: "Welcome",
+        component: Welcome,
+        meta: {
+          title: "首页",
+        },
+      },
+      {
         path: "",
-        component: Map,
+        component: Welcome,
         meta: {
           title: "首页",
         },
@@ -101,5 +111,6 @@ const router = new VueRouter({
 });
 router.afterEach((to, from) => {
   window.document.title = to.meta.title;
+  window.document.icon = to.meta.icon;
 });
 export default router;

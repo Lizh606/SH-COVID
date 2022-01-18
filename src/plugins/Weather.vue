@@ -1,13 +1,13 @@
 <template>
   <div>
     <div id="map"></div>
-    <Dropdown trigger="click" id="weatherDropdown">
+    <Dropdown id="Dropdown" @on-click="weatherDropdown">
       <Button type="primary"> Select Weather </Button>
-      <DropdownMenu slot="list" ref="select">
-        <DropdownItem id="Sunny">Sunny</DropdownItem>
-        <DropdownItem id="Cloudy" active>Cloudy</DropdownItem>
-        <DropdownItem id="Rainy">Rainy</DropdownItem>
-        <DropdownItem id="Foggy">Foggy</DropdownItem>
+      <DropdownMenu slot="list">
+        <DropdownItem name="Sunny">Sunny</DropdownItem>
+        <DropdownItem name="Cloudy" active>Cloudy</DropdownItem>
+        <DropdownItem name="Rainy">Rainy</DropdownItem>
+        <DropdownItem name="Foggy">Foggy</DropdownItem>
       </DropdownMenu>
     </Dropdown>
   </div>
@@ -27,16 +27,16 @@ export default {
   },
   mounted() {
     this.init();
-    console.log(this.$refs.select);
   },
   methods: {
-    init() {
+    init(selectedWeather) {
       const map = new Map({
         basemap: "satellite",
         ground: "world-elevation",
       });
       const sceneLayer = new SceneLayer({
-        url: "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_Bldgs/SceneServer/layers/0",
+        url:
+          "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_Bldgs/SceneServer/layers/0",
         title: "San Francisco Downtown",
         popupEnabled: false,
       });
@@ -66,8 +66,6 @@ export default {
           },
         },
       });
-      const weatherDropdown = document.getElementById("weatherDropdown");
-      view.ui.add(weatherDropdown, "top-left");
 
       const daylightExpand = new Expand({
         view: view,
@@ -76,29 +74,31 @@ export default {
         }),
       });
       view.ui.add(daylightExpand, "top-left");
-      console.log(weatherDropdown);
-      weatherDropdown.addEventListener("select", () => {
-        //   console.log(e);
-        // Read the id of the current selected item
-        let selectedWeather = weatherDropdown.selectedItems[0].id;
-        console.log("selectedWeather");
-        // Get the new weather instance and set it to the weather property of the view
-        view.environment.weather = setWeather(selectedWeather);
+
+      const weatherClick = document.getElementById("Dropdown");
+      weatherClick.addEventListener("click", () => {
+        view.environment.weather = this.setWeather(selectedWeather);
       });
-      // console.log(selectedWeather);
-      function setWeather(selectedWeather) {
-        switch (selectedWeather) {
-          case "Sunny":
-            return { type: "sunny", cloudCover: 0.8 }; // autocasts as new SunnyWeather({ cloudCover: 0.8 })
-          case "Cloudy":
-            return { type: "cloudy", cloudCover: 0.4 }; // autocasts as new CloudyWeather({ cloudCover: 0.4})
-          case "Rainy":
-            return { type: "rainy", cloudCover: 0.4 }; // autocasts as new RainyWeather({ cloudCover: 0.4 })
-          case "Foggy":
-            return { type: "foggy", fogStrength: 0.6 }; // autocasts as new FoggyWeather({ fogStrength: 0.6 })
-        }
-      }
+
       view.ui.remove("attribution");
+    },
+    weatherDropdown(name) {
+      let selectedWeather = name;
+      // console.log(selectedWeather); //得到选中天气
+      this.init(selectedWeather);
+    },
+    setWeather(selectedWeather) {
+      // console.log(selectedWeather); //=>获取选中天气
+      switch (selectedWeather) {
+        case "Sunny":
+          return { type: "sunny", cloudCover: 0.8 }; // autocasts as new SunnyWeather({ cloudCover: 0.8 })
+        case "Cloudy":
+          return { type: "cloudy", cloudCover: 0.4 }; // autocasts as new CloudyWeather({ cloudCover: 0.4})
+        case "Rainy":
+          return { type: "rainy", cloudCover: 0.4 }; // autocasts as new RainyWeather({ cloudCover: 0.4 })
+        case "Foggy":
+          return { type: "foggy", fogStrength: 0.6 }; // autocasts as new FoggyWeather({ fogStrength: 0.6 })
+      }
     },
   },
 };
@@ -109,5 +109,12 @@ export default {
   width: 100%;
   height: 100%;
   position: absolute;
+}
+#Dropdown {
+  left: 60px;
+  top: 10px;
+  width: 100px;
+  height: 50px;
+  position: relative;
 }
 </style>

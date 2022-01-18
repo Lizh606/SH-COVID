@@ -22,7 +22,6 @@ export default {
   methods: {
     locate() {
       let view = window.view;
-
       view.popup.autoOpenEnabled = false;
       view.on("click", (event) => {
         const lat = Math.round(event.mapPoint.latitude * 1000) / 1000;

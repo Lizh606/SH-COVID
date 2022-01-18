@@ -11,6 +11,7 @@ export default {
 </script>
 
 <style>
+@import "./styles/font/font.css";
 * {
   margin: 0;
   padding: 0;
@@ -18,6 +19,7 @@ export default {
 html,
 body {
   height: 100%;
+  font-family: 方正楷体;
 }
 #app {
   width: 100%;

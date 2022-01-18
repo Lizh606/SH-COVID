@@ -6,12 +6,7 @@
       <label for="layers">选择一个图层</label>
       <div id="layers" class="geometry-options">
         <button
-          class="
-            esri-widget--button
-            esri-icon-map-pin
-            layer-button
-            geometry-button-selected
-          "
+          class="esri-widget--button esri-icon-map-pin layer-button geometry-button-selected"
           id="point-layer-button"
           value="point"
           title="点要素"
@@ -139,7 +134,7 @@ export default {
           view.whenLayerView(layer).then(function (layerView) {
             if (layer.type === "feature") {
               const type = layer.geometryType;
-              layerView[type] == layerView;
+              layerViews[type] = layerView;
               if (layerView.layer.geometryType === "point") {
                 //点图层作为默认图层
                 featureLayerView = layerView;
@@ -148,7 +143,7 @@ export default {
           });
         });
       });
-      const view = new MapView({
+      let view = new MapView({
         map: map,
         container: "map",
         padding: { right: 260 },
@@ -159,6 +154,11 @@ export default {
       const spatialRelType = document.getElementById("relationship-select");
       const distanceValueNum = document.getElementById("distanceValueNum");
 
+      // listen to change and input events on UI components
+      distanceNum.onchange = distanceVariablesChanged;
+      distanceUnit.onchange = distanceVariablesChanged;
+      spatialRelType.onchange = distanceVariablesChanged;
+      distanceNum.oninput = distanceVariablesChanged;
       //从与距离相关的选项中获取用户输入的值
 
       function distanceVariablesChanged() {
@@ -177,8 +177,7 @@ export default {
             distance,
             unit
           );
-          bufferGeometriesLayer.graphics.getItemAt(0).geometry =
-            newBufferGeometry;
+          bufferGeometriesLayer.graphics.getItemAt(0).geometry = newBufferGeometry;
           updateFilter();
         } else {
           bufferGraphic.geometry = null;
@@ -206,12 +205,10 @@ export default {
       }
 
       //图层类型按钮的单击事件
-      document.getElementById("point-layer-button").onclick =
-        layersChangedClickHandler;
-      document.getElementById("line-layer-button").onclick =
-        layersChangedClickHandler;
-      document.getElementById("polygon-layer-button").onclick =
-        layersChangedClickHandler;
+      document.getElementById("point-layer-button").onclick = layersChangedClickHandler;
+      document.getElementById("line-layer-button").onclick = layersChangedClickHandler;
+      document.getElementById("polygon-layer-button").onclick = layersChangedClickHandler;
+
       // Make the selected layerview visible while setting the other layerviews invisible
       function layersChangedClickHandler(event) {
         for (var key in layerViews) {
@@ -224,14 +221,16 @@ export default {
         updateBuffer();
         setActiveButton(this);
       }
-
       // geometry buttons - use the selected geometry to set effect
-      document.getElementById("point-geometry-button").onclick =
-        geometryButtonsClickHandler;
-      document.getElementById("line-geometry-button").onclick =
-        geometryButtonsClickHandler;
-      document.getElementById("polygon-geometry-button").onclick =
-        geometryButtonsClickHandler;
+      document.getElementById(
+        "point-geometry-button"
+      ).onclick = geometryButtonsClickHandler;
+      document.getElementById(
+        "line-geometry-button"
+      ).onclick = geometryButtonsClickHandler;
+      document.getElementById(
+        "polygon-geometry-button"
+      ).onclick = geometryButtonsClickHandler;
       function geometryButtonsClickHandler(event) {
         const geometryType = event.target.value;
         var filterGraphic;
@@ -258,9 +257,7 @@ export default {
 
       function setActiveButton(selectedButton) {
         // focus the view to activate keyboard shortcuts for sketching
-        var elements = document.getElementsByClassName(
-          "geometry-button-selected"
-        );
+        var elements = document.getElementsByClassName("geometry-button-selected");
         if (selectedButton) {
           for (var i = 0; i < elements.length; i++) {
             if (
@@ -316,14 +313,8 @@ export default {
         const line = {
           type: "polyline",
           paths: [
-            [
-              polygonGraphic.geometry.extent.xmin,
-              polygonGraphic.geometry.extent.ymin,
-            ],
-            [
-              polygonGraphic.geometry.extent.xmax,
-              polygonGraphic.geometry.extent.ymax,
-            ],
+            [polygonGraphic.geometry.extent.xmin, polygonGraphic.geometry.extent.ymin],
+            [polygonGraphic.geometry.extent.xmax, polygonGraphic.geometry.extent.ymax],
           ],
           spatialReference: view.spatialReference,
         };
@@ -378,7 +369,7 @@ export default {
           lineGraphic,
           pointGraphic,
         ]);
-        document.getElementById("map").style.display = "block";
+        view.ui.remove("attribution");
       });
     },
   },
@@ -390,7 +381,6 @@ export default {
   width: 100%;
   height: 100%;
   position: absolute;
-  font-family: "Avenir Next W00", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 #content {
   background-color: white;
@@ -398,10 +388,10 @@ export default {
   width: 250px;
   margin: 5px;
   position: absolute;
-  bottom: 15px;
+  bottom: 10px;
   right: 10px;
   font-size: 14px;
-  display: none;
+  /* display: none; */
 }
 .geometry-options {
   display: flex;
