@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import "@arcgis/core/assets/esri/themes/light/main.css";
 import Map from "@arcgis/core/Map";
 import MapView from "@arcgis/core/views/MapView";
 // 不能用 import locator from‘’

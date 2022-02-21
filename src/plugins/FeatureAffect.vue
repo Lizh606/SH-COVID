@@ -87,7 +87,6 @@
 </template>
 
 <script>
-import "@arcgis/core/assets/esri/themes/light/main.css";
 import WebMap from "@arcgis/core/WebMap";
 import GraohicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import MapView from "@arcgis/core/views/MapView";

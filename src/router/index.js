@@ -1,26 +1,42 @@
 import Vue from "vue";
 import Router from "vue-router";
 import VueRouter from "vue-router";
-import Map from "../components/Map.vue";
+import Login from "../views/Login.vue";
+import Welcome from "../views/Welcome.vue";
+import Map from "../plugins/Map.vue";
 import layout from "../layout/layout.vue";
-import SceneMap from "../components/SceneMap.vue";
+import SceneMap from "../plugins/SceneMap.vue";
 import Locator from "../plugins/Locator.vue";
 import Swapmap from "../plugins/Swapmap.vue";
 import Weather from "../plugins/Weather.vue";
 import ChangeView from "../plugins/ChangeView.vue";
 import FeatureAffect from "../plugins/FeatureAffect.vue";
-import TianDiTu from "../components/TianDiTu.vue";
-import Welcome from "../layout/Welcome.vue";
+import TianDiTu from "@/components/tdtMap/TianDiTu.vue";
+import Popup from "../plugins/Popup.vue";
 
 Vue.use(Router);
 const routes = [
   {
-    path: "/",
+    path: "/layout",
     component: layout,
-
     children: [
       {
-        path: "Map",
+        path: "",
+        component: Welcome,
+        meta: {
+          title: "首页",
+        },
+      },
+      {
+        path: "/Welcome",
+        name: "Welcome",
+        component: Welcome,
+        meta: {
+          title: "首页",
+        },
+      },
+      {
+        path: "/Map",
         name: "Map",
         component: Map,
         meta: {
@@ -29,7 +45,7 @@ const routes = [
         },
       },
       {
-        path: "SceneMap",
+        path: "/SceneMap",
         name: "SceneMap",
         component: SceneMap,
         meta: {
@@ -37,7 +53,7 @@ const routes = [
         },
       },
       {
-        path: "TianDiTu",
+        path: "/TianDiTu",
         name: "TianDiTu",
         component: TianDiTu,
         meta: {
@@ -45,7 +61,7 @@ const routes = [
         },
       },
       {
-        path: "Locator",
+        path: "/Locator",
         name: "Locator",
         component: Locator,
         meta: {
@@ -53,7 +69,7 @@ const routes = [
         },
       },
       {
-        path: "Swapmap",
+        path: "/Swapmap",
         name: "Swapmap",
         component: Swapmap,
         meta: {
@@ -61,15 +77,15 @@ const routes = [
         },
       },
       {
-        path: "Weather",
+        path: "/Weather",
         name: "Weather",
         component: Weather,
         meta: {
-          title: "切换天气",
+          title: "天气可视化",
         },
       },
       {
-        path: "ChangeView",
+        path: "/ChangeView",
         name: "ChangeView",
         component: ChangeView,
         meta: {
@@ -77,26 +93,19 @@ const routes = [
         },
       },
       {
-        path: "FeatureAffect",
+        path: "/FeatureAffect",
         name: "FeatureAffect",
         component: FeatureAffect,
         meta: {
-          title: "特征影响",
+          title: "缓冲区",
         },
       },
       {
-        path: "Welcome",
-        name: "Welcome",
-        component: Welcome,
+        path: "/Popup",
+        name: "Popup",
+        component: Popup,
         meta: {
-          title: "首页",
-        },
-      },
-      {
-        path: "",
-        component: Welcome,
-        meta: {
-          title: "首页",
+          title: "弹窗",
         },
       },
     ],
@@ -104,6 +113,14 @@ const routes = [
   {
     path: "/layout",
     component: layout,
+  },
+  {
+    path: "/",
+    name: "Login",
+    component: Login,
+    meta: {
+      title: "登录",
+    },
   },
 ];
 const router = new VueRouter({

@@ -38,6 +38,7 @@ export default {
           nextBasemap: "streets-vector",
         });
         view.ui.components = [];
+        view.ui.remove("attribution");
         view.ui.add(toggle, "top-left");
       });
     },

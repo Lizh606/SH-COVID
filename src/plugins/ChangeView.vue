@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import "@arcgis/core/assets/esri/themes/light/main.css";
 import MapView from "@arcgis/core/views/MapView";
 import SceneView from "@arcgis/core/views/SceneView";
 import WebMap from "@arcgis/core/WebMap";
@@ -110,9 +109,9 @@ export default {
   height: 100%;
 }
 #infomap {
-  position: absolute;
+  position: relative;
   top: 15px;
-  left: 120px;
+  left: 50px;
 }
 #infomap input {
   border: none;
