@@ -39,47 +39,62 @@
 </template>
 
 <script>
+import { post } from '../utils/request'
 export default {
-  name: "Login",
+  name: 'Login',
 
   data() {
     return {
       loading: false,
       formInline: {
-        user: "",
+        user: '',
         checkbox: [],
-        password: "",
+        password: '',
       },
       ruleInline: {
         user: [
           {
             required: true,
-            message: "用户名不能为空",
-            trigger: "blur",
+            message: '用户名不能为空',
+            trigger: 'blur',
           },
           {
-            trigger: "blur",
+            trigger: 'blur',
           },
         ],
         password: [
           {
             required: true,
-            message: "用户密码不能为空",
-            trigger: "blur",
+            message: '用户密码不能为空',
+            trigger: 'blur',
           },
           {
-            trigger: "blur",
+            trigger: 'blur',
           },
         ],
       },
-    };
+    }
   },
   methods: {
-    handleSubmit() {
-      this.$router.push("/layout");
+    async handleSubmit() {
+      // this.$router.push("/layout");
+      try {
+        const result = await post('/api/user/login', {
+          username: this.formInline.user,
+          password: this.formInline.password,
+        })
+        if (result?.errno === 0) {
+          localStorage.isLogin = true
+          this.$router.push('/layout')
+        } else {
+          alert('登陆失败')
+        }
+      } catch (e) {
+        alert('请求失败')
+      }
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -87,10 +102,10 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
-  background: url("../../public/shanghai.jpg") no-repeat center;
+  background: url('../../public/shanghai.jpg') no-repeat center;
   background-size: cover;
   &:after {
-    content: "";
+    content: '';
     width: 100%;
     height: 100%;
     position: absolute;
@@ -122,7 +137,7 @@ export default {
         width: 4.17rem;
         height: 4.17rem;
         float: right;
-        background: url("../../public/erweima.png") no-repeat center;
+        background: url('../../public/erweima.png') no-repeat center;
         background-size: cover;
       }
       .sign-title {

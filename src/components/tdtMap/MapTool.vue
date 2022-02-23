@@ -43,24 +43,22 @@ import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 
 export default {
   name: "MapTools",
-
-  components: {},
-
+  inject: ["map","view"],
   data() {
     return {
       loc: "",
     };
   },
-
   created() {},
 
-  mounted() {
-    this.$nextTick(() => {
-      this.map = window.map;
-      this.view = window.view;
-      // console.log(this.view);
-    });
-  },
+  // mounted() {
+  //   this.$nextTick(() => {
+
+  //     this.map = window.map;
+  //     this.view = window.view;
+  //     console.log(this.view);
+  //   });
+  // },
 
   computed: {},
 

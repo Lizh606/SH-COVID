@@ -121,11 +121,21 @@ const routes = [
     meta: {
       title: "登录",
     },
+    // beforeEnter(to, from, next) {
+    //   const { isLogin } = localStorage;
+    //   // isLogin ? next({ name: "layout" }) : next();
+    // },
   },
 ];
 const router = new VueRouter({
   routes,
 });
+// router.beforeEach((to, from ,next) => {
+//   const { isLogin } = localStorage;
+//   const { name } = to;
+//   const isLoginOrRegister = (name === "layout");
+//   (isLogin || isLoginOrRegister) ? next({ name: 'layout'}) : next();
+// })
 router.afterEach((to, from) => {
   window.document.title = to.meta.title;
   window.document.icon = to.meta.icon;

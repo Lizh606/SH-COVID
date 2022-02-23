@@ -17,7 +17,7 @@ module.exports = {
   devServer: {
     // 调试端口
     host: '0.0.0.0',
-    port: 7777,
+    port: 8888,
     open: true,
     hot: true,
     watchOptions: {
@@ -31,7 +31,7 @@ module.exports = {
         changeOrgin: true,
         secure: false,
         pathRewrite: {
-          '^/services': '/',
+          '^/services': '',
         },
       },
     },

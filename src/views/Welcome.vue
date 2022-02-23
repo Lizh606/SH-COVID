@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <img class="back" src="../../public/上海logo.jpeg" />
+    <img class="back" src="../assets/img/上海夜景.jpeg" />
     <!-- <div id="msg">Welcome to Shanghai COVID-19 map system</div> -->
   </div>
 </template>
