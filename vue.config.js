@@ -33,14 +33,6 @@ module.exports = {
           "^/services": "",
         },
       },
-      "/hospital.png": {
-        target: "https://www.shanghai-map.net/emergency/img/hospital.png/",
-        changeOrgin: true,
-        secure: false,
-        pathRewrite: {
-          "^/hospital.png": "",
-        },
-      },
     },
   },
   //其他配置....
