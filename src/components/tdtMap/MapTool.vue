@@ -40,10 +40,9 @@ import Polygon from "@arcgis/core/geometry/Polygon";
 import Graphic from "@arcgis/core/Graphic";
 import Polyline from "@arcgis/core/geometry/Polyline";
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
-
 export default {
   name: "MapTools",
-  inject: ["map","view"],
+  inject: ["TdtMap"],
   data() {
     return {
       loc: "",
@@ -51,14 +50,13 @@ export default {
   },
   created() {},
 
-  // mounted() {
-  //   this.$nextTick(() => {
-
-  //     this.map = window.map;
-  //     this.view = window.view;
-  //     console.log(this.view);
-  //   });
-  // },
+  mounted() {
+    
+    this.$nextTick(() => {
+      this.map = this.TdtMap.map;
+      this.view = this.TdtMap.view
+    });
+  },
 
   computed: {},
 

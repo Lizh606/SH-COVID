@@ -7,22 +7,22 @@
     <div class="swap-content" v-if="isSwapOn">
       <!--切换行政区划地图按钮-->
       <div class="vec-collection">
-        <Button type="primary" class="vec"> </Button>
+        <Button type="primary" class="vec" @click="swapmap(0)"> </Button>
         <p class="swap-content-mask">电子底图</p>
       </div>
       <!--切换遥感影像地图按钮-->
       <div class="img-collection">
-        <Button type="primary" class="img"></Button>
+        <Button type="primary" class="img" @click="swapmap(1)"></Button>
         <p class="swap-content-mask">影像底图</p>
       </div>
       <!--切换地形地图按钮-->
       <div class="ter-collection">
-        <Button type="primary" class="ter"></Button>
+        <Button type="primary" class="ter" @click="swapmap(2)"></Button>
         <p class="swap-content-mask">地形底图</p>
       </div>
       <p>
         <span class="word">注记</span>
-        <i-switch class="switch" size="small" />
+        <i-switch v-if="isSwapOn" class="switch" size="small" />
       </p>
     </div>
   </div>
@@ -31,21 +31,24 @@
 <script>
 export default {
   name: "changemap",
-
   data() {
     return {
-      isSwapOn: false,
+      isSwapOn: true,
     };
   },
   mounted() {
     this.$nextTick(() => {
+      this.map = window.map;
       this.view = window.view;
     });
   },
-  methods: {},
+  methods: {
+    swapmap(id) {
+      window.map.basemap = window.BasemapGalleryVM.source.basemaps.get("items")[id];
+    },
+  },
 };
 </script>
-
 
 <style lang="less" scoped>
 .swap-popup {
@@ -69,7 +72,7 @@ export default {
 .swap-btn {
   position: relative;
   display: block;
-    background:url("../../assets/img/vec.png") no-repeat;
+  background: url("../../assets/img/vec.png") no-repeat;
   background-size: 100%;
   margin: 4px auto;
 }
@@ -122,7 +125,7 @@ export default {
   position: relative;
 }
 .vec {
-  background:url("../../assets/img/vec.png") no-repeat;
+  background: url("../../assets/img/vec.png") no-repeat;
   background-size: 100%;
 }
 .img {
