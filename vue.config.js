@@ -3,7 +3,7 @@ function resolve(dir) {
   return path.join(__dirname, dir);
 }
 module.exports = {
-  // publicPath: '/map/',
+  publicPath: '/SH-COVID-19/',
   lintOnSave: false,
   chainWebpack: (config) => {
     config.resolve.alias.set("@", resolve("src"));
