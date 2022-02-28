@@ -1,7 +1,15 @@
 <template>
   <div id="home">
     <img class="back" src="../assets/img/上海夜景.jpeg" />
-    <!-- <div id="msg">Welcome to Shanghai COVID-19 map system</div> -->
+    <!-- <iframe
+      src="http://localhost:8080/public/static/index.html"
+      width="100%"
+      height="800"
+      frameborder="0"
+      scrolling="auto"
+      id="iframename"
+      name="iframename"
+    ></iframe> -->
   </div>
 </template>
 

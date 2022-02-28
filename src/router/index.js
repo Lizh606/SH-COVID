@@ -3,6 +3,7 @@ import Router from "vue-router";
 import VueRouter from "vue-router";
 import Login from "../views/Login.vue";
 import Welcome from "../views/Welcome.vue";
+import html from '../views/html.vue'
 import Map from "../plugins/Map.vue";
 import layout from "../layout/layout.vue";
 import SceneMap from "../plugins/SceneMap.vue";
@@ -126,6 +127,18 @@ const routes = [
     //   // isLogin ? next({ name: "layout" }) : next();
     // },
   },
+  {
+    path: "/html",
+    name: "html",
+    component: html,
+    meta: {
+      title: "大屏",
+    },
+    // beforeEnter(to, from, next) {
+    //   const { isLogin } = localStorage;
+    //   // isLogin ? next({ name: "layout" }) : next();
+    // },
+  },
 ];
 const router = new VueRouter({
   routes,
@@ -136,8 +149,8 @@ const router = new VueRouter({
 //   const isLoginOrRegister = (name === "layout");
 //   (isLogin || isLoginOrRegister) ? next({ name: 'layout'}) : next();
 // })
-router.afterEach((to, from) => {
-  window.document.title = to.meta.title;
-  window.document.icon = to.meta.icon;
-});
+// router.afterEach((to, from) => {
+//   window.document.title = to.meta.title;
+//   window.document.icon = to.meta.icon;
+// });
 export default router;

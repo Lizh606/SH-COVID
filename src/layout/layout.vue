@@ -5,10 +5,7 @@
       <Header>
         <Menu mode="horizontal" theme="primary">
           <MenuItem name="user" class="user-item">
-            <IconSvg
-              iconClass="bangzhuyushuoming"
-              class="menu-item-icon"
-            ></IconSvg>
+            <IconSvg iconClass="bangzhuyushuoming" class="menu-item-icon"></IconSvg>
             <span class="menu-item-word">系统说明</span>
           </MenuItem>
           <MenuItem name="feedback" class="feedback-item">
@@ -32,11 +29,7 @@
             </Dropdown>
           </MenuItem>
           <MenuItem name="system" class="system-item">
-            <img
-              src="../../public/上海logo.jpeg"
-              class="system-icon"
-              @click="GoHome"
-            />
+            <img src="../../public/上海logo.jpeg" class="system-icon" @click="GoHome" />
             <span class="system-name">上海市新冠疫情可视化系统</span>
           </MenuItem>
         </Menu>
@@ -59,24 +52,15 @@
                   custom="iconfont icon-erweiditu"
                   class="sider-item-icon-son"
                 /> -->
-                <IconSvg
-                  iconClass="erweiditu"
-                  class="sider-item-icon-son"
-                ></IconSvg>
+                <IconSvg iconClass="erweiditu" class="sider-item-icon-son"></IconSvg>
                 <span class="sider-item-word-son">二维地图</span>
               </MenuItem>
               <MenuItem name="gaodemap" @click.native="togaode">
-                <Icon
-                  custom="iconfont icon-sanweiditu"
-                  class="sider-item-icon-son"
-                />
+                <Icon custom="iconfont icon-sanweiditu" class="sider-item-icon-son" />
                 <span class="sider-item-word-son">三维地图</span>
               </MenuItem>
               <MenuItem name="tiandutu" @click.native="totianditu">
-                <Icon
-                  custom="iconfont icon-mapOfGaud"
-                  class="sider-item-icon-son"
-                />
+                <Icon custom="iconfont icon-mapOfGaud" class="sider-item-icon-son" />
                 <span class="sider-item-word-son">天地图 </span>
               </MenuItem>
             </Submenu>
@@ -86,31 +70,19 @@
                 <span class="sider-item-word">功能列表</span>
               </template>
               <MenuItem name="locator" @click.native="tolocator">
-                <Icon
-                  custom="iconfont icon-dingwei-"
-                  class="sider-item-icon-son"
-                />
+                <Icon custom="iconfont icon-dingwei-" class="sider-item-icon-son" />
                 <span class="sider-item-word-son">定位道路</span>
               </MenuItem>
               <MenuItem name="Swapmap" @click.native="toswapmap">
-                <Icon
-                  custom="iconfont icon-qiehuan"
-                  class="sider-item-icon-son"
-                />
+                <Icon custom="iconfont icon-qiehuan" class="sider-item-icon-son" />
                 <span class="sider-item-word-son">切换底图</span>
               </MenuItem>
               <MenuItem name="sidetable3" @click.native="toweather">
-                <Icon
-                  custom="iconfont icon-tianqi"
-                  class="sider-item-icon-son"
-                />
+                <Icon custom="iconfont icon-tianqi" class="sider-item-icon-son" />
                 <span class="sider-item-word-son">天气可视化</span>
               </MenuItem>
               <MenuItem name="changeview" @click.native="tochangeview">
-                <Icon
-                  custom="iconfont icon-relitu"
-                  class="sider-item-icon-son"
-                />
+                <Icon custom="iconfont icon-relitu" class="sider-item-icon-son" />
                 <span class="sider-item-word-son">23D切换</span>
               </MenuItem>
               <MenuItem name="featureaffect" @click.native="tofeatureaffect">
@@ -143,114 +115,114 @@
 
 <script>
 export default {
-  name: 'LayOut',
+  name: "LayOut",
   data() {
     return {
       siderActiveName: null,
-    }
+    };
   },
   mounted() {
     // 使页面更新后导航菜单的active-name与页面内容匹配
     this.$nextTick(() => {
-      let path = this.$route.path.split('/')
-      this.changeActiveName(path)
-    })
+      let path = this.$route.path.split("/");
+      this.changeActiveName(path);
+    });
   },
   watch: {
     // 解决手动改路径时，导航菜单的active-name不更新的问题
     // 这一监听也作用于router.push
     $route(val) {
-      let path = val.path.split('/')
-      this.changeActiveName(path)
+      let path = val.path.split("/");
+      this.changeActiveName(path);
     },
   },
   methods: {
     GoHome() {
-      this.$router.push('/Welcome')
+      this.$router.push("/Welcome");
     },
     changeActiveName(path) {
-      let length = path.length
-      let name = path[length - 1]
-      if (name == 'layout') {
-        this.siderActiveName = 'Map'
+      let length = path.length;
+      let name = path[length - 1];
+      if (name == "layout") {
+        this.siderActiveName = "Map";
       } else {
-        this.siderActiveName = name
+        this.siderActiveName = name;
       }
     },
     tomap() {
       // 避免跳转到当前页面
-      if (this.$route.path == '/Map') {
-        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.")
-        return
+      if (this.$route.path == "/Map") {
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
+        return;
       }
-      this.$router.push('/Map')
+      this.$router.push("/Map");
     },
     togaode() {
       // 避免跳转到当前页面
-      if (this.$route.path == '/SceneMap') {
-        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.")
-        return
+      if (this.$route.path == "/SceneMap") {
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
+        return;
       }
-      this.$router.push('/SceneMap')
+      this.$router.push("/SceneMap");
     },
     totianditu() {
       // 避免跳转到当前页面
-      if (this.$route.path == '/TianDiTu') {
-        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.")
-        return
+      if (this.$route.path == "/TianDiTu") {
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
+        return;
       }
-      this.$router.push('/TianDiTu')
+      this.$router.push("/TianDiTu");
     },
     tolocator() {
       // 避免跳转到当前页面
-      if (this.$route.path == '/Locator') {
-        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.")
-        return
+      if (this.$route.path == "/Locator") {
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
+        return;
       }
-      this.$router.push('/Locator')
+      this.$router.push("/Locator");
     },
     toswapmap() {
       // 避免跳转到当前页面
-      if (this.$route.path == '/Swapmap') {
-        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.")
-        return
+      if (this.$route.path == "/Swapmap") {
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
+        return;
       }
-      this.$router.push('/Swapmap')
+      this.$router.push("/Swapmap");
     },
     toweather() {
       // 避免跳转到当前页面
-      if (this.$route.path == '/Weather') {
-        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.")
-        return
+      if (this.$route.path == "/Weather") {
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
+        return;
       }
-      this.$router.push('/Weather')
+      this.$router.push("/Weather");
     },
     tochangeview() {
       // 避免跳转到当前页面
-      if (this.$route.path == '/ChangeView') {
-        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.")
-        return
+      if (this.$route.path == "/ChangeView") {
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
+        return;
       }
-      this.$router.push('/ChangeView')
+      this.$router.push("/ChangeView");
     },
     tofeatureaffect() {
       // 避免跳转到当前页面
-      if (this.$route.path == '/FeatureAffect') {
-        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.")
-        return
+      if (this.$route.path == "/FeatureAffect") {
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
+        return;
       }
-      this.$router.push('/FeatureAffect')
+      this.$router.push("/FeatureAffect");
     },
     topopup() {
       // 避免跳转到当前页面
-      if (this.$route.path == '/Popup') {
-        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.")
-        return
+      if (this.$route.path == "/Popup") {
+        console.log("ROUTER WARNIND: I'd forget my page if it wasn't attached.");
+        return;
       }
-      this.$router.push('/Popup')
+      this.$router.push("/Popup");
     },
   },
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -345,6 +317,7 @@ export default {
   flex-basis: 100% !important;
 }
 .sider-menu {
+  top: 1px;
   width: 74px !important;
   height: 100%;
 }

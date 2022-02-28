@@ -19,7 +19,6 @@ import '../src/styles/index.less'
 
 
 
-
 Vue.config.productionTip = false
 Vue.use(less)
 Vue.prototype.axios = axios;
