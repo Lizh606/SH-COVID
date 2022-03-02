@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <router-view> </router-view>
   </div>
 </template>
 
@@ -19,8 +19,9 @@ export default {
 html,
 body {
   height: 100%;
-  font-family: 方正楷体;
+  font-family: ”Microsoft YaHei”, Arial, Helvetica, sans-serif, ”宋体”;
 }
+
 #app {
   width: 100%;
   height: 100%;

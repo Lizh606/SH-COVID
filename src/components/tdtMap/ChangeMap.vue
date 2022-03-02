@@ -22,7 +22,7 @@
       </div>
       <p>
         <span class="word">注记</span>
-        <i-switch v-if="isSwapOn" class="switch" size="small" />
+        <i-switch v-model="isSwitchOn"  @on-change="change" class="switch" size="small" />
       </p>
     </div>
   </div>
@@ -31,20 +31,28 @@
 <script>
 export default {
   name: "changemap",
+  inject: ["TdtMap"],
   data() {
     return {
       isSwapOn: true,
+      isSwitchOn:true
     };
   },
   mounted() {
     this.$nextTick(() => {
-      this.map = window.map;
-      this.view = window.view;
+      this.map = this.TdtMap.map;
+      this.view = this.TdtMap.view;
     });
   },
   methods: {
     swapmap(id) {
-      window.map.basemap = window.BasemapGalleryVM.source.basemaps.get("items")[id];
+      this.map.basemap = window.BasemapGalleryVM.source.basemaps.get("items")[id];
+    },
+    change() {
+      if(this.isSwitchOn == false){
+        let zjlayer = this.map.basemap.baseLayers.get("items")[1]
+        this.map.removeAll()
+      }
     },
   },
 };

@@ -5,26 +5,31 @@
       <Header>
         <Menu mode="horizontal" theme="primary">
           <MenuItem name="user" class="user-item">
-            <IconSvg iconClass="bangzhuyushuoming" class="menu-item-icon"></IconSvg>
-            <span class="menu-item-word">系统说明</span>
+            <Dropdown class="menu-item-word">
+              <IconSvg iconClass="bangzhuyushuoming" class="menu-item-icon"></IconSvg>
+              <a href="javascript:void(0)">
+                <span class="menu-item-word">系统说明</span>
+              </a>
+            </Dropdown>
           </MenuItem>
           <MenuItem name="feedback" class="feedback-item">
-            <IconSvg iconClass="wentifankui" class="menu-item-icon"></IconSvg>
-            <span class="menu-item-word">问题反馈</span>
+            <Dropdown class="menu-item-word">
+              <IconSvg iconClass="wentifankui" class="menu-item-icon"></IconSvg>
+              <a href="javascript:void(0)">
+                <span class="menu-item-word">问题反馈</span>
+              </a>
+            </Dropdown>
           </MenuItem>
           <MenuItem name="logout" class="logout-item">
-            <IconSvg iconClass="yonghu" class="menu-item-icon"></IconSvg>
-
             <Dropdown class="menu-item-word">
+              <IconSvg iconClass="yonghu" class="menu-item-icon"></IconSvg>
               <a href="javascript:void(0)">
                 <span class="menu-item-word">个人中心</span>
               </a>
               <DropdownMenu slot="list">
-                <DropdownItem>驴打滚</DropdownItem>
-                <DropdownItem>炸酱面</DropdownItem>
-                <DropdownItem disabled>豆汁儿</DropdownItem>
-                <DropdownItem>冰糖葫芦</DropdownItem>
-                <DropdownItem divided>北京烤鸭</DropdownItem>
+                <DropdownItem>个人中心</DropdownItem>
+                <DropdownItem>修改密码</DropdownItem>
+                <DropdownItem>退出登录 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </MenuItem>
@@ -36,8 +41,9 @@
       </Header>
     </Layout>
     <Content id="layout-content">
+      <Button class="btn-enter" @click="GoHome">进入系统</Button>
       <iframe
-        src="http://localhost:8080/public/static/index.html"
+        src="http://127.0.0.1:5500/public/static/index.html"
         width="100%"
         frameborder="0"
         id="iframename"
@@ -152,5 +158,13 @@ export default {
   width: 100%;
   height: 100%;
   position: absolute;
+}
+.btn-enter {
+  position: absolute;
+  left: 700px;
+  top: 20px;
+  z-index: 2;
+  border: 1px solid #d7dde4;
+  border-radius: 4px;
 }
 </style>

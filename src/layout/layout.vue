@@ -5,26 +5,31 @@
       <Header>
         <Menu mode="horizontal" theme="primary">
           <MenuItem name="user" class="user-item">
-            <IconSvg iconClass="bangzhuyushuoming" class="menu-item-icon"></IconSvg>
-            <span class="menu-item-word">系统说明</span>
+            <Dropdown class="menu-item-word">
+              <IconSvg iconClass="bangzhuyushuoming" class="menu-item-icon"></IconSvg>
+              <a href="javascript:void(0)">
+                <span class="menu-item-word">系统说明</span>
+              </a>
+            </Dropdown>
           </MenuItem>
           <MenuItem name="feedback" class="feedback-item">
-            <IconSvg iconClass="wentifankui" class="menu-item-icon"></IconSvg>
-            <span class="menu-item-word">问题反馈</span>
+            <Dropdown class="menu-item-word">
+              <IconSvg iconClass="wentifankui" class="menu-item-icon"></IconSvg>
+              <a href="javascript:void(0)">
+                <span class="menu-item-word">问题反馈</span>
+              </a>
+            </Dropdown>
           </MenuItem>
           <MenuItem name="logout" class="logout-item">
-            <IconSvg iconClass="yonghu" class="menu-item-icon"></IconSvg>
-
             <Dropdown class="menu-item-word">
+              <IconSvg iconClass="yonghu" class="menu-item-icon"></IconSvg>
               <a href="javascript:void(0)">
                 <span class="menu-item-word">个人中心</span>
               </a>
               <DropdownMenu slot="list">
-                <DropdownItem>驴打滚</DropdownItem>
-                <DropdownItem>炸酱面</DropdownItem>
-                <DropdownItem disabled>豆汁儿</DropdownItem>
-                <DropdownItem>冰糖葫芦</DropdownItem>
-                <DropdownItem divided>北京烤鸭</DropdownItem>
+                <DropdownItem>个人中心</DropdownItem>
+                <DropdownItem>修改密码</DropdownItem>
+                <DropdownItem>退出登录 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </MenuItem>
@@ -44,24 +49,21 @@
           >
             <Submenu name="1">
               <template slot="title">
+                <!-- <IconSvg iconClass="ditu2" class="sider-item-icon"></IconSvg> -->
                 <Icon custom="iconfont icon-ditu2" class="sider-item-icon" />
                 <span class="sider-item-word">地图展示</span>
               </template>
               <MenuItem name="mapgroup" @click.native="tomap">
-                <!-- <Icon
-                  custom="iconfont icon-erweiditu"
-                  class="sider-item-icon-son"
-                /> -->
                 <IconSvg iconClass="erweiditu" class="sider-item-icon-son"></IconSvg>
                 <span class="sider-item-word-son">二维地图</span>
               </MenuItem>
               <MenuItem name="gaodemap" @click.native="togaode">
-                <Icon custom="iconfont icon-sanweiditu" class="sider-item-icon-son" />
+                <IconSvg iconClass="sanweiditu" class="sider-item-icon-son"></IconSvg>
                 <span class="sider-item-word-son">三维地图</span>
               </MenuItem>
               <MenuItem name="tiandutu" @click.native="totianditu">
-                <Icon custom="iconfont icon-mapOfGaud" class="sider-item-icon-son" />
-                <span class="sider-item-word-son">天地图 </span>
+                <IconSvg iconClass="mapOfGaud" class="sider-item-icon-son"></IconSvg>
+                <span class="sider-item-word-son">天地图</span>
               </MenuItem>
             </Submenu>
             <Submenu name="2">
@@ -362,14 +364,14 @@ export default {
   display: none;
 }
 .content {
-  position: relative;
+  position: flex;
   left: 150px;
   height: 100%;
 }
 #layout-content {
   top: -6px;
   width: 945px;
-  height: 689px;
+  // height: 689px;
 }
 #layout {
   width: 100%;

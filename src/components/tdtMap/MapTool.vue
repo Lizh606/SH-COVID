@@ -318,7 +318,7 @@ export default {
         text: Math.abs(Math.round(area * 100) / 100) + unit,
         font: {
           size: 12,
-          family: "sans-serif",
+          // family: "sans-serif",
           weight: "bold",
         },
       };

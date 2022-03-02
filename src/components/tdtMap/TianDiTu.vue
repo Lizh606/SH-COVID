@@ -9,6 +9,13 @@
         <span id="scale" class="scale"> 比例尺 1:{{ curScale }} </span>
       </p>
       <div id="overviewDiv"><div id="extentDiv"></div></div>
+      <div type="button" @click="exportMap" class="export-button" aria-label="导出地图" title="导出地图">
+        <IconSvg iconClass="icon_daochu" class="export-button-icon">导出地图</IconSvg>
+      </div>
+        <!-- <div type="button" @click="takescreen" class="export-button1" aria-label="导出地图" title="导出地图">
+        <IconSvg iconClass="icon_daochu" class="export-button-icon">导出地图</IconSvg>
+      </div> -->
+      <screentake></screentake>
       <change-map></change-map>
     </div>
   </div>
@@ -28,13 +35,16 @@ import Home from "@arcgis/core/widgets/Home";
 import BasemapGallery from "@arcgis/core/widgets/BasemapGallery";
 import BasemapGalleryVM from "@arcgis/core/widgets/BasemapGallery/BasemapGalleryViewModel";
 import LocalBasemapsSource from "@arcgis/core/widgets/BasemapGallery/support/LocalBasemapsSource";
+import Fullscreen from "@arcgis/core/widgets/Fullscreen";
 
 import maptool from "./MapTool.vue";
 import changemap from "./ChangeMap.vue";
+import screentake from './Screentake.vue'
 
+import html2canvas from "html2canvas";
 export default {
   name: "TianDiTu",
-  components: { ChangeMap: changemap, MapTools: maptool },
+  components: { ChangeMap: changemap, MapTools: maptool ,Screentake:screentake},
   data() {
     return {
       TdtMap: {
@@ -294,6 +304,17 @@ export default {
         zoom: 11, // Zoom level
         spatialReference: { wkid: 4326 },
       });
+      //解决html2canvas截图空白问题
+      HTMLCanvasElement.prototype.getContext = (function (origFn) {
+        return function (type, attributes) {
+          if (type === "webgl") {
+            attributes = Object.assign({}, attributes, {
+              preserveDrawingBuffer: true,
+            });
+          }
+          return origFn.call(this, type, attributes);
+        };
+      })(HTMLCanvasElement.prototype.getContext);
       // const basemapGallery = new BasemapGallery({
       //   view: view, //MapView
       //   container: "toggle", // <div id="basemapGalleryDiv"></div>
@@ -385,6 +406,11 @@ export default {
 
       view.ui.add(homeWidget, "top-left");
 
+      const fullscreen = new Fullscreen({
+        view: view,
+      });
+      view.ui.add(fullscreen, "top-left");
+
       view.ui.components = [];
       //取消下面esri标志
       view.ui.remove("attribution");
@@ -423,15 +449,33 @@ export default {
         extentgraphic.geometry = extent;
       });
     },
+    exportMap() {
+      this.$nextTick(() => {
+        html2canvas(document.getElementById("map"), {
+          async: false, // 同步执行
+          allowTaint: true, // 是否允许跨域图片污染画布
+          imageTimeout: 0, // 禁用加载图像的超时时间
+          taintTest: false, // 污染检查
+          useCORS: true, // 用CORS服务从某服务中加载图片
+        }).then(function (canvas) {
+          let dataURL = canvas.toDataURL("image/png");
+          let a = document.createElement("a");
+          document.body.appendChild(a);
+          a.href = dataURL;
+          a.download = "ExportedMap";
+          a.click();
+        });
+      });
+    },
   },
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 #map {
   width: 100%;
-  height: 100%;
-  position: absolute;
+  height: 726px;
+  position: relative;
 }
 #area {
   position: fixed;
@@ -498,5 +542,72 @@ export default {
   box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   z-index: 99;
+}
+//esri ui组件
+&/deep/.esri-component.esri-home.esri-widget--button.esri-widget {
+  position: fixed;
+  bottom: 50px;
+  right: 20px;
+}
+
+&/deep/.esri-component.esri-fullscreen.esri-widget--button.esri-widget {
+  position: fixed;
+  bottom: 87px;
+  right: 20px;
+}
+&/deep/.ivu-btn {
+  border-radius: 0px;
+}
+.export-button {
+  position: fixed;
+  bottom: 23px;
+  right: 20px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+  font-size: 14px;
+  background-color: #fff;
+  color: #6e6e6e;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 125ms ease-in-out;
+}
+.export-button-icon {
+  box-sizing: inherit;
+  color: rgba(128, 134, 149, 1);
+  font-size: 18px;
+  content: "";
+  color: inherit;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+}
+.export-button1 {
+  position: fixed;
+  bottom: 3px;
+  right: 50px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+  font-size: 14px;
+  background-color: #fff;
+  color: #6e6e6e;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 125ms ease-in-out;
 }
 </style>
