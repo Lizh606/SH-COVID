@@ -198,12 +198,12 @@ export default {
 .loadpoint {
   position: relative;
   left: 15px;
-  bottom: 670px;
+  bottom: 825px;
 }
 .begin {
   position: relative;
   left: 20px;
-  bottom: 670px;
+  bottom: 825px;
 }
 </style>
 <style lang="scss" scoped>

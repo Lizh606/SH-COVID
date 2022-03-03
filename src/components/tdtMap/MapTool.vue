@@ -1,36 +1,63 @@
 <template>
-  <Dropdown class="toolbar-container">
-    <Button>
-      <Icon custom="iconfont icon-gongjuxiang" />
-      <span> 工具箱</span>
-    </Button>
-    <DropdownMenu slot="list">
-      <DropdownItem
-        ><div class="distance-btn" @click="measureDistance()">
-          <Icon custom="iconfont icon-ceju" />
-          <span class="btn-item">测距</span>
-        </div>
-      </DropdownItem>
-      <DropdownItem
-        ><div class="area-btn" @click="measureArea()">
-          <Icon custom="iconfont icon-cemian" />
-          <span class="btn-item">测面</span>
-        </div>
-      </DropdownItem>
-      <DropdownItem
-        ><div class="area-btn" @click="clear()">
-          <Icon custom="iconfont icon-qingchu" />
-          <span class="btn-item">一键清除</span>
-        </div>
-      </DropdownItem>
-      <DropdownItem
-        ><div class="locate-btn" @click="locate()">
-          <Icon custom="iconfont icon-qingchu" />
-          <span class="btn-item">定位街道</span>
-        </div>
-      </DropdownItem>
-    </DropdownMenu>
-  </Dropdown>
+  <div>
+    <!-- 切换底图弹窗内容 -->
+    <Dropdown class="toolbar-container">
+      <Button>
+        <Icon custom="iconfont icon-gongjuxiang" />
+        <span> 工具箱</span>
+      </Button>
+      <DropdownMenu slot="list">
+        <DropdownItem
+          ><div class="distance-btn" @click="measureDistance()">
+            <Icon custom="iconfont icon-ceju" />
+            <span class="btn-item">测距</span>
+          </div>
+        </DropdownItem>
+        <DropdownItem
+          ><div class="area-btn" @click="measureArea()">
+            <Icon custom="iconfont icon-cemian" />
+            <span class="btn-item">测面</span>
+          </div>
+        </DropdownItem>
+        <DropdownItem
+          ><div class="area-btn" @click="clear()">
+            <Icon custom="iconfont icon-qingchu" />
+            <span class="btn-item">一键清除</span>
+          </div>
+        </DropdownItem>
+        <DropdownItem
+          ><div class="locate-btn" @click="locate()">
+            <Icon custom="iconfont icon-qingchu" />
+            <span class="btn-item">定位街道</span>
+          </div>
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+    <!-- 右下角工具 -->
+    <!-- 导出地图html2canvas -->
+    <div
+      type="button"
+      @click="exportbtn"
+      class="export-button"
+      aria-label="导出地图"
+      title="导出地图"
+    >
+      <IconSvg iconClass="icon_daochu" class="export-button-icon"
+        >导出地图</IconSvg
+      >
+    </div>
+    <!-- 地图截屏 -->
+    <screentake></screentake>
+    <!-- 切换底图弹窗内容 -->
+    <change-map></change-map>
+    <!-- 比例尺和经纬度 -->
+    <p id="coordinate-scale" class="coordinate-scale">
+      <span id="mouse-position" class="mouse-position"
+        >经度:{{ lon }} &nbsp; 纬度:{{ lat }}</span
+      >
+      <span id="scale" class="scale"> 比例尺 1:{{ curScale }} </span>
+    </p>
+  </div>
 </template>
 
 <script>
@@ -39,23 +66,78 @@ import Draw from "@arcgis/core/views/draw/Draw";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Graphic from "@arcgis/core/Graphic";
 import Polyline from "@arcgis/core/geometry/Polyline";
+import Search from "@arcgis/core/widgets/Search";
+import Home from "@arcgis/core/widgets/Home";
+import Fullscreen from "@arcgis/core/widgets/Fullscreen";
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+
+
+import screentake from "./Screentake.vue";
+import changemap from "./ChangeMap.vue";
+
+
+import html2canvas from "html2canvas";
+
 export default {
   name: "MapTools",
+  components: { ChangeMap: changemap, Screentake: screentake },
   inject: ["TdtMap"],
   data() {
     return {
       loc: "",
+      curScale: "36978669",
+      lon: "121.60",
+      lat: "31.18",
     };
   },
   created() {},
 
   mounted() {
-    
     this.$nextTick(() => {
       this.map = this.TdtMap.map;
-      this.view = this.TdtMap.view
+      this.view = this.TdtMap.view;
+      //经纬度
+      let that = this;
+      this.view.on("pointer-move", function (event) {
+        let mapPoistion = that.view.toMap({
+          x: event.x,
+          y: event.y,
+        });
+
+        let lon = mapPoistion.x;
+        let lat = mapPoistion.y;
+        that.lon = lon.toFixed(2);
+        that.lat = lat.toFixed(2);
+      });
+       //搜索
+      const searchWidgets = new Search({
+        view: this.view,
+      });
+      this.view.ui.add(searchWidgets, {
+        position: "top-left",
+      });
+      const homeWidget = new Home({
+        view: this.view,
+      });
+
+      this.view.ui.add(homeWidget);
+
+      const fullscreen = new Fullscreen({
+        view: this.view,
+      });
+      this.view.ui.add(fullscreen);
     });
+    //解决html2canvas截图空白问题
+    HTMLCanvasElement.prototype.getContext = (function (origFn) {
+      return function (type, attributes) {
+        if (type === "webgl") {
+          attributes = Object.assign({}, attributes, {
+            preserveDrawingBuffer: true,
+          });
+        }
+        return origFn.call(this, type, attributes);
+      };
+    })(HTMLCanvasElement.prototype.getContext);
   },
 
   computed: {},
@@ -236,9 +318,9 @@ export default {
       }
     },
     createPolygon(event) {
-      var vertices = event.vertices;
+      const vertices = event.vertices;
 
-      var symbol = {
+      const symbol = {
         type: "simple-marker",
         color: [255, 255, 255],
         size: 6,
@@ -248,7 +330,7 @@ export default {
         },
       };
 
-      var fillSymbol = {
+      const fillSymbol = {
         type: "simple-fill", // autocasts as new SimpleFillSymbol()
         color: [3, 255, 240, 0.1],
         outline: {
@@ -258,23 +340,23 @@ export default {
         },
       };
 
-      var polygon = new Polygon({
+      const polygon = new Polygon({
         rings: vertices,
         spatialReference: this.view.spatialReference,
       });
 
       this.view.graphics.removeAll();
-      var polygonGraphics = new Graphic({
+      const polygonGraphics = new Graphic({
         geometry: polygon,
         symbol: fillSymbol,
       });
 
       this.view.graphics.add(polygonGraphics);
 
-      var center = polygon.centroid;
+      const center = polygon.centroid;
 
-      var area = 0;
-      var unit;
+      let area = 0;
+      let unit;
       if (this.view.scale > 5000) {
         area = geometryEngine.geodesicArea(
           polygonGraphics.geometry,
@@ -290,27 +372,27 @@ export default {
       }
 
       for (let i = 0; i < vertices.length; i++) {
-        var point = {
+        const point = {
           type: "point",
           x: vertices[i][0],
           y: vertices[i][1],
           spatialReference: this.view.spatialReference,
         };
 
-        var pointGraphics = new Graphic({
+        const pointGraphics = new Graphic({
           geometry: point,
           symbol: symbol,
         });
         this.view.graphics.add(pointGraphics);
       }
-      var pointcenter = {
+      const pointcenter = {
         type: "point",
         x: center.x,
         y: center.y,
         spatialReference: this.view.spatialReference,
       };
 
-      var textSymbol = {
+      const textSymbol = {
         type: "text",
         color: "white",
         haloColor: "black",
@@ -322,7 +404,7 @@ export default {
           weight: "bold",
         },
       };
-      var textGraphics = new Graphic({
+      const textGraphics = new Graphic({
         geometry: pointcenter,
         symbol: textSymbol,
       });
@@ -360,6 +442,34 @@ export default {
       });
       return loc;
     },
+    exportbtn() {
+      this.$Modal.confirm({
+        title: "提示",
+        content: "<p>是否导出地图？</p>",
+        onOk: () => {
+          this.exportMap();
+        },
+        onCancel: () => {},
+      });
+    },
+    exportMap() {
+      this.$nextTick(() => {
+        html2canvas(document.getElementById("map"), {
+          async: false, // 同步执行
+          allowTaint: true, // 是否允许跨域图片污染画布
+          imageTimeout: 0, // 禁用加载图像的超时时间
+          taintTest: false, // 污染检查
+          useCORS: true, // 用CORS服务从某服务中加载图片
+        }).then(function (canvas) {
+          let dataURL = canvas.toDataURL("image/png");
+          let a = document.createElement("a");
+          document.body.appendChild(a);
+          a.href = dataURL;
+          a.download = "ExportedMap";
+          a.click();
+        });
+      });
+    },
   },
 };
 </script>
@@ -367,6 +477,7 @@ export default {
 .title {
   color: #000;
 }
+//工具箱
 .toolbar-container {
   position: fixed;
   top: 95px;
@@ -381,29 +492,61 @@ export default {
 .btn-item {
   margin-left: 0.5rem;
 }
-// .area-btn {
-//   position: fixed;
-//   bottom: 74px;
-//   right: 83px;
-//   box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
-//   border-radius: 3px;
-//   z-index: 2;
-// }
-// .distance-btn {
-//   position: fixed;
-//   bottom: 74px;
-//   right: 143px;
-//   box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
-//   border-radius: 3px;
-//   z-index: 2;
-// }
-
-// .clear-btn {
-//   position: fixed;
-//   bottom: 74px;
-//   right: 23px;
-//   box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.1);
-//   border-radius: 3px;
-//   z-index: 2;
-// }
+//导出地图html2canvas
+.export-button {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+  font-size: 14px;
+  background-color: #fff;
+  color: #6e6e6e;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 125ms ease-in-out;
+}
+.export-button-icon {
+  box-sizing: inherit;
+  color: rgba(128, 134, 149, 1);
+  font-size: 18px;
+  content: "";
+  color: inherit;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+}
+//坐标和比例尺
+.coordinate-scale {
+  position: fixed;
+  bottom: 24px;
+  right: 65px;
+  z-index: 2;
+  width: 290px;
+  height: 32px;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  text-align: center;
+  padding: 6px 0px 7px 0px;
+  font-size: 12px;
+  color: rgba(128, 134, 149, 1);
+  line-height: 19px;
+}
+.mouse-position {
+  width: 160px;
+  float: left;
+}
+.scale {
+  width: 130px;
+  float: right;
+}
 </style>

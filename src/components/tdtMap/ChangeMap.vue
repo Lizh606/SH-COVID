@@ -22,7 +22,12 @@
       </div>
       <p>
         <span class="word">注记</span>
-        <i-switch v-model="isSwitchOn"  @on-change="change" class="switch" size="small" />
+        <i-switch
+          v-model="isSwitchOn"
+          @on-change="change"
+          class="switch"
+          size="small"
+        />
       </p>
     </div>
   </div>
@@ -34,8 +39,8 @@ export default {
   inject: ["TdtMap"],
   data() {
     return {
-      isSwapOn: true,
-      isSwitchOn:true
+      isSwapOn: false,
+      isSwitchOn: true,
     };
   },
   mounted() {
@@ -46,12 +51,15 @@ export default {
   },
   methods: {
     swapmap(id) {
-      this.map.basemap = window.BasemapGalleryVM.source.basemaps.get("items")[id];
+      this.map.basemap =
+        window.BasemapGalleryVM.source.basemaps.get("items")[id];
     },
     change() {
-      if(this.isSwitchOn == false){
-        let zjlayer = this.map.basemap.baseLayers.get("items")[1]
-        this.map.removeAll()
+      let zjlayer = this.map.basemap.baseLayers.get("items")[1];
+      if (this.isSwitchOn == false) {
+        zjlayer.visible = false;
+      } else {
+        zjlayer.visible = true;
       }
     },
   },
@@ -94,8 +102,8 @@ export default {
 /*切换底图弹窗内容*/
 .swap-content {
   position: fixed;
-  right: 23px;
-  top: 148px;
+  right: 14px;
+  top: 143px;
   z-index: 2;
   width: 70px;
   height: 226px;

@@ -40,6 +40,7 @@
 </template>
 
 <script>
+
 export default {
   name: "screentake",
   inject: ["TdtMap"],
@@ -248,7 +249,7 @@ export default {
 }
 .export-button1 {
   position: fixed;
-  bottom: 133px;
+  bottom: 129px;
   right: 20px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
   font-size: 14px;
