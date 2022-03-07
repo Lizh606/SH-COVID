@@ -279,12 +279,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-* {
-  padding: 0;
-  margin: 0;
-}
 .layout-first {
-  border: 1px solid #d7dde4;
+  // border: 1px solid #d7dde4;
   background: #f5f7f9;
   position: relative;
   border-radius: 4px;
@@ -321,7 +317,9 @@ export default {
   line-height: 40px;
   display: block;
 }
-
+&/deep/.ivu-select-dropdown {
+  margin: -10px 0;
+}
 .system-item {
   left: 0px;
   height: 70px;

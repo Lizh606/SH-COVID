@@ -39,16 +39,17 @@ export default {
     };
   },
   mounted() {
-    this.$nextTick(() => {
+    setTimeout(() => {
       this.createMap();
-      this.TdtMap.map = window.map;
-      this.TdtMap.view = window.view;
-      this.overviewmap = window.overviewmap;
-      this.overview_view = window.overview_view;
-    });
+    }, 50);
+    
+    // this.TdtMap.map = window.map;
+    // this.TdtMap.view = window.view;
+    // this.overviewmap = window.overviewmap;
+    // this.overview_view = window.overview_view;
   },
   methods: {
-    createMap() {
+    async createMap() {
       //加载天地图图层
       let vectdtUrl =
         "http://{subDomain}.tianditu.gov.cn/DataServer?T=vec_c&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1";
@@ -127,11 +128,11 @@ export default {
           this.watchoverview();
         });
       });
-
-      window.map = map;
-      window.overviewmap = overviewmap;
       window.view = view;
-      window.overview_view = overview_view;
+      this.TdtMap.map = map;
+      this.overviewmap = overviewmap;
+      this.TdtMap.view = view;
+      this.overview_view = overview_view;
 
       //取消esri的缩放
       view.ui.components = [];

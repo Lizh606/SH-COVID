@@ -7,9 +7,9 @@
           <Icon custom="iconfont icon-gongjuxiang" />
           <span>属性查询</span>
         </Button> -->
-        <a href="javascript:void(0)" style="color:#515A6E"  @click="query">
-          <Icon custom="iconfont icon-gongjuxiang" />
-          <span>  属性查询</span>
+        <a href="javascript:void(0)" style="color: #515a6e" @click="query">
+          <Icon custom="iconfont icon-bangzhuyushuoming" />
+          <span> 属性查询</span>
         </a>
       </Dropdown>
       <Dropdown class="btns-common-style">
@@ -17,13 +17,13 @@
           <Icon custom="iconfont icon-gongjuxiang" />
           <span> 工具箱</span>
         </Button> -->
-         <a href="javascript:void(0)" style="color:#515A6E">
+        <a href="javascript:void(0)" style="color: #515a6e">
           <Icon custom="iconfont icon-gongjuxiang" />
-          <span>  工具箱</span>
+          <span> 工具箱</span>
         </a>
         <DropdownMenu slot="list">
           <DropdownItem
-            ><div  class="btn-dropdown-style" @click="measureDistance()">
+            ><div class="btn-dropdown-style" @click="measureDistance()">
               <Icon custom="iconfont icon-ceju" />
               <span class="btn-item">测距</span>
             </div>
@@ -41,7 +41,7 @@
             </div>
           </DropdownItem>
           <DropdownItem
-            ><div  class="btn-dropdown-style" @click="locate()">
+            ><div class="btn-dropdown-style" @click="locate()">
               <Icon custom="iconfont icon-qingchu" />
               <span class="btn-item">定位街道</span>
             </div>
@@ -108,38 +108,40 @@ export default {
 
   mounted() {
     this.$nextTick(() => {
-      this.map = this.TdtMap.map;
-      this.view = this.TdtMap.view;
-      //经纬度
-      let that = this;
-      this.view.on("pointer-move", function (event) {
-        let mapPoistion = that.view.toMap({
-          x: event.x,
-          y: event.y,
+      setTimeout(() => {
+        this.map = this.TdtMap.map;
+        this.view = this.TdtMap.view;
+        //经纬度
+        let that = this;
+        this.view.on("pointer-move", function (event) {
+          let mapPoistion = that.view.toMap({
+            x: event.x,
+            y: event.y,
+          });
+
+          let lon = mapPoistion.x;
+          let lat = mapPoistion.y;
+          that.lon = lon.toFixed(2);
+          that.lat = lat.toFixed(2);
+        });
+        //搜索
+        const searchWidgets = new Search({
+          view: this.view,
+        });
+        this.view.ui.add(searchWidgets, {
+          position: "top-left",
+        });
+        const homeWidget = new Home({
+          view: this.view,
         });
 
-        let lon = mapPoistion.x;
-        let lat = mapPoistion.y;
-        that.lon = lon.toFixed(2);
-        that.lat = lat.toFixed(2);
-      });
-      //搜索
-      const searchWidgets = new Search({
-        view: this.view,
-      });
-      this.view.ui.add(searchWidgets, {
-        position: "top-left",
-      });
-      const homeWidget = new Home({
-        view: this.view,
-      });
+        this.view.ui.add(homeWidget);
 
-      this.view.ui.add(homeWidget);
-
-      const fullscreen = new Fullscreen({
-        view: this.view,
-      });
-      this.view.ui.add(fullscreen);
+        const fullscreen = new Fullscreen({
+          view: this.view,
+        });
+        this.view.ui.add(fullscreen);
+      }, 100);
     });
     //解决html2canvas截图空白问题
     HTMLCanvasElement.prototype.getContext = (function (origFn) {
@@ -426,10 +428,9 @@ export default {
     },
     clear() {
       this.view.graphics.removeAll();
-      this.locate().remove();
     },
     locate() {
-      let view = window.view;
+      let view = this.view;
       view.popup.autoOpenEnabled = false;
       const loc = view.on("click", (event) => {
         const lat = Math.round(event.mapPoint.latitude * 1000) / 1000;
@@ -621,6 +622,12 @@ export default {
 // }
 .btn-item {
   margin-left: 0.5rem;
+}
+&/deep/.ivu-dropdown-item {
+  white-space: nowrap;
+}
+&/deep/.ivu-select-dropdown {
+  margin: 5px 0;
 }
 //导出地图html2canvas
 .export-button {
