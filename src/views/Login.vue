@@ -76,10 +76,10 @@ export default {
       },
     };
   },
-  mounmounted() {},
+  mounted() {},
   methods: {
     async handleSubmit() {
-      this.$router.push("/html");
+      // this.$router.push("/daping");
       try {
         const result = await post("/api/user/login", {
           username: this.formInline.user,
@@ -87,7 +87,7 @@ export default {
         });
         if (result?.errno === 0) {
           localStorage.isLogin = true;
-          this.$router.push("/html");
+          this.$router.push("/daping");
         } else {
           alert("登陆失败");
         }

@@ -2,7 +2,6 @@
   <div>
     <div ref="map" id="map"></div>
     <MapTools class="map-tools" />
-
     <div id="overviewDiv"><div id="extentDiv"></div></div>
   </div>
 </template>
@@ -40,14 +39,16 @@ export default {
     };
   },
   mounted() {
-    this.createMap();
-    this.TdtMap.map = window.map;
-    this.TdtMap.view = window.view;
-    this.overviewmap = window.overviewmap;
-    this.overview_view = window.overview_view;
+    this.$nextTick(() => {
+      this.createMap();
+      this.TdtMap.map = window.map;
+      this.TdtMap.view = window.view;
+      this.overviewmap = window.overviewmap;
+      this.overview_view = window.overview_view;
+    });
   },
   methods: {
-    async createMap() {
+    createMap() {
       //加载天地图图层
       let vectdtUrl =
         "http://{subDomain}.tianditu.gov.cn/DataServer?T=vec_c&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1";
@@ -73,7 +74,7 @@ export default {
 
       const map = new Map({
         basemap: {
-          baseLayers: [vectiledLayer, SHLayer_zj],
+          baseLayers: [vectiledLayer, tiledjzLayer],
         },
       });
       const view = new MapView({
@@ -86,17 +87,17 @@ export default {
 
       // 底图逻辑
       const vecBaseMap = new Basemap({
-        baseLayers: [vectiledLayer, SHLayer_zj],
+        baseLayers: [vectiledLayer, tiledjzLayer],
         title: "矢量地图",
         id: "矢量地图",
       });
       const imgBaseMap = new Basemap({
-        baseLayers: [imgtiledLayer, SHLayer_zj],
+        baseLayers: [imgtiledLayer, tiledjzLayer],
         title: "影像地图",
         id: "影像地图",
       });
       const terBaseMap = new Basemap({
-        baseLayers: [tertiledLayer, SHLayer_zj],
+        baseLayers: [tertiledLayer, tiledjzLayer],
         title: "地形地图",
         id: "地形地图",
       });
@@ -107,51 +108,6 @@ export default {
         }),
       });
       window.BasemapGalleryVM = basemapvmodel;
-
-      // view.on("mouse-wheel", function (event) {
-      //   view.hitTest(event).then(function (response) {
-      //     if (response.results.length) {
-      //       // var graphic = response.results.filter(function (result) {
-      //       //   // return (
-      //       //   //   result.graphic.layer === nodesGraLayer ||
-      //       //   //   result.graphic.layer === allPipesGraLayer
-      //       //   // )
-      //       // })[0].graphic
-      //       var graphic = response.results;
-      //       if (graphic) {
-      //         // 在此操作
-      //         console.log(graphic);
-      //       }
-      //     }
-      //   });
-      // });
-
-      view.on("click", function (evt) {
-        view.hitTest(evt).then(function (response) {
-          // view.graphics.removeAll(); //清除上一次点击目标
-          var result = response.results[0];
-          if (result && result.graphic) {
-            console.log(result);
-            var graphic = result.graphic;
-            //自定义高亮
-            //这里的几何图形是面状，配置graphic的symbol为fillSymbol
-            graphic.symbol = {
-              style: "circle",
-              //点填充颜色，颜色说明详见线样式
-              color: "#33cc33",
-              //点大小，值类型详见线样式的width
-              size: "8px",
-              //边框线样式，具体同线的样式
-              outline: {
-                // color: [255, 255, 0],
-                width: 3,
-              },
-            };
-          }
-
-          view.graphics.add(graphic); //添加新的点击目标
-        });
-      });
 
       //鹰眼
       const overviewmap = new Map({

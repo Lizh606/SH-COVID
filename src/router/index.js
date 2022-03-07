@@ -3,7 +3,7 @@ import Router from "vue-router";
 import VueRouter from "vue-router";
 import Login from "../views/Login.vue";
 import Welcome from "../views/Welcome.vue";
-import html from '../views/html.vue'
+import daping from '../views/daping.vue'
 import Map from "../plugins/Map.vue";
 import layout from "../layout/layout.vue";
 import SceneMap from "../plugins/SceneMap.vue";
@@ -128,9 +128,9 @@ const routes = [
     // },
   },
   {
-    path: "/html",
-    name: "html",
-    component: html,
+    path: "/daping",
+    name: "daping",
+    component: daping,
     meta: {
       title: "大屏",
     },
@@ -143,6 +143,10 @@ const routes = [
 const router = new VueRouter({
   routes,
 });
+// const VueRouterPush = Router.prototype.push
+// Router.prototype.push = function push (to) {
+//   return VueRouterPush.call(this, to).catch(err => err)
+// }
 // router.beforeEach((to, from ,next) => {
 //   const { isLogin } = localStorage;
 //   const { name } = to;

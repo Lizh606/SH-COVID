@@ -236,7 +236,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .export-button-icon {
   box-sizing: inherit;
   color: rgba(128, 134, 149, 1);

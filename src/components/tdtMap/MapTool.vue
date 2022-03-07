@@ -1,38 +1,54 @@
 <template>
   <div>
     <!-- 切换底图弹窗内容 -->
-    <Dropdown class="toolbar-container">
-      <Button>
-        <Icon custom="iconfont icon-gongjuxiang" />
-        <span> 工具箱</span>
-      </Button>
-      <DropdownMenu slot="list">
-        <DropdownItem
-          ><div class="distance-btn" @click="measureDistance()">
-            <Icon custom="iconfont icon-ceju" />
-            <span class="btn-item">测距</span>
-          </div>
-        </DropdownItem>
-        <DropdownItem
-          ><div class="area-btn" @click="measureArea()">
-            <Icon custom="iconfont icon-cemian" />
-            <span class="btn-item">测面</span>
-          </div>
-        </DropdownItem>
-        <DropdownItem
-          ><div class="area-btn" @click="clear()">
-            <Icon custom="iconfont icon-qingchu" />
-            <span class="btn-item">一键清除</span>
-          </div>
-        </DropdownItem>
-        <DropdownItem
-          ><div class="locate-btn" @click="locate()">
-            <Icon custom="iconfont icon-qingchu" />
-            <span class="btn-item">定位街道</span>
-          </div>
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+    <ButtonGroup class="toolbar-container">
+      <Dropdown class="btns-common-style">
+        <!-- <Button @click="query">
+          <Icon custom="iconfont icon-gongjuxiang" />
+          <span>属性查询</span>
+        </Button> -->
+        <a href="javascript:void(0)" style="color:#515A6E"  @click="query">
+          <Icon custom="iconfont icon-gongjuxiang" />
+          <span>  属性查询</span>
+        </a>
+      </Dropdown>
+      <Dropdown class="btns-common-style">
+        <!-- <Button>
+          <Icon custom="iconfont icon-gongjuxiang" />
+          <span> 工具箱</span>
+        </Button> -->
+         <a href="javascript:void(0)" style="color:#515A6E">
+          <Icon custom="iconfont icon-gongjuxiang" />
+          <span>  工具箱</span>
+        </a>
+        <DropdownMenu slot="list">
+          <DropdownItem
+            ><div  class="btn-dropdown-style" @click="measureDistance()">
+              <Icon custom="iconfont icon-ceju" />
+              <span class="btn-item">测距</span>
+            </div>
+          </DropdownItem>
+          <DropdownItem
+            ><div class="btn-dropdown-style" @click="measureArea()">
+              <Icon custom="iconfont icon-cemian" />
+              <span class="btn-item">测面</span>
+            </div>
+          </DropdownItem>
+          <DropdownItem
+            ><div class="btn-dropdown-style" @click="clear()">
+              <Icon custom="iconfont icon-qingchu" />
+              <span class="btn-item">一键清除</span>
+            </div>
+          </DropdownItem>
+          <DropdownItem
+            ><div  class="btn-dropdown-style" @click="locate()">
+              <Icon custom="iconfont icon-qingchu" />
+              <span class="btn-item">定位街道</span>
+            </div>
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </ButtonGroup>
     <!-- 右下角工具 -->
     <!-- 导出地图html2canvas -->
     <div
@@ -71,10 +87,8 @@ import Home from "@arcgis/core/widgets/Home";
 import Fullscreen from "@arcgis/core/widgets/Fullscreen";
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 
-
 import screentake from "./Screentake.vue";
 import changemap from "./ChangeMap.vue";
-
 
 import html2canvas from "html2canvas";
 
@@ -109,7 +123,7 @@ export default {
         that.lon = lon.toFixed(2);
         that.lat = lat.toFixed(2);
       });
-       //搜索
+      //搜索
       const searchWidgets = new Search({
         view: this.view,
       });
@@ -186,7 +200,6 @@ export default {
       );
     },
     createLine(vertices) {
-      // const vertices = event.vertices;
       this.view.graphics.removeAll();
       let pointsymbol = {
         type: "simple-marker",
@@ -198,7 +211,7 @@ export default {
         },
       };
 
-      let graphics = new Graphic({
+      let linegraphics = new Graphic({
         geometry: new Polyline({
           paths: vertices,
           spatialReference: this.view.spatialReference,
@@ -213,7 +226,7 @@ export default {
         },
       });
 
-      this.view.graphics.add(graphics);
+      this.view.graphics.add(linegraphics);
 
       let firsttextSymbol = {
         type: "text",
@@ -470,6 +483,55 @@ export default {
         });
       });
     },
+    query() {
+      let that = this;
+      that.view.on("click", function (evt) {
+        that.view.hitTest(evt).then(function (response) {
+          let result = response.results[0];
+          if (result && result.graphic) {
+            console.log(result);
+            let graphic = result.graphic;
+
+            //自定义高亮
+            //这里的几何图形是面状，配置graphic的symbol为fillSymbol
+            graphic.symbol = {
+              type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+              color: [226, 119, 40],
+              outline: {
+                // autocasts as new SimpleLineSymbol()
+                color: [255, 255, 255],
+                width: 2,
+              },
+            };
+            graphic.popupTemplate = {
+              title: graphic.attributes.Name,
+              content: [
+                {
+                  // Pass in the fields to display
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "Name",
+                      label: "Name",
+                    },
+                    {
+                      fieldName: "Addres",
+                      label: "Addres",
+                    },
+                    {
+                      fieldName: "Phone",
+                      label: "Phone",
+                    },
+                  ],
+                },
+              ],
+            };
+            // that.view.graphics.removeAll(); //清除上一次点击目标
+            that.view.graphics.add(graphic); //添加新的点击目标
+          }
+        });
+      });
+    },
   },
 };
 </script>
@@ -477,18 +539,86 @@ export default {
 .title {
   color: #000;
 }
-//工具箱
 .toolbar-container {
-  position: fixed;
-  top: 95px;
-  right: 83px;
-  height: 1.63rem;
+  position: absolute;
+  top: 1.83rem;
+  right: 5.1rem;
+  height: 2.63rem;
   border-radius: 0.21rem;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.1);
   display: flex;
-  z-index: 99;
 }
+.toolbar-container .btn-common-style {
+  border-radius: 0;
+  border-style: none;
+  height: 2.63rem;
+  // width: 2.44rem;
+  padding: 0;
+  line-height: 2.63rem;
+  vertical-align: initial;
+  .tool-icon-style {
+    font-size: 1.05rem;
+    color: rgba(102, 102, 102, 1);
+  }
+  .tool-icon-style.active {
+    color: rgba(24, 144, 255, 1);
+  }
+  .tool-icon-style:hover {
+    color: rgba(24, 144, 255, 1);
+  }
+}
+.toolbar-container .btn-common-style:first-child {
+  border-radius: 0.21rem;
+}
+.toolbar-container .btn-common-style:focus {
+  box-shadow: 0 0 0 0 rgba(45, 140, 240, 0);
+}
+.toolbar-container .btns-common-style {
+  margin: 0 10px;
+  height: 2.63rem;
+  // width: 2.44rem;
+  line-height: 2.63rem;
+  text-align: center;
+  cursor: pointer;
+  .tools-icon-style {
+    color: rgba(102, 102, 102, 1);
+    font-size: 1.05rem;
+  }
+  .tools-icon-arrow {
+    color: rgba(102, 102, 102, 1);
+    vertical-align: middle;
+  }
+  .dropdown-icon {
+    font-size: 1.05rem;
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+  }
+}
+// //属性查询
+// .toolbar-query {
+//   position: fixed;
+//   top: 95px;
+//   right: 183px;
+//   height: 1.63rem;
+//   border-radius: 0.21rem;
+//   background: rgba(255, 255, 255, 1);
+//   box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.1);
+//   display: flex;
+//   z-index: 99;
+// }
+// //工具箱
+// .toolbar-container {
+//   position: fixed;
+//   top: 95px;
+//   right: 83px;
+//   height: 1.63rem;
+//   border-radius: 0.21rem;
+//   background: rgba(255, 255, 255, 1);
+//   box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.1);
+//   display: flex;
+//   z-index: 99;
+// }
 .btn-item {
   margin-left: 0.5rem;
 }

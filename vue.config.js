@@ -2,10 +2,12 @@ const path = require("path");
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
+
 module.exports = {
-  publicPath: '/SH-COVID-19/',
+  // publicPath: '/SH-COVID-19/',
   lintOnSave: false,
   chainWebpack: (config) => {
+    config.plugins.delete("prefetch");
     config.resolve.alias.set("@", resolve("src"));
     //路径配置
     // config.resolve.alias
@@ -14,6 +16,7 @@ module.exports = {
   },
 
   // webpack-dev-server 相关配置
+
   devServer: {
     // 调试端口
     host: "0.0.0.0",
