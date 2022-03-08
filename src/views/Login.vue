@@ -4,30 +4,46 @@
       <div class="signIn-left"></div>
       <div class="signIn-right">
         <div class="sign-qr-code"></div>
-        <div class="sign-title">上海市新冠疫情“一张图”系统</div>
+        <div class="sign-title">上海市新冠疫情可视化系统</div>
         <div class="sign-center" @keyup.enter="handleSubmit">
-          <Form ref="formInline" :rules="ruleInline">
+          <Form
+            id="form"
+            ref="formValidate"
+            :model="formValidate"
+            :rules="ruleValidate"
+          >
             <FormItem label="用户名" prop="user">
               <i-input
+                id="user"
                 type="text"
-                v-model="formInline.user"
+                v-model="formValidate.user"
                 placeholder="请输入用户名"
               ></i-input>
             </FormItem>
             <FormItem label="密码" prop="password">
               <i-input
+                id="password"
                 type="password"
-                v-model="formInline.password"
+                v-model="formValidate.password"
                 placeholder="请输入密码"
               ></i-input>
             </FormItem>
             <FormItem>
-              <CheckboxGroup v-model="formInline.checkbox">
-                <Checkbox label="记住密码"></Checkbox>
+              <CheckboxGroup>
+                <Checkbox
+                  label="记住密码"
+                  id="remeberPwd"
+                  v-model="formValidate.savePwd"
+                  @click.native="change()"
+                ></Checkbox>
               </CheckboxGroup>
             </FormItem>
             <FormItem>
-              <Button type="primary" @click="handleSubmit" class="form-buttom"
+              <Button
+                type="primary"
+                @click="handleSubmit('formValidate')"
+                :loading="loading"
+                class="form-buttom"
                 >登录</Button
               >
             </FormItem>
@@ -45,14 +61,14 @@ export default {
 
   data() {
     return {
-      url1: "",
-      loading: false,
-      formInline: {
+      loading:false,
+      formValidate: {
         user: "",
-        checkbox: [],
+        // checkbox:true,
+        savePwd:true,
         password: "",
       },
-      ruleInline: {
+      ruleValidate: {
         user: [
           {
             required: true,
@@ -70,30 +86,84 @@ export default {
             trigger: "blur",
           },
           {
+            type: "string",
+            min: 6,
+            message: "密码不能少于6位",
             trigger: "blur",
           },
         ],
       },
     };
   },
-  mounted() {},
+  created() {
+    // 清掉所有的localStorage
+    // localStorage.removeAll();
+    // sessionStorage.removeAll();
+  },
+
+  mounted() {
+    //页面初始化时，如果帐号密码cookie存在则填充
+    if (this.getCookie("user") && this.getCookie("password")) {
+      this.formValidate.user = this.getCookie("user");
+      this.formValidate.password = this.getCookie("password");
+      this.formValidate.savePwd === true
+    }
+  },
   methods: {
-    async handleSubmit() {
-      // this.$router.push("/daping");
-      try {
-        const result = await post("/api/user/login", {
-          username: this.formInline.user,
-          password: this.formInline.password,
-        });
-        if (result?.errno === 0) {
-          localStorage.isLogin = true;
-          this.$router.push("/daping");
-        } else {
-          alert("登陆失败");
-        }
-      } catch (e) {
-        alert("请求失败");
+    //复选框勾选状态发生改变时，如果未勾选则清除cookie
+    change() {
+      console.log(this.formValidate.savePwd);
+      if (this.formValidate.savePwd === true) {
+        this.formValidate.savePwd ===false,
+        this.delCookie("user");
+        this.delCookie("password");
+      }else{
+        this.formValidate.savePwd === true
       }
+    },
+    setCookie(name, value, day) {
+      var date = new Date();
+      date.setDate(date.getDate() + day);
+      document.cookie = name + "=" + value + ";expires=" + date;
+    },
+    getCookie(name) {
+      var reg = RegExp(name + "=([^;]+)");
+      var arr = document.cookie.match(reg);
+      if (arr) {
+        return arr[1];
+      } else {
+        return "";
+      }
+    },
+    delCookie(name) {
+      this.setCookie(name, null, -1);
+    },
+    async handleSubmit(info) {
+      this.loading = true;
+      const loginname = this.formValidate.user.trim();
+      const loginpwd = this.formValidate.password;
+      if (this.formValidate.savePwd === true) {
+        this.setCookie("user", loginname, 7); //保存帐号到cookie，有效期7天
+        this.setCookie("password", loginpwd, 7); //保存密码到cookie，有效期7天
+      }
+      this.$refs[info].validate(async (valid) => {
+        if (valid) {
+          try {
+            const result = await post("/api/user/login", {
+              username: loginname,
+              password: loginpwd,
+            });
+            if (result) {
+              localStorage.isLogin = true;
+              this.$router.push("/daping");
+            } else {
+              alert("登陆失败");
+            }
+          } catch (e) {
+            alert("请求失败");
+          }
+        }
+      });
     },
   },
 };

@@ -6,7 +6,10 @@
         <Menu mode="horizontal" theme="primary">
           <MenuItem name="user" class="user-item">
             <Dropdown class="menu-item-word">
-              <IconSvg iconClass="bangzhuyushuoming" class="menu-item-icon"></IconSvg>
+              <IconSvg
+                iconClass="bangzhuyushuoming"
+                class="menu-item-icon"
+              ></IconSvg>
               <a href="javascript:void(0)">
                 <span class="menu-item-word">系统说明</span>
               </a>
@@ -29,12 +32,18 @@
               <DropdownMenu slot="list">
                 <DropdownItem>个人中心</DropdownItem>
                 <DropdownItem>修改密码</DropdownItem>
-                <DropdownItem>退出登录 </DropdownItem>
+                <DropdownItem
+                  ><div @click="ToLogin()">退出登录</div></DropdownItem
+                >
               </DropdownMenu>
             </Dropdown>
           </MenuItem>
           <MenuItem name="system" class="system-item">
-            <img src="../../public/上海logo.jpeg" class="system-icon" @click="GoHome" />
+            <img
+              src="../../public/上海logo.jpeg"
+              class="system-icon"
+              @click="GoHome"
+            />
             <span class="system-name">上海市新冠疫情可视化系统</span>
           </MenuItem>
         </Menu>
@@ -62,6 +71,14 @@ export default {
   mounted() {},
 
   methods: {
+    ToLogin() {
+      if (localStorage.isLogin === "true") {
+        localStorage.clear();
+        this.$router.push("/");
+      } else {
+        this.$router.push("/");
+      }
+    },
     GoHome() {
       this.$router.push("/Welcome");
     },

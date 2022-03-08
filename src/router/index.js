@@ -123,7 +123,10 @@ const routes = [
       title: "登录",
     },
     // beforeEnter(to, from, next) {
-    //   const { isLogin } = localStorage;
+    //   // const { isLogin } = localStorage.getItem('toekn');
+    //   // isLogin ? next({ name: "daping" }) : next();
+     
+   
     //   // isLogin ? next({ name: "layout" }) : next();
     // },
   },
@@ -143,18 +146,15 @@ const routes = [
 const router = new VueRouter({
   routes,
 });
-// const VueRouterPush = Router.prototype.push
-// Router.prototype.push = function push (to) {
-//   return VueRouterPush.call(this, to).catch(err => err)
-// }
-// router.beforeEach((to, from ,next) => {
-//   const { isLogin } = localStorage;
-//   const { name } = to;
-//   const isLoginOrRegister = (name === "layout");
-//   (isLogin || isLoginOrRegister) ? next({ name: 'layout'}) : next();
-// })
-// router.afterEach((to, from) => {
-//   window.document.title = to.meta.title;
-//   window.document.icon = to.meta.icon;
-// });
+
+router.beforeEach((to, from ,next) => {
+ if(to.name === 'Login'){
+   console.log(localStorage);
+   if(localStorage.isLogin === "true"){
+    router.replace('/daping')
+   }
+ }
+ next()
+})
+
 export default router;

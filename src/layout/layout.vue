@@ -4,6 +4,8 @@
       <!-------------------------------- 页眉 -------------------------------->
       <Header>
         <Menu mode="horizontal" theme="primary">
+         <div class="time-item">{{ nowDate }}</div>
+
           <MenuItem name="user" class="user-item">
             <Dropdown class="menu-item-word">
               <IconSvg
@@ -151,9 +153,11 @@ export default {
   data() {
     return {
       siderActiveName: null,
+      nowDate: "", // 当前日期
     };
   },
   mounted() {
+     this.currentTime();
     // 使页面更新后导航菜单的active-name与页面内容匹配
     this.$nextTick(() => {
       let path = this.$route.path.split("/");
@@ -169,11 +173,34 @@ export default {
     },
   },
   methods: {
+    currentTime() {
+      setInterval(this.formatDate, 500);
+    },
+    formatDate() {
+      let date = new Date();
+      let year = date.getFullYear(); // 年
+      let month = date.getMonth() + 1; // 月
+      let day = date.getDate(); // 日
+      let week = date.getDay(); // 星期
+      let weekArr = [ "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" ];
+      let hour = date.getHours(); // 时
+      hour = hour < 10 ? "0" + hour : hour; // 如果只有一位，则前面补零
+      let minute = date.getMinutes(); // 分
+      minute = minute < 10 ? "0" + minute : minute; // 如果只有一位，则前面补零
+      let second = date.getSeconds(); // 秒
+      second = second < 10 ? "0" + second : second; // 如果只有一位，则前面补零
+      this.nowDate = `${year}/${month}/${day} ${hour}:${minute}:${second} ${weekArr[week]}`;
+    },
     GoHome() {
       this.$router.push("/Welcome");
     },
     ToLogin() {
-      this.$router.push("/");
+      if (localStorage.isLogin === "true") {
+        localStorage.clear();
+        this.$router.push("/");
+      } else {
+        this.$router.push("/");
+      }
     },
     changeActiveName(path) {
       let length = path.length;
@@ -287,7 +314,15 @@ export default {
   overflow: hidden;
   height: 100%;
 }
+.time-item{
 
+    float: right !important;
+    // margin-right: 200px;
+    color: #ffffff;
+    left: 165px;
+    width: 166px;
+
+}
 .user-item {
   right: 125px;
 }
@@ -419,7 +454,7 @@ export default {
 }
 #layout-content {
   top: -6px;
-  width: 945px;
+  // width: 945px;
   // height: 689px;
 }
 #layout {
