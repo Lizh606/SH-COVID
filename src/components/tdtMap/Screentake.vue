@@ -7,7 +7,7 @@
         aria-label="地图截屏"
         title="地图截屏"
       >
-        <IconSvg iconClass="icon_daochu" class="export-button-icon"
+        <IconSvg iconClass="jieping" class="export-button-icon"
           >地图截屏</IconSvg
         >
       </div>
@@ -40,7 +40,6 @@
 </template>
 
 <script>
-
 export default {
   name: "screentake",
   inject: ["TdtMap"],
@@ -49,8 +48,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.map = this.TdtMap.map;
-      this.view = this.TdtMap.view;
+      setTimeout(() => {
+        this.map = this.TdtMap.map;
+        this.view = this.TdtMap.view;
+      }, 100);
     });
     const screenshotBtn = document.getElementById("screenshotBtn");
 
@@ -119,24 +120,18 @@ export default {
             .then((screenshot) => {
               // display a prethis.view of the image
               this.showPreview(screenshot);
-              let that =this;
+              let that = this;
               // create the image for download
               downloadBtn.onclick = () => {
                 const text = document.getElementById("textInput").value;
                 // if a text exists, then add it to the image
                 if (text) {
                   const dataUrl = this.getImageWithText(screenshot, text);
-                  that.downloadImage(
-                    `Screentake.png`,
-                    dataUrl
-                  );
+                  that.downloadImage(`Screentake.png`, dataUrl);
                 }
                 // otherwise download only the webscene screenshot
                 else {
-                  that.downloadImage(
-                    `Screentake.png`,
-                    screenshot.dataUrl
-                  );
+                  that.downloadImage(`Screentake.png`, screenshot.dataUrl);
                 }
               };
 

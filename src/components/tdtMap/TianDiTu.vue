@@ -15,12 +15,14 @@ import Graphic from "@arcgis/core/Graphic";
 import * as watchUtils from "@arcgis/core/core/watchUtils";
 import BasemapGalleryVM from "@arcgis/core/widgets/BasemapGallery/BasemapGalleryViewModel";
 import LocalBasemapsSource from "@arcgis/core/widgets/BasemapGallery/support/LocalBasemapsSource";
+
 //js组件
 import createWmtsLayer from "./layers/wmtsLayer";
 import createTileLayer from "./layers/tileLayer";
 
 //组件
 import maptool from "./MapTool.vue";
+// import Swipe from '@arcgis/core/widgets/Swipe';
 
 export default {
   name: "TianDiTu",
@@ -39,14 +41,11 @@ export default {
     };
   },
   mounted() {
-    setTimeout(() => {
-      this.createMap();
-    }, 50);
-    
-    // this.TdtMap.map = window.map;
-    // this.TdtMap.view = window.view;
-    // this.overviewmap = window.overviewmap;
-    // this.overview_view = window.overview_view;
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.createMap();
+      }, 10);
+    });
   },
   methods: {
     async createMap() {
@@ -133,7 +132,7 @@ export default {
       this.overviewmap = overviewmap;
       this.TdtMap.view = view;
       this.overview_view = overview_view;
-
+      
       //取消esri的缩放
       view.ui.components = [];
       //取消下面esri标志

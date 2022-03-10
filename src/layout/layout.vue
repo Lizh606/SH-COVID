@@ -4,12 +4,12 @@
       <!-------------------------------- 页眉 -------------------------------->
       <Header>
         <Menu mode="horizontal" theme="primary">
-         <div class="time-item">{{ nowDate }}</div>
+          <div class="time-item">{{ nowDate }}</div>
 
           <MenuItem name="user" class="user-item">
             <Dropdown class="menu-item-word">
               <IconSvg
-                iconClass="bangzhuyushuoming"
+                iconClass="bianji"
                 class="menu-item-icon"
               ></IconSvg>
               <a href="javascript:void(0)">
@@ -19,7 +19,7 @@
           </MenuItem>
           <MenuItem name="feedback" class="feedback-item">
             <Dropdown class="menu-item-word">
-              <IconSvg iconClass="wentifankui" class="menu-item-icon"></IconSvg>
+              <IconSvg iconClass="pinglun" class="menu-item-icon"></IconSvg>
               <a href="javascript:void(0)">
                 <span class="menu-item-word">问题反馈</span>
               </a>
@@ -27,7 +27,7 @@
           </MenuItem>
           <MenuItem name="logout" class="logout-item">
             <Dropdown class="menu-item-word">
-              <IconSvg iconClass="yonghu" class="menu-item-icon"></IconSvg>
+              <IconSvg iconClass="zhanghao1" class="menu-item-icon"></IconSvg>
               <a href="javascript:void(0)">
                 <span class="menu-item-word">个人中心</span>
               </a>
@@ -41,11 +41,12 @@
             </Dropdown>
           </MenuItem>
           <MenuItem name="system" class="system-item">
-            <img
+            <!-- <img
               src="../../public/上海logo.jpeg"
               class="system-icon"
               @click="GoHome"
-            />
+            /> -->
+            <IconSvg iconClass="ziyuan"  class="system-icon"></IconSvg>
             <span class="system-name">上海市新冠疫情可视化系统</span>
           </MenuItem>
         </Menu>
@@ -60,10 +61,17 @@
           >
             <Submenu name="1">
               <template slot="title">
-                <!-- <IconSvg iconClass="ditu2" class="sider-item-icon"></IconSvg> -->
-                <Icon custom="iconfont icon-ditu2" class="sider-item-icon" />
-                <span class="sider-item-word">地图展示</span>
+                <IconSvg iconClass="diqiu" class="sider-item-icon"></IconSvg>
+                <!-- <Icon custom="iconfont icon-diqiu" class="sider-item-icon" /> -->
+                <span class="sider-item-word"> 地图展示</span>
               </template>
+              <MenuItem name="tiandutu" @click.native="totianditu">
+                <IconSvg
+                  iconClass="ditu4"
+                  class="sider-item-icon-son"
+                ></IconSvg>
+                <span class="sider-item-word-son">天地图</span>
+              </MenuItem>
               <MenuItem name="mapgroup" @click.native="tomap">
                 <IconSvg
                   iconClass="erweiditu"
@@ -78,60 +86,25 @@
                 ></IconSvg>
                 <span class="sider-item-word-son">三维地图</span>
               </MenuItem>
-              <MenuItem name="tiandutu" @click.native="totianditu">
-                <IconSvg
-                  iconClass="mapOfGaud"
-                  class="sider-item-icon-son"
-                ></IconSvg>
-                <span class="sider-item-word-son">天地图</span>
-              </MenuItem>
             </Submenu>
             <Submenu name="2">
               <template slot="title">
-                <Icon custom="iconfont icon-gongneng" class="sider-item-icon" />
+                <!-- <Icon custom="iconfont icon-gongneng" class="sider-item-icon" /> -->
+                <IconSvg iconClass="liebiao" class="sider-item-icon"></IconSvg>
                 <span class="sider-item-word">功能列表</span>
               </template>
-              <MenuItem name="locator" @click.native="tolocator">
-                <Icon
-                  custom="iconfont icon-dingwei-"
-                  class="sider-item-icon-son"
-                />
-                <span class="sider-item-word-son">定位道路</span>
-              </MenuItem>
-              <MenuItem name="Swapmap" @click.native="toswapmap">
-                <Icon
-                  custom="iconfont icon-qiehuan"
-                  class="sider-item-icon-son"
-                />
-                <span class="sider-item-word-son">切换底图</span>
+              <MenuItem name="popup" @click.native="tohos">
+                <IconSvg iconClass="yiyuan"  class="sider-item-icon-son"></IconSvg>
+
+                <span class="sider-item-word-son">加载医院</span>
               </MenuItem>
               <MenuItem name="sidetable3" @click.native="toweather">
-                <Icon
-                  custom="iconfont icon-tianqi"
-                  class="sider-item-icon-son"
-                />
+                <IconSvg iconClass="tianqi" class="sider-item-icon-son"></IconSvg>
                 <span class="sider-item-word-son">天气可视化</span>
               </MenuItem>
-              <MenuItem name="changeview" @click.native="tochangeview">
-                <Icon
-                  custom="iconfont icon-relitu"
-                  class="sider-item-icon-son"
-                />
-                <span class="sider-item-word-son">23D切换</span>
-              </MenuItem>
               <MenuItem name="featureaffect" @click.native="tofeatureaffect">
-                <Icon
-                  custom="iconfont icon-sanweihuanchongqu"
-                  class="sider-item-icon-son"
-                />
+                <IconSvg iconClass="sanweihuanchongqu" class="sider-item-icon-son"></IconSvg>
                 <span class="sider-item-word-son">缓冲区</span>
-              </MenuItem>
-              <MenuItem name="popup" @click.native="topopup">
-                <Icon
-                  custom="iconfont icon-sanweihuanchongqu"
-                  class="sider-item-icon-son"
-                />
-                <span class="sider-item-word-son">弹窗</span>
               </MenuItem>
             </Submenu>
           </Menu>
@@ -157,7 +130,7 @@ export default {
     };
   },
   mounted() {
-     this.currentTime();
+    this.currentTime();
     // 使页面更新后导航菜单的active-name与页面内容匹配
     this.$nextTick(() => {
       let path = this.$route.path.split("/");
@@ -182,7 +155,15 @@ export default {
       let month = date.getMonth() + 1; // 月
       let day = date.getDate(); // 日
       let week = date.getDay(); // 星期
-      let weekArr = [ "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" ];
+      let weekArr = [
+        "星期日",
+        "星期一",
+        "星期二",
+        "星期三",
+        "星期四",
+        "星期五",
+        "星期六",
+      ];
       let hour = date.getHours(); // 时
       hour = hour < 10 ? "0" + hour : hour; // 如果只有一位，则前面补零
       let minute = date.getMinutes(); // 分
@@ -241,26 +222,7 @@ export default {
       }
       this.$router.push("/TianDiTu");
     },
-    tolocator() {
-      // 避免跳转到当前页面
-      if (this.$route.path == "/Locator") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
-      }
-      this.$router.push("/Locator");
-    },
-    toswapmap() {
-      // 避免跳转到当前页面
-      if (this.$route.path == "/Swapmap") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
-      }
-      this.$router.push("/Swapmap");
-    },
+
     toweather() {
       // 避免跳转到当前页面
       if (this.$route.path == "/Weather") {
@@ -291,7 +253,7 @@ export default {
       }
       this.$router.push("/FeatureAffect");
     },
-    topopup() {
+    tohos() {
       // 避免跳转到当前页面
       if (this.$route.path == "/Popup") {
         console.log(
@@ -314,14 +276,11 @@ export default {
   overflow: hidden;
   height: 100%;
 }
-.time-item{
-
-    float: right !important;
-    // margin-right: 200px;
-    color: #ffffff;
-    left: 165px;
-    width: 166px;
-
+.time-item {
+  float: right !important;
+  color: #ffffff;
+  left: 165px;
+  width: 200px;
 }
 .user-item {
   right: 125px;
@@ -344,7 +303,7 @@ export default {
   margin: 0 auto;
   position: relative;
   display: block;
-  font-size: 30px;
+  font-size: 25px;
 }
 .menu-item-word {
   text-align: center;
@@ -377,7 +336,7 @@ export default {
   overflow: hidden;
 }
 .system-name {
-  left: 10px;
+  // left: 10px;
   position: relative;
   font-size: 24px;
   font-weight: bold;
@@ -435,7 +394,8 @@ export default {
 }
 
 .sider-item-word {
-  left: 2px;
+  left: 6px;
+  top: -3px;
   position: relative;
   font-weight: bold;
 }
@@ -453,7 +413,7 @@ export default {
   height: 100%;
 }
 #layout-content {
-  top: -6px;
+  margin-top: 6px;
   // width: 945px;
   // height: 689px;
 }

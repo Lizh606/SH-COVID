@@ -45,8 +45,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.map = this.TdtMap.map;
-      this.view = this.TdtMap.view;
+      setTimeout(() => {
+        this.map = this.TdtMap.map;
+        this.view = this.TdtMap.view;
+      }, 60);
     });
   },
   methods: {
@@ -68,7 +70,7 @@ export default {
 
 <style lang="less" scoped>
 .swap-popup {
-  top: 88px;
+  top: 80px;
   right: 23px;
   position: fixed;
   z-index: 2;

@@ -3,12 +3,18 @@
     <!-- 切换底图弹窗内容 -->
     <ButtonGroup class="toolbar-container">
       <Dropdown class="btns-common-style">
+        <a href="javascript:void(0)" style="color: #515a6e" @click="swipemap">
+          <IconSvg iconClass="ditujuanlian"></IconSvg>
+          <span> 卷帘分析</span>
+        </a>
+      </Dropdown>
+      <Dropdown class="btns-common-style">
         <!-- <Button @click="query">
           <Icon custom="iconfont icon-gongjuxiang" />
           <span>属性查询</span>
         </Button> -->
         <a href="javascript:void(0)" style="color: #515a6e" @click="query">
-          <Icon custom="iconfont icon-bangzhuyushuoming" />
+          <IconSvg iconClass="tishishuoming"></IconSvg>
           <span> 属性查询</span>
         </a>
       </Dropdown>
@@ -36,13 +42,13 @@
           </DropdownItem>
           <DropdownItem
             ><div class="btn-dropdown-style" @click="clear()">
-              <Icon custom="iconfont icon-qingchu" />
+              <IconSvg iconClass="qingkong"></IconSvg>
               <span class="btn-item">一键清除</span>
             </div>
           </DropdownItem>
           <DropdownItem
             ><div class="btn-dropdown-style" @click="locate()">
-              <Icon custom="iconfont icon-qingchu" />
+              <IconSvg iconClass="ditu3"></IconSvg>
               <span class="btn-item">定位街道</span>
             </div>
           </DropdownItem>
@@ -86,6 +92,10 @@ import Search from "@arcgis/core/widgets/Search";
 import Home from "@arcgis/core/widgets/Home";
 import Fullscreen from "@arcgis/core/widgets/Fullscreen";
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import Swipe from "@arcgis/core/widgets/Swipe";
+import * as watchUtils from "@arcgis/core/core/watchUtils";
+
+import createWmtsLayer from "./layers/wmtsLayer";
 
 import screentake from "./Screentake.vue";
 import changemap from "./ChangeMap.vue";
@@ -123,6 +133,12 @@ export default {
           let lat = mapPoistion.y;
           that.lon = lon.toFixed(2);
           that.lat = lat.toFixed(2);
+        });
+        //比例尺
+        watchUtils.whenTrue(this.view, "stationary", () => {
+          if (this.view.extent) {
+            this.curScale = this.view.viewpoint.scale.toFixed(0);
+          }
         });
         //搜索
         const searchWidgets = new Search({
@@ -240,7 +256,7 @@ export default {
         yoffset: "10px",
         font: {
           size: 12,
-          // family: "sans-serif",
+          family: "KaiTi",
           weight: "bold",
         },
       };
@@ -438,6 +454,11 @@ export default {
         view.popup.open({
           title: "坐标:[" + lon + "," + lat + "]",
           location: event.mapPoint,
+          symbol: {
+            font: {
+              family: "KaiTi",
+            },
+          },
         });
         const params = {
           location: event.mapPoint,
@@ -453,6 +474,17 @@ export default {
           .catch(() => {
             view.popup.content = "未找到位置";
           });
+        watchUtils.whenTrue(view.popup, "visible", function () {
+          watchUtils.whenFalseOnce(view.popup, "visible", function () {
+            view.popup = {
+              // collapseEnabled: false, // 移除title点击折叠功能
+              // dockOptions: {
+              //   buttonEnabled: false, // 隐藏固定标签页
+              // },
+              actions: [], // 清空事件按钮 （缩放至、...）
+            };
+          });
+        });
       });
       return loc;
     },
@@ -490,48 +522,107 @@ export default {
         that.view.hitTest(evt).then(function (response) {
           let result = response.results[0];
           if (result && result.graphic) {
-            console.log(result);
-            let graphic = result.graphic;
-
-            //自定义高亮
-            //这里的几何图形是面状，配置graphic的symbol为fillSymbol
-            graphic.symbol = {
-              type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-              color: [226, 119, 40],
-              outline: {
-                // autocasts as new SimpleLineSymbol()
-                color: [255, 255, 255],
-                width: 2,
-              },
-            };
-            graphic.popupTemplate = {
-              title: graphic.attributes.Name,
-              content: [
-                {
-                  // Pass in the fields to display
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "Name",
-                      label: "Name",
-                    },
-                    {
-                      fieldName: "Addres",
-                      label: "Addres",
-                    },
-                    {
-                      fieldName: "Phone",
-                      label: "Phone",
-                    },
-                  ],
+            if (result.graphic.symbol.type === "simple-fill") {
+              let graphic = result.graphic;
+              graphic.symbol = {
+                type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
+                color: [226, 119, 40],
+                outline: {
+                  // autocasts as new SimpleLineSymbol()
+                  color: [255, 255, 255],
+                  width: 1,
                 },
-              ],
-            };
-            // that.view.graphics.removeAll(); //清除上一次点击目标
-            that.view.graphics.add(graphic); //添加新的点击目标
+              };
+              // graphic.popupTemplate = {
+              //   title: graphic.attributes.Name,
+              //   content: [
+              //     {
+              //       // Pass in the fields to display
+              //       type: "fields",
+              //       fieldInfos: [
+              //         {
+              //           fieldName: "Name",
+              //           label: "Name",
+              //         },
+              //         {
+              //           fieldName: "Addres",
+              //           label: "Addres",
+              //         },
+              //         {
+              //           fieldName: "Phone",
+              //           label: "Phone",
+              //         },
+              //       ],
+              //     },
+              //   ],
+              // };
+              // that.view.graphics.removeAll(); //清除上一次点击目标
+              that.view.graphics.add(graphic); //添加新的点击目标
+            } else {
+              let graphic = result.graphic;
+
+              //自定义高亮
+              //这里的几何图形是面状，配置graphic的symbol为fillSymbol
+              graphic.symbol = {
+                type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+                color: [226, 119, 40],
+                outline: {
+                  // autocasts as new SimpleLineSymbol()
+                  color: [255, 255, 255],
+                  width: 2,
+                },
+              };
+              graphic.popupTemplate = {
+                title: graphic.attributes.Name,
+                content: [
+                  {
+                    // Pass in the fields to display
+                    type: "fields",
+                    fieldInfos: [
+                      {
+                        fieldName: "Name",
+                        label: "Name",
+                      },
+                      {
+                        fieldName: "Addres",
+                        label: "Addres",
+                      },
+                      {
+                        fieldName: "Phone",
+                        label: "Phone",
+                      },
+                    ],
+                  },
+                ],
+              };
+              // that.view.graphics.removeAll(); //清除上一次点击目标
+              that.view.graphics.add(graphic); //添加新的点击目标
+            }
           }
         });
       });
+    },
+    swipemap() {
+      //卷帘、
+      this.view.ui.remove("swipe");
+      let imgtdtUrl =
+        "http://{subDomain}.tianditu.gov.cn/DataServer?T=img_c&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1";
+      const imgtiledLayer = createWmtsLayer(imgtdtUrl);
+      let tdtjzUrl =
+        "http://{subDomain}.tianditu.gov.cn/DataServer?T=cva_c&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1";
+      const tiledjzLayer = createWmtsLayer(tdtjzUrl);
+      this.map.add(tiledjzLayer);
+      this.map.add(imgtiledLayer);
+
+      const swipe = new Swipe({
+        leadingLayers: this.map.basemap.baseLayers,
+        trailingLayers: [tiledjzLayer, imgtiledLayer],
+        // direction:"vertical",
+        position: 50,
+        view: this.view,
+      });
+      this.view.ui.add(swipe);
+      // this.view.ui.remove(swipe);
     },
   },
 };
@@ -542,7 +633,7 @@ export default {
 }
 .toolbar-container {
   position: absolute;
-  top: 1.83rem;
+  top: 1.3rem;
   right: 5.1rem;
   height: 2.63rem;
   border-radius: 0.21rem;
@@ -596,40 +687,28 @@ export default {
     padding-right: 0.55rem;
   }
 }
-// //属性查询
-// .toolbar-query {
-//   position: fixed;
-//   top: 95px;
-//   right: 183px;
-//   height: 1.63rem;
-//   border-radius: 0.21rem;
-//   background: rgba(255, 255, 255, 1);
-//   box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.1);
-//   display: flex;
-//   z-index: 99;
-// }
-// //工具箱
-// .toolbar-container {
-//   position: fixed;
-//   top: 95px;
-//   right: 83px;
-//   height: 1.63rem;
-//   border-radius: 0.21rem;
-//   background: rgba(255, 255, 255, 1);
-//   box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.1);
-//   display: flex;
-//   z-index: 99;
-// }
+
 .btn-item {
   margin-left: 0.5rem;
 }
+//弹窗样式
+.esri-view-height-less-than-medium .esri-popup__main-container {
+  font-family: "KaiTi";
+}
+.esri-feature__content-element:last-child {
+  font-family: "KaiTi";
+}
+&/deep/.esri-popup__main-container {
+  font-family: "KaiTi";
+}
+//下来菜单样式
 &/deep/.ivu-dropdown-item {
   white-space: nowrap;
 }
 &/deep/.ivu-select-dropdown {
   margin: 5px 0;
 }
-//导出地图html2canvas
+// 导出地图html2canvas
 .export-button {
   position: fixed;
   bottom: 24px;

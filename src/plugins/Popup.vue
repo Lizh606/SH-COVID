@@ -3,42 +3,36 @@
     <tdt-map></tdt-map>
     <Button class="loadpoint" @click="loadpoint">加载医院</Button>
     <Button class="begin" @click="loadroute">加载路线</Button>
-    <Modal v-model="showReviewModal">
+    <!-- <Modal v-model="showReviewModal">
       <h2>当前审查任务是否通过？</h2>
       <template slot="footer">
         <Button type="primary" size="large">通过</Button>
         <Button size="large">不通过</Button>
       </template>
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 
 <script>
 import data from "../assets/json/data";
 import Point from "@arcgis/core/geometry/Point";
-import PictureFillSymbol from "@arcgis/core/symbols/PictureFillSymbol";
+import Polygon from "@arcgis/core/geometry/Polygon";
 import PictureMarkerSymbol from "@arcgis/core/symbols/PictureMarkerSymbol";
 import GraohicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import Graphic from "@arcgis/core/Graphic";
 
-import RouteParameters from "@arcgis/core/rest/support/RouteParameters";
-import FeatureSet from "@arcgis/core/rest/support/FeatureSet";
-import * as route from "@arcgis/core/rest/route";
-
-import * as clusterPopupTemplateCreator from "@arcgis/core/smartMapping/popup/clusters";
-import * as clusterLabelCreator from "@arcgis/core/smartMapping/labels/clusters";
-
+import shanghai from "../assets/json/sh.json";
 export default {
   name: "dian",
 
   data() {
     return {
       showReviewModal: false,
+      shPolygon: shanghai,
     };
   },
   mounted() {
-    this.$nextTick(() => {
-    });
+    this.$nextTick(() => {});
   },
   methods: {
     loadpoint() {
@@ -65,7 +59,7 @@ export default {
           Phone: hospitalfeature[i].properties.TELEPHONE,
         };
 
-        const pointGraphic = new Graphic({  
+        const pointGraphic = new Graphic({
           geometry: pt,
           symbol: ptsymbol,
           attributes: attr,
@@ -79,7 +73,63 @@ export default {
     },
 
     loadroute() {
-      this.showReviewModal = true;
+      for (let j = 0; j < this.shPolygon.features.length; j++) {
+        const rings = this.shPolygon.features[j].geometry.coordinates;
+        console.log(rings);
+        const polygon = {
+          type: "polygon",
+          rings: rings[0],
+        };
+        const fillSymbol = {
+          //面的样式
+          type: "simple-fill",
+          color: [227, 139, 79, 0.8],
+          outline: {
+            color: [255, 255, 255],
+            width: 1,
+          },
+        };
+        const polygonAttr = {
+          Name: this.shPolygon.features[j].properties.name,
+          // Addres: this.shPolygon.features[j].properties.ADDR,
+          // Phone:this.shPolygon.features[j].properties.TELEPHONE,
+        };
+        const popupTemplate = {
+          title: polygonAttr.Name,
+        };
+        const polygonGraphic = new Graphic({
+          //创建面图斑
+          geometry: polygon,
+          symbol: fillSymbol,
+          popupTemplate: popupTemplate,
+        });
+        window.view.graphics.add(polygonGraphic);
+        const textSymbol = {
+          type: "text",
+          color: "#2152AC",
+          haloColor: "#ffffff",
+          haloSize: 1,
+          backgroundColor: "#ffffff",
+          borderLineSize: 1,
+          borderLineColor: "#2152AC",
+          text: this.shPolygon.features[j].properties.name,
+          font: {
+            size: 12,
+            family: "KaiTi",
+          },
+        };
+        const pointgeo = {
+          type: "point",
+          longitude: this.shPolygon.features[j].properties.center[0],
+          latitude: this.shPolygon.features[j].properties.center[1],
+        };
+        const textGraphic = new Graphic({
+          //创建面图斑
+          geometry: pointgeo,
+          symbol: textSymbol,
+        });
+        window.view.graphics.add(textGraphic);
+      }
     },
   },
 };

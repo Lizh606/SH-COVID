@@ -14,6 +14,7 @@ import "./register/index";
 import '@arcgis/core/assets/esri/themes/light/main.css'
 
 //style
+import './styles/scss/global.scss'
 import '../src/styles/index.less'
 
 

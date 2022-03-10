@@ -10,13 +10,11 @@ export default {
 };
 </script>
 
-<style>
-/* * {
-  margin: 0;
-  padding: 0;
-} */
+<style lang="less">
+@import "./styles/font/font.css";
 html,
 body {
+  // font-family: "KaiTi";
   height: 100%;
 }
 
