@@ -61,11 +61,11 @@ export default {
 
   data() {
     return {
-      loading:false,
+      loading: false,
       formValidate: {
         user: "",
         // checkbox:true,
-        savePwd:true,
+        savePwd: true,
         password: "",
       },
       ruleValidate: {
@@ -106,7 +106,7 @@ export default {
     if (this.getCookie("user") && this.getCookie("password")) {
       this.formValidate.user = this.getCookie("user");
       this.formValidate.password = this.getCookie("password");
-      this.formValidate.savePwd === true
+      this.formValidate.savePwd === true;
     }
   },
   methods: {
@@ -114,11 +114,10 @@ export default {
     change() {
       console.log(this.formValidate.savePwd);
       if (this.formValidate.savePwd === true) {
-        this.formValidate.savePwd ===false,
-        this.delCookie("user");
+        this.formValidate.savePwd === false, this.delCookie("user");
         this.delCookie("password");
-      }else{
-        this.formValidate.savePwd === true
+      } else {
+        this.formValidate.savePwd === true;
       }
     },
     setCookie(name, value, day) {
@@ -139,7 +138,6 @@ export default {
       this.setCookie(name, null, -1);
     },
     async handleSubmit(info) {
-      this.loading = true;
       const loginname = this.formValidate.user.trim();
       const loginpwd = this.formValidate.password;
       if (this.formValidate.savePwd === true) {
@@ -154,6 +152,7 @@ export default {
               password: loginpwd,
             });
             if (result) {
+              this.loading = true;
               localStorage.isLogin = true;
               this.$router.push("/daping");
             } else {

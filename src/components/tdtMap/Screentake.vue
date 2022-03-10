@@ -51,6 +51,8 @@ export default {
       setTimeout(() => {
         this.map = this.TdtMap.map;
         this.view = this.TdtMap.view;
+        const jp = document.getElementById('viewDiv');
+        this.view.ui.add(jp)
       }, 100);
     });
     const screenshotBtn = document.getElementById("screenshotBtn");

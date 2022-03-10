@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 切换底图弹窗内容 -->
-    <ButtonGroup class="toolbar-container">
+    <ButtonGroup class="toolbar-container" id="toolbar">
       <Dropdown class="btns-common-style">
         <a href="javascript:void(0)" style="color: #515a6e" @click="swipemap">
           <IconSvg iconClass="ditujuanlian"></IconSvg>
@@ -60,6 +60,7 @@
     <div
       type="button"
       @click="exportbtn"
+      id="export"
       class="export-button"
       aria-label="导出地图"
       title="导出地图"
@@ -73,12 +74,15 @@
     <!-- 切换底图弹窗内容 -->
     <change-map></change-map>
     <!-- 比例尺和经纬度 -->
-    <p id="coordinate-scale" class="coordinate-scale">
+    <p id="scale" class="coordinate-scale">
       <span id="mouse-position" class="mouse-position"
         >经度:{{ lon }} &nbsp; 纬度:{{ lat }}</span
       >
       <span id="scale" class="scale"> 比例尺 1:{{ curScale }} </span>
     </p>
+    <div ref="exportDiv" class="map-export-div-default">
+    
+  </div>
   </div>
 </template>
 
@@ -139,6 +143,16 @@ export default {
           if (this.view.extent) {
             this.curScale = this.view.viewpoint.scale.toFixed(0);
           }
+        });
+        const scale = document.getElementById("scale");
+        this.view.ui.add(scale);
+        //toolbar
+        const toolbar = document.getElementById("toolbar");
+        this.view.ui.add(toolbar);
+        //导出地图
+        const exportbtn = document.getElementById("export");
+        this.view.ui.add(exportbtn, {
+          position: "bottom-right",
         });
         //搜索
         const searchWidgets = new Search({
@@ -493,28 +507,96 @@ export default {
         title: "提示",
         content: "<p>是否导出地图？</p>",
         onOk: () => {
-          this.exportMap();
+          this.exportMap()
         },
         onCancel: () => {},
       });
     },
-    exportMap() {
-      this.$nextTick(() => {
-        html2canvas(document.getElementById("map"), {
-          async: false, // 同步执行
-          allowTaint: true, // 是否允许跨域图片污染画布
-          imageTimeout: 0, // 禁用加载图像的超时时间
-          taintTest: false, // 污染检查
-          useCORS: true, // 用CORS服务从某服务中加载图片
-        }).then(function (canvas) {
-          let dataURL = canvas.toDataURL("image/png");
-          let a = document.createElement("a");
-          document.body.appendChild(a);
-          a.href = dataURL;
-          a.download = "ExportedMap";
-          a.click();
-        });
+    async exportMap() {
+      // this.$nextTick(() => {
+      //   html2canvas(document.getElementById("map"), {
+      //     async: false, // 同步执行
+      //     allowTaint: true, // 是否允许跨域图片污染画布
+      //     imageTimeout: 0, // 禁用加载图像的超时时间
+      //     taintTest: false, // 污染检查
+      //     useCORS: true, // 用CORS服务从某服务中加载图片
+      //   }).then(function (canvas) {
+      //     let dataURL = canvas.toDataURL("image/png");
+      //     let a = document.createElement("a");
+      //     document.body.appendChild(a);
+      //     a.href = dataURL;
+      //     a.download = "ExportedMap";
+      //     a.click();
+      //   });
+      // });
+      this.$Spin.show({
+        render: h => {
+          return h("div", [
+            h("Icon", {
+              class: "map-spin-icon-load",
+              props: {
+                type: "ios-loading",
+                size: 38
+              }
+            }),
+            h(
+              "div",
+              {
+                class: "map-load-text"
+              },
+              "正在保存地图图片..."
+            )
+          ]);
+        }
       });
+      this.$refs.exportDiv.classList.remove("map-export-div-default");
+      this.$refs.exportDiv.classList.add("map-export-div");
+
+      let esriUi = document.querySelector(".esri-ui");
+      this.cloneEsriUi = esriUi.cloneNode(true);
+      this.$refs.exportDiv.appendChild(this.cloneEsriUi);
+      document.querySelector(".esri-ui-corner-container").style.display =
+        "none";
+      // const canvas = document.getElement("canvas");
+      const resCanvas = await this.view.takeScreenshot(false);
+      let dataURL = resCanvas.dataUrl;
+      let blob = this.dataURItoBlob(dataURL);
+
+      let aLink = document.createElement("a");
+      let evt = document.createEvent("HTMLEvents");
+      evt.initEvent("click", true, true); // initEvent 不加后两个参数在FF下会报错  事件类型，是否冒泡，是否阻止浏览器的默认行为
+      aLink.download = "map.png";
+      aLink.href = URL.createObjectURL(blob);
+
+      aLink.dispatchEvent(
+        new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        })
+      ); // 兼容火狐
+      this.$refs.exportDiv.classList.remove("map-export-div");
+      this.$refs.exportDiv.classList.add("map-export-div-default");
+      document.querySelector(".esri-ui-corner-container").style.display =
+        "flex";
+      if (this.cloneEsriUi) {
+        this.$refs.exportDiv.removeChild(this.cloneEsriUi);
+        this.cloneEsriUi = null;
+      }
+      this.$Spin.hide();
+    },
+    dataURItoBlob(dataURI) {
+      let byteString = atob(dataURI.split(",")[1]);
+      let mimeString = dataURI
+        .split(",")[0]
+        .split(":")[1]
+        .split(";")[0];
+      let ab = new ArrayBuffer(byteString.length);
+      let dw = new DataView(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        dw.setUint8(i, byteString.charCodeAt(i));
+      }
+      return new Blob([ab], { type: mimeString });
     },
     query() {
       let that = this;
@@ -633,8 +715,8 @@ export default {
 }
 .toolbar-container {
   position: absolute;
-  top: 1.3rem;
-  right: 5.1rem;
+  top: 0.6rem;
+  right: 4.8rem;
   height: 2.63rem;
   border-radius: 0.21rem;
   background: rgba(255, 255, 255, 1);
@@ -743,7 +825,7 @@ export default {
 //坐标和比例尺
 .coordinate-scale {
   position: fixed;
-  bottom: 24px;
+  bottom: 30.5px;
   right: 65px;
   z-index: 2;
   width: 290px;
@@ -756,6 +838,7 @@ export default {
   font-size: 12px;
   color: rgba(128, 134, 149, 1);
   line-height: 19px;
+  display: flex;
 }
 .mouse-position {
   width: 160px;
@@ -764,5 +847,12 @@ export default {
 .scale {
   width: 130px;
   float: right;
+}
+.map-spin-icon-load {
+  animation: ani-map-spin 1s linear infinite;
+}
+.map-load-text {
+  padding-top: 0.526rem;
+  font-size: 0.74rem;
 }
 </style>

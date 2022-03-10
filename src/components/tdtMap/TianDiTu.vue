@@ -127,6 +127,11 @@ export default {
           this.watchoverview();
         });
       });
+      const ov = document.getElementById("overviewDiv")
+      view.ui.add(ov,{
+        position:'bottom-left'
+      })
+
       window.view = view;
       this.TdtMap.map = map;
       this.overviewmap = overviewmap;
@@ -185,8 +190,7 @@ export default {
 //鹰眼
 #overviewDiv {
   position: relative;
-  bottom: 177px;
-  left: 18px;
+  bottom: 17px;
   width: 180px;
   height: 150px;
   border: 1px solid black;
@@ -196,7 +200,7 @@ export default {
 
 #extentDiv {
   background-color: rgba(0, 0, 0, 0.5);
-  position: absolute;
+  position: relative;
   z-index: 99;
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="swapmap">
     <div class="swap-popup" @click="isSwapOn = !isSwapOn">
       <div class="swap-btn"></div>
       <div class="swap-btn-cover"></div>
@@ -48,6 +48,8 @@ export default {
       setTimeout(() => {
         this.map = this.TdtMap.map;
         this.view = this.TdtMap.view;
+        const swapmap = document.getElementById("swapmap");
+        this.view.ui.add(swapmap)
       }, 60);
     });
   },
@@ -69,10 +71,20 @@ export default {
 </script>
 
 <style lang="less" scoped>
+#swapmap {
+  position: absolute;
+  top: 0.4rem;
+  right: 1.2rem;
+  // height: 2.63rem;
+  border-radius: 0.21rem;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+}
 .swap-popup {
-  top: 80px;
-  right: 23px;
-  position: fixed;
+  // top: 76px;
+  // right: 20px;
+  // position: relative;
   z-index: 2;
   width: 50px;
   height: 50px;
@@ -104,8 +116,8 @@ export default {
 /*切换底图弹窗内容*/
 .swap-content {
   position: fixed;
-  right: 14px;
-  top: 143px;
+  right: 10px;
+  top: 133px;
   z-index: 2;
   width: 70px;
   height: 226px;
