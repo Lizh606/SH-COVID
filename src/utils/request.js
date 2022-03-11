@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const service = axios.create({
-  baseURL : 'https://www.fastmock.site/mock/d8a22c448e54d3639cd5f3cddb75a94c',
+  // baseURL : 'https://www.fastmock.site/mock/d8a22c448e54d3639cd5f3cddb75a94c',
   timeout : 10000
 })
 
@@ -23,9 +23,29 @@ service.interceptors.response.use(
   },
   (error) => {
 
-    ElMessage.error(error.message)
-    return Promise.reject(error)
+    console.log(error);
   }
 )
-
+export const get = (url, params = {}) => {
+  return new Promise((resolve, reject) => {
+    service.get(url, { params }).then((response) => {
+      resolve(response.data)
+    }, err =>{
+      reject(err)
+    })
+  })
+}
+export const post = (url, data = {}) => {
+  return new Promise((resolve, reject) => {
+    service.post(url, data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => {
+      resolve(response.data)
+    }, err => {
+      reject(err)
+    })
+  })
+}
 export default service

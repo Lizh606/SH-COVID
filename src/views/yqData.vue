@@ -3,6 +3,7 @@
     ref="table"
     :height="tableHeight"
     :columns="columns1"
+    stripe
     :data="data1"
     row-key="name"
     id="ta"
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import typhoonPathData from '@/api/sys.js'
+import {typhoonPathData} from '@/api/sys.js'
 export default {
   name: "yqData",
   data() {
@@ -75,8 +76,8 @@ export default {
           align: "center",
         },
       ],
-      data1: null,
-      tableHeight: 750,
+      data1: [],
+      tableHeight: 700,
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -84,24 +85,31 @@ export default {
   },
   methods: {
     async getYQData() {
-      this.data1 = await typhoonPathData()
+      let data = await typhoonPathData();
+      this.data1 = data.data
+
     }
   },
   mounted() {
     // 设置表格高度
     this.tableHeight =
       window.innerHeight - this.$refs.table.$el.offsetTop;
+      this.getYQData()
+      console.log(this.data1);
+
   },
 };
 </script>
 
 <style scoped>
 #ta {
+  overflow: scroll;
   border: none;
   margin-left: 140px;
   margin-top: 50px;
   margin-right: 47px;
   width: 1038px;
+  max-height: 600px;
 }
 #ta .ivu-table-column-kYfPrO {
   width: 1rem;

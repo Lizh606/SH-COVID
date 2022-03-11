@@ -8,7 +8,7 @@
         "heal": 142466,
         "showHeal": true,
         "wzz": 0,
-        "_showChildren": false,
+        "_showChildren": true,
         "children": [
             {
                 "name": "香港",
