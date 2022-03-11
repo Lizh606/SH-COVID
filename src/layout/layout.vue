@@ -46,8 +46,8 @@
               class="system-icon"
               @click="GoHome"
             /> -->
-            <IconSvg iconClass="ziyuan"  class="system-icon"></IconSvg>
-            <span class="system-name">上海市新冠疫情可视化系统</span>
+            <IconSvg iconClass="ziyuan"  class="system-icon" ></IconSvg>
+            <span class="system-name" @click="GoHome">上海市新冠疫情可视化系统</span>
           </MenuItem>
         </Menu>
       </Header>
@@ -105,6 +105,10 @@
               <MenuItem name="featureaffect" @click.native="tofeatureaffect">
                 <IconSvg iconClass="sanweihuanchongqu" class="sider-item-icon-son"></IconSvg>
                 <span class="sider-item-word-son">缓冲区</span>
+              </MenuItem>
+                <MenuItem name="yq" @click.native="todata">
+                <IconSvg iconClass="sanweihuanchongqu" class="sider-item-icon-son"></IconSvg>
+                <span class="sider-item-word-son">疫情数据表</span>
               </MenuItem>
             </Submenu>
           </Menu>
@@ -262,6 +266,16 @@ export default {
         return;
       }
       this.$router.push("/Popup");
+    },
+    todata() {
+      // 避免跳转到当前页面
+      if (this.$route.path == "/yqData") {
+        console.log(
+          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
+        );
+        return;
+      }
+      this.$router.push("/yqData");
     },
   },
 };

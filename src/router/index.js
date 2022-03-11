@@ -14,6 +14,7 @@ import ChangeView from "../plugins/ChangeView.vue";
 import FeatureAffect from "../plugins/FeatureAffect.vue";
 import TianDiTu from "@/components/tdtMap/TianDiTu.vue";
 import Popup from "../plugins/Popup.vue";
+import yqData from "../views/yqData.vue"
 
 Vue.use(Router);
 const routes = [
@@ -86,11 +87,11 @@ const routes = [
         },
       },
       {
-        path: "/ChangeView",
-        name: "ChangeView",
-        component: ChangeView,
+        path: "/yqData",
+        name: "yqData",
+        component: resolve=>(require(["../views/yqData.vue"],resolve)),
         meta: {
-          title: "二维切换三维",
+          title: "疫情",
         },
       },
       {

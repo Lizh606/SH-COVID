@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "20384849",
+      "name": "进入",
+      "font_class": "jinru",
+      "unicode": "e786",
+      "unicode_decimal": 59270
+    },
+    {
       "icon_id": "28147920",
       "name": "上海环球金融中心",
       "font_class": "ziyuan1",
