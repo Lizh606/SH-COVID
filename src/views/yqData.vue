@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import yq from "../assets/json/data.json";
+import typhoonPathData from '@/api/sys.js'
 export default {
   name: "yqData",
   data() {
@@ -75,14 +75,18 @@ export default {
           align: "center",
         },
       ],
-      data1: yq,
+      data1: null,
       tableHeight: 750,
     };
   },
   beforeRouteLeave(to, from, next) {
     next();
   },
-
+  methods: {
+    async getYQData() {
+      this.data1 = await typhoonPathData()
+    }
+  },
   mounted() {
     // 设置表格高度
     this.tableHeight =
