@@ -309,7 +309,7 @@ export default {
 .feedback-item,
 .logout-item {
   width: 100px;
-  top: 9px;
+  top: 13px;
   font-size: 14px;
   float: right !important;
 }

@@ -48,6 +48,7 @@ export default {
       setTimeout(() => {
         this.map = this.TdtMap.map;
         this.view = this.TdtMap.view;
+        console.log(this.map);
         const swapmap = document.getElementById("swapmap");
         this.view.ui.add(swapmap)
       }, 60);
@@ -73,7 +74,7 @@ export default {
 <style lang="less" scoped>
 #swapmap {
   position: absolute;
-  top: 0.4rem;
+  top: 0.7rem;
   right: 1.2rem;
   // height: 2.63rem;
   border-radius: 0.21rem;

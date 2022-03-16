@@ -40,6 +40,7 @@ export default {
       TdtMap: this.TdtMap,
     };
   },
+   
   mounted() {
     this.$nextTick(() => {
       setTimeout(() => {
@@ -47,6 +48,7 @@ export default {
       }, 10);
     });
   },
+
   methods: {
     async createMap() {
       //加载天地图图层
@@ -143,6 +145,7 @@ export default {
       //取消下面esri标志
       view.ui.remove("attribution");
     },
+    
     //鹰眼监听
     watchoverview() {
       const extentgraphic = new Graphic({
@@ -207,13 +210,24 @@ export default {
 //esri ui组件
 &/deep/.esri-component.esri-home.esri-widget--button.esri-widget {
   position: fixed;
-  bottom: 59px;
+  bottom: 94px;
   right: 20px;
 }
 
 &/deep/.esri-component.esri-fullscreen.esri-widget--button.esri-widget {
   position: fixed;
-  bottom: 94px;
+  bottom: 129px;
+  right: 20px;
+}
+&/deep/.esri-expand__container  {
+  position: fixed;
+  bottom: 59px;
+  right: 20px;
+  transition: 300ms;
+}
+&/deep/.esri-expand{
+  position: fixed;
+  bottom: 59px;
   right: 20px;
 }
 &/deep/.ivu-btn {

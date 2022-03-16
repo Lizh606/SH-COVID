@@ -246,7 +246,7 @@ export default {
 }
 .export-button1 {
   position: fixed;
-  bottom: 129px;
+  bottom: 164px;
   right: 20px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
   font-size: 14px;

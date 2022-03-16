@@ -1,31 +1,23 @@
 <template>
   <Table
     ref="table"
-    :height="tableHeight"
+    border
+    :loading="loading"
     :columns="columns1"
-    stripe
+    :height = "tableHeight"
     :data="data1"
     row-key="name"
     id="ta"
   >
-    <template slot-scope="{ row }" slot="action">
+    <template slot="action">
       <Button
         type="primary"
         size="small"
         style="margin-right: 5px"
-        v-show="row.id == 'b'"
         id="btn-country"
+        @click="handleThematicMap"
       >
         <!-- 专题渲染 -->
-        <font id="zt-font"> 专题渲染 </font>
-      </Button>
-      <Button
-        type="primary"
-        size="small"
-        style="margin-right: 5px"
-        v-show="row.id == 'a'"
-        id="btn-province"
-      >
         <font id="zt-font"> 专题渲染 </font>
       </Button>
     </template>
@@ -33,7 +25,7 @@
 </template>
 
 <script>
-import {typhoonPathData} from '@/api/sys.js'
+import { YQPathData } from "@/api/sys.js";
 export default {
   name: "yqData",
   data() {
@@ -65,19 +57,20 @@ export default {
         },
         {
           title: "累计治愈",
-          width: 170,
+          width: 150,
           key: "heal",
           sortable: true,
         },
         {
-          title: "",
+          title: "操作",
           slot: "action",
-          width: 160,
+          width: 140,
           align: "center",
         },
       ],
       data1: [],
-      tableHeight: 700,
+      loading: false,
+      tableHeight: 600,
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -85,34 +78,79 @@ export default {
   },
   methods: {
     async getYQData() {
-      let data = await typhoonPathData();
-      this.data1 = data.data
+      this.loading = true;
+      let resdata = await YQPathData();
+      this.loading = false;
+      this.data1 = resdata.data;
+    },
+    handleThematicMap() {
+      const thematicLayerInfo = {
+        base: "中国城市累计确诊",
+        levelOne: "累计确诊: 0 ~ 5000人",
+        levelTwo: "累计确诊: 5000 ~ 10000人",
+        levelThree: "累计确诊: 10000 ~ 50000人",
+        levelFour: "累计确诊: 50000 ~ 1000000人",
+      };
+      let groupCollection = {
+        levelOne: [],
+        levelTwo: [],
+        levelThree: [],
+        levelFour: [],
+        thematicLayerInfo: thematicLayerInfo,
+      };
+      for (let i = 0; i < this.data1[0].children[3].children.length; i++) {
+        let provinceName = this.data1[0].children[3].children[i].name;
+        let confirm = this.data1[0].children[3].children[i].confirm;
+        let nowConfirm = this.data1[0].children[3].children[i].nowConfirm;
+        let dead = this.data1[0].children[3].children[i].dead;
+        let heal = this.data1[0].children[3].children[i].heal;
 
-    }
+
+
+        if (confirm <= 20) {
+          if (confirm <= 10) {
+            groupCollection.levelOne.push([provinceName,nowConfirm,confirm,dead,heal]);
+          } else {
+            groupCollection.levelTwo.push([provinceName,nowConfirm,confirm,dead,heal]);
+          }
+        } else {
+          if (confirm <= 30) {
+            groupCollection.levelThree.push([provinceName,nowConfirm,confirm,dead,heal]);
+          } else {
+            groupCollection.levelFour.push([provinceName,nowConfirm,confirm,dead,heal]);
+          }
+        }
+      }
+      // 返回地图界面
+      this.$router.push({
+        name: "Popup",
+        params: {
+          id: 2,
+          collection: groupCollection,
+          keyId: 1,
+        },
+      });
+    },
   },
   mounted() {
     // 设置表格高度
-    this.tableHeight =
-      window.innerHeight - this.$refs.table.$el.offsetTop;
-      this.getYQData()
-      console.log(this.data1);
-
+    // this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop
+    this.getYQData();
+    console.log(this.data1);
   },
 };
 </script>
 
 <style scoped>
 #ta {
-  overflow: scroll;
-  border: none;
+  /* overflow: scroll; */
   margin-left: 140px;
   margin-top: 50px;
   margin-right: 47px;
-  width: 1038px;
+  width: 1014px;
   max-height: 600px;
 }
 #ta .ivu-table-column-kYfPrO {
   width: 1rem;
 }
-
 </style>

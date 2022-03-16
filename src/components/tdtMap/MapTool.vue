@@ -80,9 +80,7 @@
       >
       <span id="scale" class="scale"> 比例尺 1:{{ curScale }} </span>
     </p>
-    <div ref="exportDiv" class="map-export-div-default">
-    
-  </div>
+    <div ref="exportDiv" class="map-export-div-default"></div>
   </div>
 </template>
 
@@ -97,6 +95,9 @@ import Home from "@arcgis/core/widgets/Home";
 import Fullscreen from "@arcgis/core/widgets/Fullscreen";
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import Swipe from "@arcgis/core/widgets/Swipe";
+import Legend from "@arcgis/core/widgets/Legend";
+import LegendViewModel from "@arcgis/core/widgets/Legend/LegendViewModel";
+import Expand from "@arcgis/core/widgets/Expand";
 import * as watchUtils from "@arcgis/core/core/watchUtils";
 
 import createWmtsLayer from "./layers/wmtsLayer";
@@ -154,6 +155,39 @@ export default {
         this.view.ui.add(exportbtn, {
           position: "bottom-right",
         });
+        //图例
+        const legendvm = new LegendViewModel({
+          view: this.view,
+        });
+        const legend = new Legend({
+          view: this.view,
+          layerInfos: {
+            title: "中国城市累计确诊",
+            levelOne: "累计确诊: 0 ~ 5000人",
+            levelTwo: "累计确诊: 5000 ~ 10000人",
+            levelThree: "累计确诊: 10000 ~ 50000人",
+            levelFour: "累计确诊: 50000 ~ 1000000人",
+          },
+        });
+        legend.style = {
+          type: "card",
+          layout: "auto",
+        };
+        const legendExpand = new Expand({
+          // view: this.view,
+          // content: legend,
+          view: this.view,
+          mode: "floating",
+          content: legend,
+          collapseIconClass: "esri-icon-overview-arrow-bottom-right",
+          collapseTooltip: "隐藏图例",
+          expandIconClass: "esri-icon-media",
+          expandTooltip: "显示图例",
+        });
+        this.view.ui.add(legendExpand, {
+          position: "bottom-right",
+        });
+
         //搜索
         const searchWidgets = new Search({
           view: this.view,
@@ -458,6 +492,7 @@ export default {
     },
     clear() {
       this.view.graphics.removeAll();
+      this.map.basemap.baseLayers.items[1].visible = true;
     },
     locate() {
       let view = this.view;
@@ -507,7 +542,7 @@ export default {
         title: "提示",
         content: "<p>是否导出地图？</p>",
         onOk: () => {
-          this.exportMap()
+          this.exportMap();
         },
         onCancel: () => {},
       });
@@ -530,24 +565,24 @@ export default {
       //   });
       // });
       this.$Spin.show({
-        render: h => {
+        render: (h) => {
           return h("div", [
             h("Icon", {
               class: "map-spin-icon-load",
               props: {
                 type: "ios-loading",
-                size: 38
-              }
+                size: 38,
+              },
             }),
             h(
               "div",
               {
-                class: "map-load-text"
+                class: "map-load-text",
               },
               "正在保存地图图片..."
-            )
+            ),
           ]);
-        }
+        },
       });
       this.$refs.exportDiv.classList.remove("map-export-div-default");
       this.$refs.exportDiv.classList.add("map-export-div");
@@ -572,7 +607,7 @@ export default {
         new MouseEvent("click", {
           bubbles: true,
           cancelable: true,
-          view: window
+          view: window,
         })
       ); // 兼容火狐
       this.$refs.exportDiv.classList.remove("map-export-div");
@@ -587,10 +622,7 @@ export default {
     },
     dataURItoBlob(dataURI) {
       let byteString = atob(dataURI.split(",")[1]);
-      let mimeString = dataURI
-        .split(",")[0]
-        .split(":")[1]
-        .split(";")[0];
+      let mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
       let ab = new ArrayBuffer(byteString.length);
       let dw = new DataView(ab);
       for (let i = 0; i < byteString.length; i++) {
@@ -608,7 +640,7 @@ export default {
               let graphic = result.graphic;
               graphic.symbol = {
                 type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
-                color: [226, 119, 40],
+                // color: [226, 119, 40],
                 outline: {
                   // autocasts as new SimpleLineSymbol()
                   color: [255, 255, 255],
@@ -715,7 +747,7 @@ export default {
 }
 .toolbar-container {
   position: absolute;
-  top: 0.6rem;
+  top: 0.9rem;
   right: 4.8rem;
   height: 2.63rem;
   border-radius: 0.21rem;
@@ -855,4 +887,5 @@ export default {
   padding-top: 0.526rem;
   font-size: 0.74rem;
 }
+//esri ui
 </style>

@@ -1,7 +1,7 @@
-import request from '@/utils/request'
+import {service1} from '@/utils/request'
 
-export const typhoonPathData = () => {
-  return request({
+export const YQPathData = () => {
+  return service1({
     //   默认 get请求
     url: '/data.json'
   })

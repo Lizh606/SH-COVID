@@ -25,7 +25,8 @@
                 "provinceLocalConfirm": 0,
                 "nowConfirm": 218499,
                 "confirm": 246135,
-                "_showChildren": true,
+                "_showChildren": false,
+                
                 "children": [
                     {
                         "name": "香港地区待确认",
@@ -58,7 +59,7 @@
                 "heal": 13742,
                 "showHeal": true,
                 "wzz": 0,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "台湾地区待确认",
@@ -91,7 +92,7 @@
                 "showHeal": true,
                 "wzz": 527,
                 "provinceLocalConfirm": 2192,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "广东境外输入",
@@ -368,7 +369,7 @@
                 ]
             },
             {
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "上海境外输入",
@@ -382,7 +383,7 @@
                         "dead": 0
                     },
                     {
-                        "name": "徐汇",
+                        "name": "徐汇区",
                         "wzz": 0,
                         "provinceLocalConfirm": 0,
                         "showRate": false,
@@ -394,7 +395,7 @@
                         "dead": 1
                     },
                     {
-                        "name": "浦东",
+                        "name": "浦东新区",
                         "nowConfirm": 5,
                         "confirm": 87,
                         "wzz": 0,
@@ -406,7 +407,7 @@
                         "provinceLocalConfirm": 0
                     },
                     {
-                        "name": "嘉定",
+                        "name": "嘉定区",
                         "dead": 2,
                         "showRate": false,
                         "provinceLocalConfirm": 0,
@@ -418,7 +419,7 @@
                         "confirm": 13
                     },
                     {
-                        "name": "普陀",
+                        "name": "普陀区",
                         "showRate": false,
                         "grade": "部分中风险",
                         "provinceLocalConfirm": 0,
@@ -430,7 +431,7 @@
                         "wzz": 0
                     },
                     {
-                        "name": "静安",
+                        "name": "静安区",
                         "grade": "部分中风险",
                         "provinceLocalConfirm": 0,
                         "nowConfirm": 3,
@@ -442,7 +443,7 @@
                         "wzz": 0
                     },
                     {
-                        "name": "闵行",
+                        "name": "闵行区",
                         "nowConfirm": 3,
                         "dead": 0,
                         "showRate": false,
@@ -463,10 +464,10 @@
                         "heal": 16,
                         "grade": "部分中风险",
                         "provinceLocalConfirm": 0,
-                        "name": "松江"
+                        "name": "松江区"
                     },
                     {
-                        "name": "虹口",
+                        "name": "虹口区",
                         "nowConfirm": 2,
                         "heal": 7,
                         "grade": "全部低风险",
@@ -478,7 +479,7 @@
                         "provinceLocalConfirm": 0
                     },
                     {
-                        "name": "青浦",
+                        "name": "青浦区",
                         "showRate": false,
                         "heal": 7,
                         "grade": "全部低风险",
@@ -513,7 +514,7 @@
                         "provinceLocalConfirm": 0
                     },
                     {
-                        "name": "奉贤",
+                        "name": "奉贤区",
                         "nowConfirm": 0,
                         "confirm": 11,
                         "grade": "全部低风险",
@@ -533,10 +534,10 @@
                         "confirm": 26,
                         "dead": 1,
                         "showRate": false,
-                        "name": "宝山"
+                        "name": "宝山区"
                     },
                     {
-                        "name": "黄浦",
+                        "name": "黄浦区",
                         "grade": "全部低风险",
                         "provinceLocalConfirm": 0,
                         "wzz": 0,
@@ -557,7 +558,7 @@
                         "confirm": 14,
                         "showHeal": true,
                         "provinceLocalConfirm": 0,
-                        "name": "长宁"
+                        "name": "长宁区"
                     },
                     {
                         "name": "境外来沪",
@@ -579,10 +580,10 @@
                         "showHeal": true,
                         "wzz": 0,
                         "provinceLocalConfirm": 0,
-                        "name": "杨浦"
+                        "name": "杨浦区"
                     },
                     {
-                        "name": "金山",
+                        "name": "金山区",
                         "dead": 0,
                         "showRate": false,
                         "heal": 4,
@@ -593,7 +594,7 @@
                         "confirm": 4
                     },
                     {
-                        "name": "崇明",
+                        "name": "崇明区",
                         "dead": 0,
                         "showRate": false,
                         "heal": 4,
@@ -604,7 +605,7 @@
                         "confirm": 4
                     }
                 ],
-                "name": "上海",
+                "name": "上海市",
                 "nowConfirm": 646,
                 "confirm": 4720,
                 "dead": 7,
@@ -624,7 +625,7 @@
                 "wzz": 499,
                 "provinceLocalConfirm": 1069,
                 "nowConfirm": 540,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "吉林市",
@@ -776,7 +777,7 @@
                 "provinceLocalConfirm": 1227,
                 "nowConfirm": 475,
                 "confirm": 1585,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "青岛",
@@ -972,7 +973,7 @@
                 "wzz": 7,
                 "provinceLocalConfirm": 1897,
                 "nowConfirm": 297,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "杭州",
@@ -1147,7 +1148,7 @@
                 "wzz": 46,
                 "provinceLocalConfirm": 603,
                 "nowConfirm": 289,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "广西境外输入",
@@ -1341,7 +1342,7 @@
                 "dead": 9,
                 "showRate": false,
                 "heal": 1414,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "nowConfirm": 190,
@@ -1574,7 +1575,7 @@
                 "wzz": 2,
                 "provinceLocalConfirm": 1327,
                 "nowConfirm": 149,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "呼和浩特",
@@ -1739,7 +1740,7 @@
                 "nowConfirm": 148,
                 "confirm": 1545,
                 "dead": 3,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "showRate": false,
@@ -2000,7 +2001,7 @@
                 ]
             },
             {
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "葫芦岛",
@@ -2203,7 +2204,7 @@
                 "wzz": 37,
                 "provinceLocalConfirm": 1659,
                 "nowConfirm": 134,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "连云港",
@@ -2389,7 +2390,7 @@
                 "showHeal": true,
                 "wzz": 13,
                 "provinceLocalConfirm": 324,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "兰州",
@@ -2574,7 +2575,7 @@
                 "provinceLocalConfirm": 549,
                 "nowConfirm": 99,
                 "confirm": 1998,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "德宏州",
@@ -2771,7 +2772,7 @@
                 "showRate": false,
                 "heal": 1497,
                 "showHeal": true,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "福建境外输入",
@@ -2908,7 +2909,7 @@
                 "dead": 3,
                 "showRate": false,
                 "heal": 1122,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "天津境外输入",
@@ -3121,7 +3122,7 @@
                 "showHeal": true,
                 "wzz": 7,
                 "provinceLocalConfirm": 1499,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "邢台",
@@ -3311,7 +3312,7 @@
                 ]
             },
             {
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "武汉",
@@ -3537,7 +3538,7 @@
                 "confirm": 2871,
                 "dead": 3,
                 "showRate": false,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "西安",
@@ -3711,7 +3712,7 @@
                 "heal": 2641,
                 "showHeal": true,
                 "wzz": 2,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "河南境外输入",
@@ -3957,7 +3958,7 @@
                 "wzz": 63,
                 "provinceLocalConfirm": 1681,
                 "nowConfirm": 28,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "牡丹江",
@@ -4133,7 +4134,7 @@
                 ]
             },
             {
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "晋中",
@@ -4292,7 +4293,7 @@
                 "wzz": 0,
                 "provinceLocalConfirm": 584,
                 "nowConfirm": 10,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "重庆境外输入",
@@ -4742,7 +4743,7 @@
                 "name": "重庆"
             },
             {
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "湖南境外输入",
@@ -4942,7 +4943,7 @@
                 "provinceLocalConfirm": 1002,
                 "nowConfirm": 4,
                 "confirm": 1013,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "安徽境外输入",
@@ -5146,7 +5147,7 @@
                 "confirm": 193,
                 "dead": 6,
                 "showRate": false,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "provinceLocalConfirm": 0,
@@ -5339,7 +5340,7 @@
                 "heal": 79,
                 "showHeal": true,
                 "wzz": 0,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "澳门地区待确认",
@@ -5364,7 +5365,7 @@
                 "wzz": 0,
                 "provinceLocalConfirm": 0,
                 "nowConfirm": 1,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "西宁",
@@ -5410,7 +5411,7 @@
                 "confirm": 959,
                 "dead": 1,
                 "showRate": false,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "上饶",
@@ -5570,7 +5571,7 @@
                 "heal": 993,
                 "showHeal": true,
                 "wzz": 0,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "伊犁州",
@@ -5740,7 +5741,7 @@
                 "showRate": false,
                 "heal": 160,
                 "showHeal": true,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "铜仁",
@@ -5865,7 +5866,7 @@
                 "showHeal": true,
                 "wzz": 0,
                 "provinceLocalConfirm": 0,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "拉萨",
@@ -5890,7 +5891,7 @@
                 "showRate": false,
                 "heal": 122,
                 "showHeal": true,
-                "_showChildren": true,
+                 "_showChildren": false,
                 "children": [
                     {
                         "name": "宁夏地区待确认",
