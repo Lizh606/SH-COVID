@@ -55,9 +55,10 @@
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "node_modules/cz-customizable"
     }
   },
+
   "browserslist": [
     "> 1%",
     "last 2 versions",
