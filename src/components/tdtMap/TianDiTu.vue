@@ -112,9 +112,10 @@ export default {
       window.BasemapGalleryVM = basemapvmodel;
 
       //鹰眼
+      const overview_zj = createWmtsLayer(tdtjzUrl);
       const overviewmap = new Map({
         basemap: {
-          baseLayers: [vectiledLayer, tiledjzLayer],
+          baseLayers: [vectiledLayer, overview_zj],
         },
       });
       const overview_view = new MapView({

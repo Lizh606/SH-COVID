@@ -2,9 +2,7 @@
   <div id="home">
     <!-- <img class="back" src="../assets/img/上海夜景.jpeg" /> -->
     <Carousel autoplay v-model="value2" loop>
-       <CarouselItem>
-        <img class="back" src="../assets/img/lunbo/上海夜景.jpeg" />
-      </CarouselItem>
+   
       <CarouselItem>
         <img class="back" src="../assets/img/lunbo/img1.webp" />
       </CarouselItem>
@@ -14,7 +12,9 @@
       <CarouselItem>
         <img class="back" src="../assets/img/lunbo/img3.jpeg" />
       </CarouselItem>
-     
+         <CarouselItem>
+        <img class="back" src="../assets/img/lunbo/上海夜景.jpeg" />
+      </CarouselItem>
     </Carousel>
     <!-- <iframe
       src="http://localhost:8080/public/static/index.html"

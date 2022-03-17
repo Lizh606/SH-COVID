@@ -866,8 +866,8 @@ export default {
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 3px;
   text-align: center;
-  padding: 6px 0px 7px 0px;
-  font-size: 12px;
+  padding: 6px 0px 7px 7px;
+  font-size: 13px;
   color: rgba(128, 134, 149, 1);
   line-height: 19px;
   display: flex;
