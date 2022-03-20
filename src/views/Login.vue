@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { post } from "../utils/request";
+import { login } from "../api/login.js";
 export default {
   name: "Login",
 
@@ -65,7 +65,7 @@ export default {
       formValidate: {
         user: "",
         // checkbox:true,
-        savePwd: true,
+        savePwd: false,
         password: "",
       },
       ruleValidate: {
@@ -114,10 +114,13 @@ export default {
     change() {
       console.log(this.formValidate.savePwd);
       if (this.formValidate.savePwd === true) {
-        this.formValidate.savePwd === false, this.delCookie("user");
-        this.delCookie("password");
+        this.formValidate.savePwd === false;
+        // this.delCookie("user");
+        // this.delCookie("password");
       } else {
         this.formValidate.savePwd === true;
+        this.delCookie("user");
+        this.delCookie("password");
       }
     },
     setCookie(name, value, day) {
@@ -143,17 +146,18 @@ export default {
       if (this.formValidate.savePwd === true) {
         this.setCookie("user", loginname, 7); //保存帐号到cookie，有效期7天
         this.setCookie("password", loginpwd, 7); //保存密码到cookie，有效期7天
+      } else{
+        this.delCookie("user");
+        this.delCookie("password");
       }
       this.$refs[info].validate(async (valid) => {
         if (valid) {
           try {
-            const result = await post("/api/user/login", {
+            const result = await login({
               username: loginname,
               password: loginpwd,
             });
-            if (result) {
-              this.loading = true;
-              localStorage.isLogin = true;
+            if (result.data.errno === 0) {
               this.$router.push("/daping");
             } else {
               alert("登陆失败");

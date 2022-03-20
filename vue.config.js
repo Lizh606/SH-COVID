@@ -55,6 +55,9 @@ module.exports = {
           "^/services": "",
         },
       },
+      "/api": {
+        target: "http://112.74.95.70:83",
+      },
     },
   },
   //其他配置....
