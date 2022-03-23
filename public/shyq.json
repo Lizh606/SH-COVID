@@ -1,0 +1,264 @@
+[
+    {
+        "name": "中国",
+        "nowConfirm": 229133,
+        "confirm": 380238,
+        "dead": 8639,
+        "showRate": false,
+        "heal": 142466,
+        "showHeal": true,
+        "wzz": 0,
+        "_showChildren": true,
+        "children": [
+
+            {
+                 "_showChildren": false,
+                "children": [
+                    {
+                        "name": "上海境外输入",
+                        "showRate": false,
+                        "heal": 3682,
+                        "showHeal": true,
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0,
+                        "nowConfirm": 612,
+                        "confirm": 4294,
+                        "dead": 0
+                    },
+                    {
+                        "name": "徐汇区",
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0,
+                        "showRate": false,
+                        "heal": 17,
+                        "showHeal": true,
+                        "grade": "部分中风险",
+                        "nowConfirm": 9,
+                        "confirm": 27,
+                        "dead": 1
+                    },
+                    {
+                        "name": "浦东新区",
+                        "nowConfirm": 5,
+                        "confirm": 87,
+                        "wzz": 0,
+                        "dead": 1,
+                        "showRate": false,
+                        "heal": 81,
+                        "showHeal": true,
+                        "grade": "全部低风险",
+                        "provinceLocalConfirm": 0
+                    },
+                    {
+                        "name": "嘉定区",
+                        "dead": 2,
+                        "showRate": false,
+                        "provinceLocalConfirm": 0,
+                        "nowConfirm": 4,
+                        "heal": 7,
+                        "showHeal": true,
+                        "grade": "部分中风险",
+                        "wzz": 0,
+                        "confirm": 13
+                    },
+                    {
+                        "name": "普陀区",
+                        "showRate": false,
+                        "grade": "部分中风险",
+                        "provinceLocalConfirm": 0,
+                        "nowConfirm": 4,
+                        "confirm": 15,
+                        "dead": 0,
+                        "heal": 11,
+                        "showHeal": true,
+                        "wzz": 0
+                    },
+                    {
+                        "name": "静安区",
+                        "grade": "部分中风险",
+                        "provinceLocalConfirm": 0,
+                        "nowConfirm": 3,
+                        "confirm": 22,
+                        "showRate": false,
+                        "heal": 18,
+                        "dead": 1,
+                        "showHeal": true,
+                        "wzz": 0
+                    },
+                    {
+                        "name": "闵行区",
+                        "nowConfirm": 3,
+                        "dead": 0,
+                        "showRate": false,
+                        "confirm": 22,
+                        "heal": 19,
+                        "showHeal": true,
+                        "grade": "全部低风险",
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0
+                    },
+                    {
+                        "nowConfirm": 2,
+                        "showRate": false,
+                        "showHeal": true,
+                        "wzz": 0,
+                        "confirm": 18,
+                        "dead": 0,
+                        "heal": 16,
+                        "grade": "部分中风险",
+                        "provinceLocalConfirm": 0,
+                        "name": "松江区"
+                    },
+                    {
+                        "name": "虹口区",
+                        "nowConfirm": 2,
+                        "heal": 7,
+                        "grade": "全部低风险",
+                        "confirm": 9,
+                        "dead": 0,
+                        "showRate": false,
+                        "showHeal": true,
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0
+                    },
+                    {
+                        "name": "青浦区",
+                        "showRate": false,
+                        "heal": 7,
+                        "grade": "全部低风险",
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0,
+                        "nowConfirm": 1,
+                        "confirm": 8,
+                        "dead": 0,
+                        "showHeal": true
+                    },
+                    {
+                        "name": "外地来沪",
+                        "showHeal": true,
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0,
+                        "nowConfirm": 1,
+                        "confirm": 114,
+                        "dead": 1,
+                        "showRate": false,
+                        "heal": 112
+                    },
+                    {
+                        "name": "上海地区待确认",
+                        "showRate": false,
+                        "showHeal": true,
+                        "grade": "全部低风险",
+                        "nowConfirm": 0,
+                        "confirm": 0,
+                        "dead": 0,
+                        "heal": 0,
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0
+                    },
+                    {
+                        "name": "奉贤区",
+                        "nowConfirm": 0,
+                        "confirm": 11,
+                        "grade": "全部低风险",
+                        "showHeal": true,
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0,
+                        "dead": 0,
+                        "showRate": false,
+                        "heal": 11
+                    },
+                    {
+                        "heal": 25,
+                        "showHeal": true,
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0,
+                        "nowConfirm": 0,
+                        "confirm": 26,
+                        "dead": 1,
+                        "showRate": false,
+                        "name": "宝山区"
+                    },
+                    {
+                        "name": "黄浦区",
+                        "grade": "全部低风险",
+                        "provinceLocalConfirm": 0,
+                        "wzz": 0,
+                        "nowConfirm": 0,
+                        "confirm": 22,
+                        "dead": 0,
+                        "showRate": false,
+                        "heal": 22,
+                        "showHeal": true
+                    },
+                    {
+                        "wzz": 0,
+                        "nowConfirm": 0,
+                        "dead": 0,
+                        "showRate": false,
+                        "heal": 14,
+                        "grade": "全部低风险",
+                        "confirm": 14,
+                        "showHeal": true,
+                        "provinceLocalConfirm": 0,
+                        "name": "长宁区"
+                    },
+                    {
+                        "name": "境外来沪",
+                        "nowConfirm": 0,
+                        "confirm": 1,
+                        "dead": 0,
+                        "showRate": false,
+                        "heal": 1,
+                        "showHeal": true,
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0
+                    },
+                    {
+                        "nowConfirm": 0,
+                        "confirm": 9,
+                        "dead": 0,
+                        "showRate": false,
+                        "heal": 9,
+                        "showHeal": true,
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0,
+                        "name": "杨浦区"
+                    },
+                    {
+                        "name": "金山区",
+                        "dead": 0,
+                        "showRate": false,
+                        "heal": 4,
+                        "showHeal": true,
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0,
+                        "nowConfirm": 0,
+                        "confirm": 4
+                    },
+                    {
+                        "name": "崇明区",
+                        "dead": 0,
+                        "showRate": false,
+                        "heal": 4,
+                        "showHeal": true,
+                        "wzz": 0,
+                        "provinceLocalConfirm": 0,
+                        "nowConfirm": 0,
+                        "confirm": 4
+                    }
+                ],
+                "name": "上海市",
+                "nowConfirm": 646,
+                "confirm": 4720,
+                "dead": 7,
+                "showRate": false,
+                "heal": 4067,
+                "showHeal": true,
+                "wzz": 370,
+                "provinceLocalConfirm": 426
+            }
+      
+        ]
+    }
+]

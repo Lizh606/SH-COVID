@@ -82,8 +82,8 @@ export default {
       const view = new MapView({
         container: "map",
         map: map,
-        center: [121.607331, 31.1879],
-        zoom: 11,
+        center: [121.477331, 31.2379],
+        zoom: 8,
         spatialReference: { wkid: 4326 },
       });
 
@@ -194,7 +194,7 @@ export default {
 //鹰眼
 #overviewDiv {
   position: relative;
-  bottom: 17px;
+  bottom: 11px;
   width: 180px;
   height: 150px;
   border: 1px solid black;

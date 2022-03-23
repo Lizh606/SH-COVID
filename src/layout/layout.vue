@@ -4,14 +4,10 @@
       <!-------------------------------- 页眉 -------------------------------->
       <Header>
         <Menu mode="horizontal" theme="primary">
-          <div class="time-item">{{ nowDate }}</div>
-
+          <!-- <div class="time-item">{{ nowDate }}</div> -->
           <MenuItem name="user" class="user-item">
             <Dropdown class="menu-item-word">
-              <IconSvg
-                iconClass="bianji"
-                class="menu-item-icon"
-              ></IconSvg>
+              <IconSvg iconClass="bianji" class="menu-item-icon"></IconSvg>
               <a href="javascript:void(0)">
                 <span class="menu-item-word">系统说明</span>
               </a>
@@ -29,25 +25,23 @@
             <Dropdown class="menu-item-word">
               <IconSvg iconClass="zhanghao1" class="menu-item-icon"></IconSvg>
               <a href="javascript:void(0)">
-                <span class="menu-item-word">个人中心</span>
+                <span class="menu-item-word">{{username}}</span>
               </a>
               <DropdownMenu slot="list">
                 <DropdownItem>个人中心</DropdownItem>
                 <DropdownItem>修改密码</DropdownItem>
-                <DropdownItem
-                  ><div @click="ToLogin()">退出登录</div></DropdownItem
+                <DropdownItem>
+                  <!-- <IconSvg iconClass="tuichu"></IconSvg> -->
+                  <div @click="ToLogin()">退出登录</div></DropdownItem
                 >
               </DropdownMenu>
             </Dropdown>
           </MenuItem>
           <MenuItem name="system" class="system-item">
-            <!-- <img
-              src="../../public/上海logo.jpeg"
-              class="system-icon"
-              @click="GoHome"
-            /> -->
-            <IconSvg iconClass="ziyuan"  class="system-icon" ></IconSvg>
-            <span class="system-name" @click="GoHome">上海市新冠疫情可视化系统</span>
+            <IconSvg iconClass="ziyuan" class="system-icon"></IconSvg>
+            <span class="system-name" @click="GoHome"
+              >上海市新冠疫情可视化系统</span
+            >
           </MenuItem>
         </Menu>
       </Header>
@@ -94,20 +88,32 @@
                 <span class="sider-item-word">功能列表</span>
               </template>
               <MenuItem name="popup" @click.native="tohos">
-                <IconSvg iconClass="yiyuan"  class="sider-item-icon-son"></IconSvg>
+                <IconSvg
+                  iconClass="yiyuan"
+                  class="sider-item-icon-son"
+                ></IconSvg>
 
                 <span class="sider-item-word-son">加载医院</span>
               </MenuItem>
               <MenuItem name="sidetable3" @click.native="toweather">
-                <IconSvg iconClass="tianqi" class="sider-item-icon-son"></IconSvg>
+                <IconSvg
+                  iconClass="tianqi"
+                  class="sider-item-icon-son"
+                ></IconSvg>
                 <span class="sider-item-word-son">天气可视化</span>
               </MenuItem>
               <MenuItem name="featureaffect" @click.native="tofeatureaffect">
-                <IconSvg iconClass="sanweihuanchongqu" class="sider-item-icon-son"></IconSvg>
+                <IconSvg
+                  iconClass="sanweihuanchongqu"
+                  class="sider-item-icon-son"
+                ></IconSvg>
                 <span class="sider-item-word-son">缓冲区</span>
               </MenuItem>
-                <MenuItem name="yq" @click.native="todata">
-                <IconSvg iconClass="sanweihuanchongqu" class="sider-item-icon-son"></IconSvg>
+              <MenuItem name="yq" @click.native="todata">
+                <IconSvg
+                  iconClass="sanweihuanchongqu"
+                  class="sider-item-icon-son"
+                ></IconSvg>
                 <span class="sider-item-word-son">疫情数据表</span>
               </MenuItem>
             </Submenu>
@@ -131,12 +137,15 @@ export default {
     return {
       siderActiveName: null,
       nowDate: "", // 当前日期
+      username:""
     };
   },
   mounted() {
+    console.log(this.username)
     this.currentTime();
     // 使页面更新后导航菜单的active-name与页面内容匹配
     this.$nextTick(() => {
+    this.username = window.localStorage.getItem('userName').replaceAll("\"", "");
       let path = this.$route.path.split("/");
       this.changeActiveName(path);
     });
@@ -180,8 +189,8 @@ export default {
       this.$router.push("/Welcome");
     },
     ToLogin() {
-      if (localStorage.isLogin === "true") {
-        localStorage.clear();
+      if (this.$store.state.token) {
+        this.$store.commit("del_token");
         this.$router.push("/");
       } else {
         this.$router.push("/");
@@ -291,9 +300,9 @@ export default {
   height: 100%;
 }
 .time-item {
-  float: right !important;
+  float: left !important;
   color: #ffffff;
-  left: 165px;
+    right: 125px;
   width: 200px;
 }
 .user-item {

@@ -396,9 +396,10 @@ export default {
           borderLineSize: 1,
           borderLineColor: "#2152AC",
           text: this.shPolygon.features[j].properties.name,
+        
           // font: {
           //   size: 12,
-          //   // family: "KaiTi",
+          //   family: "KaiTi",
           // },
         };
         const pointgeo = {

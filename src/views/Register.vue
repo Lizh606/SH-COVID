@@ -28,15 +28,22 @@
                 placeholder="请输入密码"
               ></i-input>
             </FormItem>
+               <FormItem label="昵称" prop="realname">
+              <i-input
+                id="realname"
+                v-model="formValidate.realname"
+                placeholder="请输入昵称"
+              ></i-input>
+            </FormItem>
             <FormItem>
-              <CheckboxGroup>
+              <!-- <CheckboxGroup>
                 <Checkbox
                   label="记住密码"
                   id="remeberPwd"
                   v-model="formValidate.savePwd"
                   @click.native="change()"
                 ></Checkbox>
-              </CheckboxGroup>
+              </CheckboxGroup> -->
             </FormItem>
             <FormItem>
               <Button
@@ -44,13 +51,10 @@
                 @click="handleSubmit('formValidate')"
                 :loading="loading"
                 class="form-buttom"
-                >登录</Button
+                >注册</Button
               >
             </FormItem>
           </Form>
-          <div type="‘button’" class="register" @click="ToRegister">
-            立即注册
-          </div>
         </div>
       </div>
     </div>
@@ -58,7 +62,7 @@
 </template>
 
 <script>
-import { login } from "../api/login.js";
+import { register } from "../api/login.js";
 export default {
   name: "Login",
 
@@ -67,9 +71,8 @@ export default {
       loading: false,
       formValidate: {
         user: "",
-        // checkbox:true,
-        savePwd: false,
         password: "",
+        realname:""
       },
       ruleValidate: {
         user: [
@@ -95,37 +98,31 @@ export default {
             trigger: "blur",
           },
         ],
+        realname: [
+          {
+            required: true,
+            message: "昵称不能为空",
+            trigger: "blur",
+          },
+          {
+            trigger: "blur",
+          },
+        ],
       },
     };
   },
-  created() {
-    // 清掉所有的localStorage
-    // localStorage.removeAll();
-    // sessionStorage.removeAll();
-  },
 
   mounted() {
-    //页面初始化时，如果帐号密码cookie存在则填充
-    if (this.getCookie("user") && this.getCookie("password")) {
-      this.formValidate.user = this.getCookie("user");
-      this.formValidate.password = this.getCookie("password");
-      this.formValidate.savePwd === true;
-    }
+    // //页面初始化时，如果帐号密码cookie存在则填充
+    // if (this.getCookie("user") && this.getCookie("password")) {
+    //   this.formValidate.user = this.getCookie("user");
+    //   this.formValidate.password = this.getCookie("password");
+    //   this.formValidate.savePwd === true;
+    // }
   },
   methods: {
     //复选框勾选状态发生改变时，如果未勾选则清除cookie
-    change() {
-      console.log(this.formValidate.savePwd);
-      if (this.formValidate.savePwd === true) {
-        this.formValidate.savePwd === false;
-        // this.delCookie("user");
-        // this.delCookie("password");
-      } else {
-        this.formValidate.savePwd === true;
-        this.delCookie("user");
-        this.delCookie("password");
-      }
-    },
+
     setCookie(name, value, day) {
       var date = new Date();
       date.setDate(date.getDate() + day);
@@ -140,44 +137,35 @@ export default {
         return "";
       }
     },
-    delCookie(name) {
-      this.setCookie(name, null, -1);
-    },
+
     async handleSubmit(info) {
-      this.loading = true;
+        this.loading = true
       const loginname = this.formValidate.user.trim();
+
       const loginpwd = this.formValidate.password;
-      if (this.formValidate.savePwd === true) {
-        this.setCookie("user", loginname, 7); //保存帐号到cookie，有效期7天
-        this.setCookie("password", loginpwd, 7); //保存密码到cookie，有效期7天
-      } else {
-        this.delCookie("user");
-        this.delCookie("password");
-      }
+      const realname = this.formValidate.realname.trim();
       this.$refs[info].validate(async (valid) => {
         if (valid) {
           try {
-            const result = await login({
+            const result = await register({
               username: loginname,
               password: loginpwd,
+              realname:realname
             });
-            this.loading = false;
-            if (result.data) {
+            if (result.code === "200") {
+               this.$store.commit("set_token", realname);
               this.$store.commit("set_token", result.data.token);
-              this.$store.commit("setUserInfo", result.data.realname);
-              this.setCookie("realname", result.data.realname, 7);
+              this.setCookie("user", loginname, 7); //保存帐号到cookie，有效期7天
+              this.setCookie("password", loginpwd, 7); //保存密码到cookie，有效期7天
               this.$router.push("/daping");
             } else {
-              alert("登陆失败");
+              alert("用户名已存在");
             }
           } catch (e) {
             alert("请求失败");
           }
         }
       });
-    },
-    ToRegister() {
-      this.$router.push("/register");
     },
   },
 };
@@ -244,8 +232,5 @@ export default {
       }
     }
   }
-}
-.register {
-  text-align: center;
 }
 </style>

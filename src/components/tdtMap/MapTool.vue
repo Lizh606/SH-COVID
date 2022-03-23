@@ -805,16 +805,16 @@ export default {
 .btn-item {
   margin-left: 0.5rem;
 }
-//弹窗样式
-.esri-view-height-less-than-medium .esri-popup__main-container {
-  font-family: "KaiTi";
-}
-.esri-feature__content-element:last-child {
-  font-family: "KaiTi";
-}
-&/deep/.esri-popup__main-container {
-  font-family: "KaiTi";
-}
+// //弹窗样式
+// .esri-view-height-less-than-medium .esri-popup__main-container {
+//   font-family: "KaiTi";
+// }
+// .esri-feature__content-element:last-child {
+//   font-family: "KaiTi";
+// }
+// &/deep/.esri-popup__main-container {
+//   font-family: "KaiTi";
+// }
 //下来菜单样式
 &/deep/.ivu-dropdown-item {
   white-space: nowrap;
@@ -857,7 +857,7 @@ export default {
 //坐标和比例尺
 .coordinate-scale {
   position: fixed;
-  bottom: 30.5px;
+  bottom: 24.5px;
   right: 65px;
   z-index: 2;
   width: 290px;

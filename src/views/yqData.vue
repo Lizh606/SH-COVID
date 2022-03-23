@@ -98,12 +98,12 @@ export default {
         levelFour: [],
         thematicLayerInfo: thematicLayerInfo,
       };
-      for (let i = 0; i < this.data1[0].children[3].children.length; i++) {
-        let provinceName = this.data1[0].children[3].children[i].name;
-        let confirm = this.data1[0].children[3].children[i].confirm;
-        let nowConfirm = this.data1[0].children[3].children[i].nowConfirm;
-        let dead = this.data1[0].children[3].children[i].dead;
-        let heal = this.data1[0].children[3].children[i].heal;
+      for (let i = 0; i < this.data1[0].children[0].children.length; i++) {
+        let provinceName = this.data1[0].children[0].children[i].name;
+        let confirm = this.data1[0].children[0].children[i].confirm;
+        let nowConfirm = this.data1[0].children[0].children[i].nowConfirm;
+        let dead = this.data1[0].children[0].children[i].dead;
+        let heal = this.data1[0].children[0].children[i].heal;
 
 
 
