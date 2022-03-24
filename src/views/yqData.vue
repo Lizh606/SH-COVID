@@ -4,7 +4,7 @@
     border
     :loading="loading"
     :columns="columns1"
-    :height = "tableHeight"
+    :height="tableHeight"
     :data="data1"
     row-key="name"
     id="ta"
@@ -98,26 +98,52 @@ export default {
         levelFour: [],
         thematicLayerInfo: thematicLayerInfo,
       };
-      for (let i = 0; i < this.data1[0].children[0].children.length; i++) {
-        let provinceName = this.data1[0].children[0].children[i].name;
-        let confirm = this.data1[0].children[0].children[i].confirm;
-        let nowConfirm = this.data1[0].children[0].children[i].nowConfirm;
-        let dead = this.data1[0].children[0].children[i].dead;
-        let heal = this.data1[0].children[0].children[i].heal;
+      for (let i = 0; i < this.data1[0].children.length; i++) {
+        if (this.data1[0].children[i].children) {
+          for (let j = 0; j < this.data1[0].children[i].children.length; j++) {
+            let provinceName = this.data1[0].children[i].children[j].name;
+            let confirm = this.data1[0].children[i].children[j].confirm;
+            let nowConfirm = this.data1[0].children[i].children[j].nowConfirm;
+            let dead = this.data1[0].children[i].children[j].dead;
+            let heal = this.data1[0].children[i].children[j].heal;
 
-
-
-        if (confirm <= 20) {
-          if (confirm <= 10) {
-            groupCollection.levelOne.push([provinceName,nowConfirm,confirm,dead,heal]);
-          } else {
-            groupCollection.levelTwo.push([provinceName,nowConfirm,confirm,dead,heal]);
-          }
-        } else {
-          if (confirm <= 30) {
-            groupCollection.levelThree.push([provinceName,nowConfirm,confirm,dead,heal]);
-          } else {
-            groupCollection.levelFour.push([provinceName,nowConfirm,confirm,dead,heal]);
+            if (confirm <= 20) {
+              if (confirm <= 10) {
+                groupCollection.levelOne.push([
+                  provinceName,
+                  nowConfirm,
+                  confirm,
+                  dead,
+                  heal,
+                ]);
+              } else {
+                groupCollection.levelTwo.push([
+                  provinceName,
+                  nowConfirm,
+                  confirm,
+                  dead,
+                  heal,
+                ]);
+              }
+            } else {
+              if (confirm <= 30) {
+                groupCollection.levelThree.push([
+                  provinceName,
+                  nowConfirm,
+                  confirm,
+                  dead,
+                  heal,
+                ]);
+              } else {
+                groupCollection.levelFour.push([
+                  provinceName,
+                  nowConfirm,
+                  confirm,
+                  dead,
+                  heal,
+                ]);
+              }
+            }
           }
         }
       }
