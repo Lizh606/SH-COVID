@@ -2,6 +2,12 @@
   <div>
     <!-- 切换底图弹窗内容 -->
     <ButtonGroup class="toolbar-container" id="toolbar">
+       <Dropdown class="btns-common-style">
+        <a href="javascript:void(0)" style="color: #515a6e" @click="topicmake">
+          <IconSvg iconClass="zhuantitu"></IconSvg>
+          <span> 专题制图</span>
+        </a>
+      </Dropdown>
       <Dropdown class="btns-common-style">
         <a href="javascript:void(0)" style="color: #515a6e" @click="swipemap">
           <IconSvg iconClass="ditujuanlian"></IconSvg>
@@ -716,6 +722,9 @@ export default {
         });
       });
     },
+    topicmake(){
+       this.$router.push("/TopicMake")
+    },
     swipemap() {
       //卷帘、
       this.view.ui.remove("swipe");
@@ -857,7 +866,7 @@ export default {
 //坐标和比例尺
 .coordinate-scale {
   position: fixed;
-  bottom: 24.5px;
+  bottom: 30.5px;
   right: 65px;
   z-index: 2;
   width: 290px;

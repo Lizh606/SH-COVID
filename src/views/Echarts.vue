@@ -1,0 +1,227 @@
+<template>
+  <div>
+    <div id="echarts" class="mychart" style="“height:100%;width:100%;”"></div>
+    <div
+      @click="DataShow"
+      class="help-icon"
+      aria-label="导出地图"
+      title="导出地图"
+    >
+      <IconSvg iconClass="bangzhuyushuoming" class="help">数据说明</IconSvg>
+    </div>
+    <Modal v-model="modal" width="1000" >
+      <p slot="header" style="color: #fff; text-align: center;font-size : 20px">
+        <span>数据说明</span>
+      </p>
+      <div >
+        <p style="font-size:16px" >
+          1、数据来源：<br />来自国家卫健委、各省市区卫健委、各省市区政府、港澳台官方渠道公开数据；<br /><br />2、数据统计原则：<br />a)
+          每日上午全国数据会优先使用国家卫健委公布的数据（此时各省市数据尚未及时更新，会出现全国数据大于各省份合计数的情况）；<br />b)
+          当各省公布数据总和大于国家卫健委公布的数据时，则全国数据切换为各省合计数；<br />c
+          全国数据含港澳台地区数据；<br /><br />3、数据更新时间：<br />实时更新全国、各省市区数据，因需要核实计算，与官方发布的时间相比，将有一定的时间延迟；<br /><br />4、“较昨日”的新增确诊、新增无症状等数据来源于卫健委发布的新增病例数，其含义是由（各省）卫健委公布的最新数据减去前一日对应的数据所得；由于各省卫健委公布时间及方式各不相同且存在核减情况，故而部分数据可能会有一定的时间延迟；<br /><br />5、国外数据说明：<br />a)
+          数据来源：国外疫情数据来自权威机构的公开报道、世卫组织（WHO）、各国官方通报；<br />b)
+          统计口径：因各国分不同时区，疫情数据日期统一采用北京时间的日期；新增数据与趋势图数据为昨日数据与前日数据相减的结果，每天更新一次；<br />c)
+          更新时间：国外疫情数据因追踪、核实需要，与各国官方的发布时间相比较有一定的延迟。<br /><br />6、百度APP全力以赴提供权威、准确、及时的疫情数据，如有任何疑问，欢迎通过百度APP留言反馈。
+        </p>
+      </div>
+      <div slot="footer">
+        <Button  @click="okHandler"  >确定</Button>
+      </div>
+    </Modal>
+  </div>
+</template>
+
+<script>
+import { YQPathData } from "@/api/sys.js";
+export default {
+  name: "Echarts",
+  data() {
+    return {
+      division: [],
+      confirm: [],
+      nowConfirm: [],
+      dead: [],
+      heal: [],
+      modal: false,
+    };
+  },
+  mounted() {
+    this.getData();
+  },
+  methods: {
+    async getData() {
+      let res = await YQPathData();
+      res.data[0].children[0].children.map((item) => {
+        this.confirm.push(item.confirm),
+          this.division.push(item.name),
+          this.nowConfirm.push(item.nowConfirm);
+        this.dead.push(item.dead);
+        this.heal.push(item.heal);
+        //返回的是[__ob__: Observer] 可视察数组 需要转为正常数组 JSON.parse(JSON.stringify()
+        // console.log(this.division);
+      });
+      (this.confirm = JSON.parse(JSON.stringify(this.confirm))),
+        (this.division = JSON.parse(JSON.stringify(this.division)));
+      (this.nowConfirm = JSON.parse(JSON.stringify(this.nowConfirm))),
+        (this.dead = JSON.parse(JSON.stringify(this.dead))),
+        (this.heal = JSON.parse(JSON.stringify(this.heal))),
+        this.mycharts();
+    },
+
+    mycharts() {
+      this.myCharts = this.$echarts.init(document.getElementById("echarts"));
+
+      this.myCharts.setOption({
+        title: {
+          text: "上海市新冠疫情统计表",
+          textStyle: {
+            color: "#525A6F",
+            fontFamily: "KaiTi",
+            fontSize: 16,
+            marginLeft: 20,
+          },
+          padding: [20, 0, 0, 20],
+        },
+        tooltip: {
+          trigger: "axis",
+          fontSize: 16,
+        }, //鼠标放到上面出现数据
+        color: ["red", "yellow", "blue", "green"],
+        grid: {
+          left: "20%",
+          right: "20%",
+          bottom: "5%",
+          containLabel: true,
+        },
+        legend: {
+          // x: {"left",
+          data: ["累计确诊", "现有确诊", "累计死亡", "累计治愈"],
+          padding: [20, 0, 0, 0],
+          textStyle: {
+            color: "#525A6F",
+            fontFamily: "KaiTi",
+            fontSize: 14,
+          },
+        },
+        xAxis: {
+          data: this.division,
+          type: "category", //类目轴，显示所有项目
+          axisTick: {
+            alignWithLabel: true,
+          },
+          axisLabel: {
+            interval: 0,
+            rotate: 45, //倾斜度 -90 至 90 默认为0
+            margin: 2,
+            textStyle: {
+              color: "#525A6F",
+              fontFamily: "KaiTi",
+              fontSize: 16,
+            },
+          },
+        },
+
+        yAxis: [
+          {
+            type: "value",
+            name: "累计确诊",
+            min: 0,
+            max: 5000,
+            position: "right",
+            axisLabel: {
+              formatter: "{value} 人",
+              textStyle: {
+                color: "#525A6F",
+                fontFamily: "KaiTi",
+                fontSize: 14,
+              },
+            },
+          },
+          {
+            type: "value",
+            name: "现有确诊",
+            min: 0,
+            max: 700,
+            position: "left",
+            axisLabel: {
+              formatter: "{value} 人",
+              textStyle: {
+                color: "#525A6F",
+                fontFamily: "KaiTi",
+                fontSize: 14,
+              },
+            },
+          },
+        ],
+        series: [
+          {
+            name: "累计确诊",
+            type: "line", //图类型
+            smooth: true,
+            data: this.confirm,
+            yAxisIndex: 0,
+          },
+          {
+            name: "现有确诊",
+            type: "line", //图类型
+            smooth: true,
+            data: this.nowConfirm,
+            yAxisIndex: 1,
+          },
+          {
+            name: "累计死亡",
+            type: "line", //图类型
+            smooth: true,
+            data: this.dead,
+          },
+          {
+            name: "累计治愈",
+            type: "line", //图类型
+            smooth: true,
+            data: this.heal,
+          },
+
+          // {
+          //   name: '价格',
+          //   type: 'bar', //图类型
+          //   data: [1200, 2200, 3200, 4200, 5200]
+          // },
+          // {
+          //   name: '人气',
+          //   type: 'bar', //图类型
+          //   data: [1300, 2300, 3300, 4300, 5300]
+          // }
+        ],
+      });
+    },
+    DataShow() {
+      this.modal = true;
+    },
+    okHandler(){
+      this.modal = false;
+
+    }
+  },
+};
+</script>
+
+<style lang="less" scoped>
+.mychart {
+  // position: absolute;
+  width: 100%;
+  height: 600px;
+}
+.help-icon {
+  position: absolute;
+
+  top: 23.5px;
+  left: 252px;
+}
+.help {
+  width: 20px;
+  height: 20px;
+}
+/deep/.ivu-modal-header{
+  background-color: #00bec9;
+}
+</style>

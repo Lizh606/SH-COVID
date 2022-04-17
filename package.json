@@ -12,6 +12,7 @@
     "@arcgis/core": "^4.22.2",
     "axios": "^0.26.0",
     "core-js": "^3.6.5",
+    "echarts": "^5.3.2",
     "esri-loader": "^3.3.0",
     "html2canvas": "^1.4.1",
     "less": "^4.1.2",
@@ -58,7 +59,6 @@
       "path": "node_modules/cz-customizable"
     }
   },
-
   "browserslist": [
     "> 1%",
     "last 2 versions",

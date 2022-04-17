@@ -103,10 +103,15 @@ export default {
         title: "地形地图",
         id: "地形地图",
       });
+       const shBaseMap = new Basemap({
+        baseLayers: [SHSU, SHLayer_zj],
+        title: "地形地图",
+        id: "地形地图",
+      });
       const basemapvmodel = new BasemapGalleryVM({
         view: view,
         source: new LocalBasemapsSource({
-          basemaps: [vecBaseMap, imgBaseMap, terBaseMap],
+          basemaps: [vecBaseMap, imgBaseMap, terBaseMap,shBaseMap],
         }),
       });
       window.BasemapGalleryVM = basemapvmodel;
@@ -194,7 +199,7 @@ export default {
 //鹰眼
 #overviewDiv {
   position: relative;
-  bottom: 11px;
+  bottom: 15px;
   width: 180px;
   height: 150px;
   border: 1px solid black;

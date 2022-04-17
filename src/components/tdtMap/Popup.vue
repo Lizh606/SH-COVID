@@ -2,7 +2,7 @@
   <div>
     <tdt-map ref="mapdata"></tdt-map>
     <Button class="loadpoint" @click="loadpoint">加载医院</Button>
-    <Button class="begin" @click="loadroute">加载行政区划</Button>
+    <Button class="begin" @click="load">加载行政区划</Button>
     <!-- <Modal v-model="showReviewModal">
       <h2>当前审查任务是否通过？</h2>
       <template slot="footer">
@@ -14,7 +14,11 @@
 </template>
 
 <script>
-import data from "../assets/json/data";
+import Map from "@arcgis/core/Map";
+import MapView from "@arcgis/core/views/MapView";
+import createWmtsLayer from "./layers/wmtsLayer";
+import createTileLayer from "./layers/tileLayer";
+import data from "../../assets/json/data";
 import Point from "@arcgis/core/geometry/Point";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import PictureMarkerSymbol from "@arcgis/core/symbols/PictureMarkerSymbol";
@@ -23,7 +27,8 @@ import Graphic from "@arcgis/core/Graphic";
 import Extent from "@arcgis/core/geometry/Extent";
 import Color from "@arcgis/core/Color";
 
-import shanghai from "../assets/json/sh.json";
+import shanghai from "@/assets/json/sh.json";
+
 export default {
   name: "dian",
 
@@ -60,7 +65,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       setTimeout(() => {
-        console.log(this.$refs.mapdata.TdtMap.map.basemap.baseLayers.items[1]);
         if (this.level.levelOne !== "") {
           this.loadroute();
           //   console.log(window.textGraphic)
@@ -83,7 +87,7 @@ export default {
 
       for (let i = 0; i < hospitalfeature.length; i++) {
         const ptsymbol = new PictureMarkerSymbol(
-          require("../assets/img/hospital.png"),
+          require("@/assets/img/hospital.png"),
           20,
           20
         );
@@ -396,7 +400,7 @@ export default {
           borderLineSize: 1,
           borderLineColor: "#2152AC",
           text: this.shPolygon.features[j].properties.name,
-        
+
           // font: {
           //   size: 12,
           //   family: "KaiTi",
@@ -431,8 +435,67 @@ export default {
 
         textGraohicsLayer.add(window.textGraphic);
         getmap.add(textGraohicsLayer);
-        
+
         // console.log(window.map.basemap.baseLayers)
+      }
+    },
+    load() {
+      for (let j = 0; j < this.shPolygon.features.length; j++) {
+        const rings = this.shPolygon.features[j].geometry.coordinates;
+        console.log(rings);
+        const polygon = {
+          type: "polygon",
+          rings: rings[0],
+        };
+        const fillSymbol = {
+          //面的样式
+          type: "simple-fill",
+          color: [227, 139, 79, 0.8],
+          outline: {
+            color: [255, 255, 255],
+            width: 1,
+          },
+        };
+        const polygonAttr = {
+          Name: this.shPolygon.features[j].properties.name,
+          // Addres: this.shPolygon.features[j].properties.ADDR,
+          // Phone:this.shPolygon.features[j].properties.TELEPHONE,
+        };
+        const popupTemplate = {
+          title: polygonAttr.Name,
+        };
+        const polygonGraphic = new Graphic({
+          //创建面图斑
+          geometry: polygon,
+          symbol: fillSymbol,
+          popupTemplate: popupTemplate,
+        });
+        window.view.graphics.add(polygonGraphic);
+        const textSymbol = {
+          type: "text",
+          color: "#2152AC",
+          haloColor: "#ffffff",
+          haloSize: 1,
+          backgroundColor: "#ffffff",
+          borderLineSize: 1,
+          borderLineColor: "#2152AC",
+          text: this.shPolygon.features[j].properties.name,
+          font: {
+            size: 12,
+            family: "KaiTi",
+          },
+        };
+        const pointgeo = {
+          type: "point",
+          longitude: this.shPolygon.features[j].properties.center[0],
+          latitude: this.shPolygon.features[j].properties.center[1],
+        };
+        const textGraphic = new Graphic({
+          //创建面图斑
+          geometry: pointgeo,
+          symbol: textSymbol,
+        });
+        window.view.graphics.add(textGraphic);
       }
     },
   },

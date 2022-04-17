@@ -20,6 +20,11 @@
         <Button type="primary" class="ter" @click="swapmap(2)"></Button>
         <p class="swap-content-mask">地形底图</p>
       </div>
+      <!--切换地形地图按钮-->
+      <div class="sh-collection">
+        <Button type="primary" class="sh" @click="swapmap(3)"></Button>
+        <p class="swap-content-mask">上海底图</p>
+      </div>
       <p>
         <span class="word">注记</span>
         <i-switch
@@ -121,7 +126,7 @@ export default {
   top: 133px;
   z-index: 2;
   width: 70px;
-  height: 226px;
+  height: 280px;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -133,7 +138,8 @@ export default {
 /*切换底图弹窗内容--按钮*/
 .vec-collection,
 .img-collection,
-.ter-collection {
+.ter-collection,
+.sh-collection {
   position: relative;
   width: 54px;
   height: 54px;
@@ -147,9 +153,13 @@ export default {
 .ter-collection {
   top: 24px;
 }
+.sh-collection {
+  top: 32px;
+}
 .vec,
 .img,
-.ter {
+.ter,
+.sh {
   width: 54px;
   height: 54px;
   border-style: none;
@@ -165,6 +175,10 @@ export default {
 }
 .ter {
   background: url("../../assets/img/ter.png") no-repeat;
+  background-size: 100%;
+}
+.sh {
+  background: url("/上海logo.jpeg") no-repeat;
   background-size: 100%;
 }
 .swap-content-mask {
@@ -185,11 +199,11 @@ export default {
 }
 /*切换底图弹窗内容--开关*/
 .switch {
-  top: 32px;
+  top: 40px;
   position: relative;
 }
 .word {
-  top: 32px;
+  top: 40px;
   position: relative;
   font-size: 13px;
   line-height: 19px;

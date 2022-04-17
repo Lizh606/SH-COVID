@@ -4,10 +4,16 @@
     <Carousel autoplay v-model="value2" loop>
    
       <CarouselItem>
-        <img class="back" src="../assets/img/lunbo/img1.webp" />
+        <img class="back" src="../assets/img/lunbo/2.jpeg" />
       </CarouselItem>
       <CarouselItem>
-        <img class="back" src="../assets/img/lunbo/img2.jpeg" />
+        <img class="back" src="../assets/img/lunbo/1.jpeg" />
+      </CarouselItem>
+       <CarouselItem>
+        <img class="back" src="../assets/img/lunbo/3.gif" />
+      </CarouselItem>
+       <CarouselItem>
+        <img class="back" src="../assets/img/lunbo/4.jpeg" />
       </CarouselItem>
       <CarouselItem>
         <img class="back" src="../assets/img/lunbo/img3.jpeg" />

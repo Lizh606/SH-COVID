@@ -1,25 +1,26 @@
 import Vue from "vue";
-import store from  '@/store/index.js'
-import storage from '@/store/storage.js'
+import store from "@/store/index.js";
+import storage from "@/store/storage.js";
 
 import Router from "vue-router";
 import VueRouter from "vue-router";
-import Login from "../views/Login.vue";
-import Register from '../views/Register.vue'
-import Welcome from "../views/Welcome.vue";
-import daping from '../views/daping.vue'
-import Map from "../plugins/Map.vue";
-import layout from "../layout/layout.vue";
-import SceneMap from "../plugins/SceneMap.vue";
-import Locator from "../plugins/Locator.vue";
-import Swapmap from "../plugins/Swapmap.vue";
-import Weather from "../plugins/Weather.vue";
-import ChangeView from "../plugins/ChangeView.vue";
-import FeatureAffect from "../plugins/FeatureAffect.vue";
+import Login from "@/views/Login.vue";
+import Register from "@/views/Register.vue";
+import Welcome from "@/views/Welcome.vue";
+import daping from "@/views/daping.vue";
+import Map from "@/plugins/Map.vue";
+import layout from "@/layout/layout.vue";
+import TopicMake from "@/components/TopicMake/Topic.vue";
+import SceneMap from "@/plugins/SceneMap.vue";
+import Locator from "@/plugins/Locator.vue";
+import Swapmap from "@/plugins/Swapmap.vue";
+import Weather from "@/plugins/Weather.vue";
+import ChangeView from "@/plugins/ChangeView.vue";
+import FeatureAffect from "@/plugins/FeatureAffect.vue";
 import TianDiTu from "@/components/tdtMap/TianDiTu.vue";
-import Popup from "../plugins/Popup.vue";
-import yqData from "../views/yqData.vue"
-
+import Popup from "@/components/tdtMap/Popup.vue";
+import yqData from "@/views/yqData.vue";
+import echarts from '@/views/Echarts.vue'
 Vue.use(Router);
 const routes = [
   {
@@ -93,7 +94,7 @@ const routes = [
       {
         path: "/yqData",
         name: "yqData",
-        component: resolve=>(require(["../views/yqData.vue"],resolve)),
+        component: (resolve) => require(["@/views/yqData.vue"], resolve),
         meta: {
           title: "疫情",
         },
@@ -112,6 +113,14 @@ const routes = [
         component: Popup,
         meta: {
           title: "弹窗",
+        },
+      },
+      {
+        path: "/Echarts",
+        name: "Echarts",
+        component: echarts,
+        meta: {
+          title: "Echarts",
         },
       },
     ],
@@ -144,6 +153,14 @@ const routes = [
       title: "大屏",
     },
   },
+  {
+    path: "/TopicMake",
+    name: "TopicMake",
+    component: TopicMake,
+    meta: {
+      title: "专题制图",
+    },
+  },
 ];
 const router = new VueRouter({
   routes,
@@ -161,26 +178,25 @@ if (storage.get("token")) {
 //       next({
 //         path: "/",
 //         // 将刚刚要去的路由path（却无权限）作为参数，方便登录成功后直接跳转到该路由，这要进一步在登陆页面判断
-//         query: { redirect: to.fullPath }  
+//         query: { redirect: to.fullPath }
 //       });
 //     }
 //   } else {
 //     next(); //如果无需token,那么随它去吧
 //   }
 // });
-router.beforeEach((to, from ,next) => {
- if(to.name === 'Login'){
-  if (store.state.token){
-    next({
-      path: "/daping",
-    });
-  } else{
-    next()
+router.beforeEach((to, from, next) => {
+  if (to.name === "Login") {
+    console.log(store.state.token);
+    if (store.state.token !== "") {
+      next({
+        path: "/daping",
+      });
+    } else {
+      next();
+    }
   }
-   
-   
- }
- next()
-})
+  next();
+});
 
 export default router;

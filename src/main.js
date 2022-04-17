@@ -6,6 +6,7 @@ import router from './router/index'
 import store from './store/index'
 import less from 'less'
 import axios from 'axios'
+import * as echarts from 'echarts';
 
 // 全局组件、指令、原型等统一注册
 import "./register/index";
@@ -22,7 +23,8 @@ import '../src/styles/index.less'
 
 Vue.config.productionTip = false
 Vue.use(less)
-Vue.prototype.axios = axios;
+Vue.prototype.$axios = axios;
+Vue.prototype.$echarts = echarts;
 
   new Vue({
     router,

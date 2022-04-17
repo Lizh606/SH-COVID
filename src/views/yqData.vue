@@ -18,7 +18,7 @@
         @click="handleThematicMap"
       >
         <!-- 专题渲染 -->
-        <font id="zt-font"> 专题渲染 </font>
+        <!-- <font id="zt-font"> 专题渲染 </font> -->
       </Button>
     </template>
   </Table>
@@ -34,38 +34,75 @@ export default {
         {
           title: "行政区划",
           key: "name",
-          width: 198,
+          width: 208,
           tree: true,
+          font: 12,
+          className: "p-header",
         },
         {
-          title: "现有确诊",
+          title: "现有确诊(人)",
+          align: "center",
           width: 170,
           key: "nowConfirm",
           sortable: true,
+          className: "header",
         },
         {
-          title: "累计确诊",
+          title: "累计确诊(人)",
           width: 170,
+          align: "center",
           key: "confirm",
+          className: "header",
           sortable: true,
         },
         {
-          title: "累计死亡",
+          title: "累计死亡(人)",
           width: 170,
+          align: "center",
           key: "dead",
+          className: "header",
           sortable: true,
         },
         {
-          title: "累计治愈",
-          width: 150,
+          title: "累计治愈(人)",
+          width: 160,
           key: "heal",
+          className: "header",
+          align: "center",
+
           sortable: true,
         },
         {
           title: "操作",
           slot: "action",
           width: 140,
+          className: "header",
           align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    size: "small",
+                  },
+                  style: {
+                    marginRight: "5px",
+                    font: {
+                      size: 18,
+                    },
+                    color: "#00bec9",
+                  },
+                  on: {
+                    click: () => {
+                      this.handleThematicMap(params.index);
+                    },
+                  },
+                },
+                "专题渲染"
+              ),
+            ]);
+          },
         },
       ],
       data1: [],
@@ -167,7 +204,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #ta {
   /* overflow: scroll; */
   margin-left: 140px;
@@ -179,4 +216,23 @@ export default {
 #ta .ivu-table-column-kYfPrO {
   width: 1rem;
 }
+/deep/.ivu-table td.p-header {
+  // background-color: #00bec9;
+  color: #10aeb5;
+  font-size: 16px;
+}
+/deep/.ivu-table th.header  {
+  background-color: #00bec9;
+  color: #fff;
+  font-size: 16px;
+}
+/deep/.ivu-table th.p-header  {
+  background-color: #00bec9;
+  color: #fff;
+  font-size: 16px;
+}
+// /deep/ .ivu-table .province-name {
+//   // background-color: #00bec9;
+//   color: #00bec9;
+// }
 </style>
