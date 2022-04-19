@@ -138,6 +138,8 @@
 </template>
 
 <script>
+import { logintext } from "../api/login.js";
+
 export default {
   name: "LayOut",
   data() {
@@ -194,8 +196,9 @@ export default {
       second = second < 10 ? "0" + second : second; // 如果只有一位，则前面补零
       this.nowDate = `${year}/${month}/${day} ${hour}:${minute}:${second} ${weekArr[week]}`;
     },
-    GoHome() {
+    async GoHome() {
       this.$router.push("/Welcome");
+      // await logintext()
     },
     ToLogin() {
       if (this.$store.state.token) {

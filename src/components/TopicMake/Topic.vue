@@ -57,6 +57,18 @@ export default {
     TopicMake,
     // middle
   },
+  data () {
+    return {
+      username:""
+    }
+  },
+  mounted () {
+     this.$nextTick(() => {
+      this.username = window.localStorage
+        .getItem("userName")
+        .replaceAll('"', "");
+    });
+  },
   methods: {
       GoHome() {
       this.$router.push("/Welcome");
@@ -81,6 +93,13 @@ export default {
   border-radius: 4px;
   overflow: hidden;
   height: 100%;
+}
+/deep/.ivu-menu-horizontal {
+  background-color: #00bec9;
+}
+/deep/ .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item-active, .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item:hover, .ivu-menu-light.ivu-menu-horizontal .ivu-menu-submenu-active, .ivu-menu-light.ivu-menu-horizontal .ivu-menu-submenu:hover{
+  color: #fff;
+    border-bottom: none;
 }
 .time-item {
   float: left !important;
@@ -124,9 +143,9 @@ export default {
   left: 0px;
   height: 70px;
 }
-&/deep/.ivu-menu-light {
-  margin-top: 5px;
-}
+// &/deep/.ivu-menu-light {
+//   margin-top: 5px;
+// }
 &/deep/.ivu-layout-header {
   padding: 0;
 }
@@ -143,73 +162,12 @@ export default {
 }
 .system-name {
   // left: 10px;
+  color: #f5f7f9;
   position: relative;
   font-size: 24px;
   font-weight: bold;
 }
 
-.layout-sider {
-  position: relative;
-  // top: -3px;
-  flex: 1 1 100% !important;
-}
-.sider {
-  background: white;
-  width: 74px !important;
-  min-width: 74px !important;
-  max-width: 74px !important;
-  flex-basis: 100% !important;
-}
-.sider:hover {
-  background: white;
-  width: 170px !important;
-  min-width: 170px !important;
-  max-width: 170px !important;
-  flex-basis: 100% !important;
-}
-.sider-menu {
-  top: 1px;
-  width: 74px !important;
-  height: 100%;
-}
-
-.sider-menu:hover {
-  width: 170px !important;
-  .sider-item-word,
-  .sider-item-word-son {
-    display: inline-block;
-    text-align: center;
-  }
-}
-.sider-item-svg,
-.sider-item-word,
-.sider-item-word-son {
-  vertical-align: middle;
-  line-height: initial;
-  display: none;
-}
-.sider-item-icon {
-  font-size: 22px;
-  left: -3px;
-  position: relative;
-}
-.sider-item-icon-son {
-  font-size: 18px;
-  left: -15px;
-  position: relative;
-}
-
-.sider-item-word {
-  left: 6px;
-  top: -3px;
-  position: relative;
-  font-weight: bold;
-}
-.sider-item-word-son {
-  left: -3px;
-  position: relative;
-  font-weight: bold;
-}
 &/deep/.ivu-icon-ios-arrow-down {
   display: none;
 }

@@ -4,7 +4,9 @@
       <div class="signIn-left"></div>
       <div class="signIn-right">
         <div class="sign-qr-code"></div>
-        <div class="sign-title">上海市新冠疫情COVID-19<br>动态分布可视化系统</div>
+        <div class="sign-title">
+          上海市新冠疫情COVID-19<br />动态分布可视化系统
+        </div>
         <div class="sign-center" @keyup.enter="handleSubmit">
           <Form
             id="form"
@@ -163,6 +165,9 @@ export default {
             });
             this.loading = false;
             if (result.data) {
+              // 存储token开始时间
+              let nowData = Date.now()
+              this.$store.commit("set_TimeStamp", nowData);
               this.$store.commit("set_token", result.data.token);
               this.$store.commit("setUserInfo", result.data.realname);
               this.setCookie("realname", result.data.realname, 7);

@@ -2,7 +2,7 @@
   <div class="topic-make">
     <div class="header">
       <b class="title">专题制图</b>
-      <Button class="close-btn" type="back">返回</Button>
+      <Button class="close-btn" type="back" @click="back()">返回</Button>
     </div>
     <div class="oper-panel">
       <Form
@@ -382,6 +382,11 @@ export default {
     this.$refs.mapdata.appendChild(this.cloneEsriUi);
     document.querySelector(".esri-ui-corner-container").style.display = "none";
   },
+  methods: {
+    back(){
+      this.$router.push("/TianDiTu")
+    }
+  }
 };
 </script>
 

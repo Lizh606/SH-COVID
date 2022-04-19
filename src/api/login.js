@@ -10,6 +10,9 @@
 
 // export { login };
 import { POST } from "@/utils/request.js";
+import { GET } from "@/utils/request.js";
+
+
 
 export function login(param) {
   return POST(
@@ -18,7 +21,12 @@ export function login(param) {
     param,
   );
 }
-
+export function logintext() {
+  return GET(
+    `/user/login-test`,
+    "测试",
+  );
+}
 //注册
 export function register(param) {
   return POST(

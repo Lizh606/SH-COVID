@@ -20,6 +20,7 @@
 <style></style>
 
 <script>
+
 export default {
   // 使用时请使用 :url.sync=""传值
 
@@ -34,7 +35,7 @@ export default {
         this.$router.push("/");
       }
     },
-    GoHome() {
+    async GoHome() {
       this.$router.push("/Welcome");
     },
   },
