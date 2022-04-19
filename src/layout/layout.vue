@@ -197,8 +197,8 @@ export default {
       this.nowDate = `${year}/${month}/${day} ${hour}:${minute}:${second} ${weekArr[week]}`;
     },
     async GoHome() {
-      // this.$router.push("/Welcome");
-      await logintext()
+      this.$router.push("/Welcome");
+      // await logintext()
     },
     ToLogin() {
       if (this.$store.state.token) {

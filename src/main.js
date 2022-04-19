@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-
+import { Message } from 'view-design'
 
 import router from './router/index'
 import store from './store/index'

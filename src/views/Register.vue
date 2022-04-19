@@ -35,16 +35,7 @@
                 placeholder="请输入昵称"
               ></i-input>
             </FormItem>
-            <FormItem>
-              <!-- <CheckboxGroup>
-                <Checkbox
-                  label="记住密码"
-                  id="remeberPwd"
-                  v-model="formValidate.savePwd"
-                  @click.native="change()"
-                ></Checkbox>
-              </CheckboxGroup> -->
-            </FormItem>
+          
             <FormItem>
               <Button
                 type="primary"
@@ -55,6 +46,9 @@
               >
             </FormItem>
           </Form>
+           <div type="‘button’" class="login" @click="ToLogin">
+            立即登录
+          </div>
         </div>
       </div>
     </div>
@@ -167,11 +161,17 @@ export default {
         }
       });
     },
+     ToLogin() {
+      this.$router.push("/");
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.login {
+  text-align: center;
+}
 .sign-In {
   width: 100%;
   height: 100%;

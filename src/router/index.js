@@ -1,6 +1,8 @@
 import Vue from "vue";
 import store from "@/store/index.js";
 import storage from "@/store/storage.js";
+import { Message } from 'view-design'
+
 
 import Router from "vue-router";
 import VueRouter from "vue-router";
@@ -132,10 +134,11 @@ router.beforeEach((to, from, next) => {
   let token = window.localStorage.getItem("token");
   // 如果token过期了
   if (!token) {
-    if (to.path == '/') return next()
+    if (to.path == '/' || to.path == '/register') return next()
     // 注意要import element的Message组件
-    // this.$Message.error("登录状态过期，请重新登录")
-    return next('/')
+    // this.alert.error("登录状态过期，请重新登录")
+    Message.error("登录状态过期，请重新登录")
+    // return next('/register')
     // 如果token没有过期，又是选择了登录页面就直接重定向到首页，不需要重新输入账户密码
   } else if (to.path == '/') {
     return next('/daping')
