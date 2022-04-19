@@ -4,7 +4,7 @@ const TOKEN_TIMEOUT_VALUE = 2 * 3600 * 1000 ;
 const getTimeStamp = () => {
     return window.localStorage.getItem("TimeStamp");
 }
- const isCheckTimeout = () =>{
+const isCheckTimeout = () =>{
     //当前时间戳
     const currentTime = Date.now();
     //登录时间戳

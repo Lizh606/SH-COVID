@@ -1,7 +1,7 @@
-import {service1} from '@/utils/request'
+import {YQservice} from '@/utils/YQrequest'
 
 export const YQPathData = () => {
-  return service1({
+  return YQservice({
     //   默认 get请求
     url: '/shyq.json'
   })

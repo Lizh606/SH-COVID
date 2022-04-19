@@ -44,6 +44,7 @@ export default new vuex.Store({
   actions: {
     logout() {
       this.commit('del_token', '')
+      storage.removeAll();
       router.push("/");
     }
   }

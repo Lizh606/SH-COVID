@@ -1,16 +1,6 @@
-// import { service } from "@/utils/request.js";
 
-// const login = (data) => {
-//   return service({
-//     url: "/user/login",
-//     method: "POST",
-//     data,
-//   });
-// };
-
-// export { login };
-import { POST } from "@/utils/request.js";
-import { GET } from "@/utils/request.js";
+import { POST } from "@/utils/axios.js";
+import { GET } from "@/utils/axios.js";
 
 
 

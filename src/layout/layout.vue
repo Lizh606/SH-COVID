@@ -197,8 +197,8 @@ export default {
       this.nowDate = `${year}/${month}/${day} ${hour}:${minute}:${second} ${weekArr[week]}`;
     },
     async GoHome() {
-      this.$router.push("/Welcome");
-      // await logintext()
+      // this.$router.push("/Welcome");
+      await logintext()
     },
     ToLogin() {
       if (this.$store.state.token) {
@@ -217,26 +217,7 @@ export default {
         this.siderActiveName = name;
       }
     },
-    tomap() {
-      // 避免跳转到当前页面
-      if (this.$route.path == "/Map") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
-      }
-      this.$router.push("/Map");
-    },
-    togaode() {
-      // 避免跳转到当前页面
-      if (this.$route.path == "/SceneMap") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
-      }
-      this.$router.push("/SceneMap");
-    },
+
     totianditu() {
       // 避免跳转到当前页面
       if (this.$route.path == "/TianDiTu") {
@@ -246,37 +227,6 @@ export default {
         return;
       }
       this.$router.push("/TianDiTu");
-    },
-
-    toweather() {
-      // 避免跳转到当前页面
-      if (this.$route.path == "/Weather") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
-      }
-      this.$router.push("/Weather");
-    },
-    tochangeview() {
-      // 避免跳转到当前页面
-      if (this.$route.path == "/ChangeView") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
-      }
-      this.$router.push("/ChangeView");
-    },
-    tofeatureaffect() {
-      // 避免跳转到当前页面
-      if (this.$route.path == "/FeatureAffect") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
-      }
-      this.$router.push("/FeatureAffect");
     },
     tohos() {
       // 避免跳转到当前页面
