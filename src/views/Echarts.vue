@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="layout">
     <div id="echarts" class="mychart" style="“height:100%;width:100%;”"></div>
     <div
       @click="DataShow"
@@ -9,12 +9,12 @@
     >
       <IconSvg iconClass="bangzhuyushuoming" class="help">数据说明</IconSvg>
     </div>
-    <Modal v-model="modal" width="1000" >
-      <p slot="header" style="color: #fff; text-align: center;font-size : 20px">
+    <Modal v-model="modal" width="1000">
+      <p slot="header" style="color: #fff; text-align: center; font-size: 20px">
         <span>数据说明</span>
       </p>
-      <div >
-        <p style="font-size:16px" >
+      <div>
+        <p style="font-size: 16px">
           1、数据来源：<br />来自国家卫健委、各省市区卫健委、各省市区政府、港澳台官方渠道公开数据；<br /><br />2、数据统计原则：<br />a)
           每日上午全国数据会优先使用国家卫健委公布的数据（此时各省市数据尚未及时更新，会出现全国数据大于各省份合计数的情况）；<br />b)
           当各省公布数据总和大于国家卫健委公布的数据时，则全国数据切换为各省合计数；<br />c
@@ -25,14 +25,14 @@
         </p>
       </div>
       <div slot="footer">
-        <Button  @click="okHandler"  >确定</Button>
+        <Button @click="okHandler">确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script>
-import { YQPathData } from "@/api/sys.js";
+import { YQDatePathData } from "@/api/sys.js";
 export default {
   name: "Echarts",
   data() {
@@ -43,6 +43,10 @@ export default {
       dead: [],
       heal: [],
       modal: false,
+
+      updateDate:[],
+      newconfirm:[],
+      asymptomatic:[],//无症状
     };
   },
   mounted() {
@@ -50,21 +54,23 @@ export default {
   },
   methods: {
     async getData() {
-      let res = await YQPathData();
-      res.data[0].children[0].children.map((item) => {
-        this.confirm.push(item.confirm),
-          this.division.push(item.name),
-          this.nowConfirm.push(item.nowConfirm);
-        this.dead.push(item.dead);
-        this.heal.push(item.heal);
+      let res = await YQDatePathData();
+      res.data.trend[1].updateDate.map((item) => {
+        this.updateDate.push(item)
         //返回的是[__ob__: Observer] 可视察数组 需要转为正常数组 JSON.parse(JSON.stringify()
         // console.log(this.division);
       });
-      (this.confirm = JSON.parse(JSON.stringify(this.confirm))),
-        (this.division = JSON.parse(JSON.stringify(this.division)));
-      (this.nowConfirm = JSON.parse(JSON.stringify(this.nowConfirm))),
-        (this.dead = JSON.parse(JSON.stringify(this.dead))),
-        (this.heal = JSON.parse(JSON.stringify(this.heal))),
+      res.data.trend[2].list[4].data.map((item)=>{
+        this.newconfirm.push(item)
+      }),
+      res.data.trend[2].list[5].data.map((item)=>{
+        this.asymptomatic.push(item)
+      }),
+      (this.updateDate = JSON.parse(JSON.stringify(this.updateDate))),
+      (this.newconfirm = JSON.parse(JSON.stringify(this.newconfirm))),
+      (this.asymptomatic = JSON.parse(JSON.stringify(this.asymptomatic))),
+
+
         this.mycharts();
     },
 
@@ -95,7 +101,7 @@ export default {
         },
         legend: {
           // x: {"left",
-          data: ["累计确诊", "现有确诊", "累计死亡", "累计治愈"],
+          data: ["新增本土","新增无症状"],
           padding: [20, 0, 0, 0],
           textStyle: {
             color: "#525A6F",
@@ -104,82 +110,115 @@ export default {
           },
         },
         xAxis: {
-          data: this.division,
+          data: this.updateDate,
           type: "category", //类目轴，显示所有项目
+          boundaryGap: true,//两边六百
+               padding: [20, 0, 0, 0],
+
           axisTick: {
             alignWithLabel: true,
           },
           axisLabel: {
-            interval: 0,
+           show: true, 
+
+            interval: 5,
             rotate: 45, //倾斜度 -90 至 90 默认为0
             margin: 2,
+
+
             textStyle: {
               color: "#525A6F",
               fontFamily: "KaiTi",
               fontSize: 16,
+
             },
           },
+          axisLine:{
+           show:true,  //这里的show用于设置是否显示x轴那一条线 默认为true
+           lineStyle:{ //lineStyle里面写x轴那一条线的样式
+             color:'#6FC6F3',
+             width:2,    //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+           }
+       },
         },
 
         yAxis: [
-          {
-            type: "value",
-            name: "累计确诊",
-            min: 0,
-            max: 5000,
-            position: "right",
-            axisLabel: {
-              formatter: "{value} 人",
-              textStyle: {
-                color: "#525A6F",
-                fontFamily: "KaiTi",
-                fontSize: 14,
-              },
-            },
+        //   {
+        //     type: "value",
+        //     name: "累计确诊",
+        //     min: 0,
+        //     max: 5000,
+        //     position: "right",
+        //     axisLabel: {
+        //       formatter: "{value} 人",
+        //       textStyle: {
+        //         color: "#525A6F",
+        //         fontFamily: "KaiTi",
+        //         fontSize: 14,
+        //       },
+        //     },
+        //   },
+        //   {
+        //     type: "value",
+        //     name: "现有确诊",
+        //     min: 0,
+        //     max: 700,
+        //     position: "left",
+        //     axisLabel: {
+        //       formatter: "{value} 人",
+        //       textStyle: {
+        //         color: "#525A6F",
+        //         fontFamily: "KaiTi",
+        //         fontSize: 14,
+        //       },
+        //     },
+        //   },
+        {
+          type:"value",
+           axisLabel:{
+             show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
+             textStyle:{   //textStyle里面写y轴下的字体的样式
+                color:'#333',
+                fontSize:13
+             }
           },
-          {
-            type: "value",
-            name: "现有确诊",
-            min: 0,
-            max: 700,
-            position: "left",
-            axisLabel: {
-              formatter: "{value} 人",
-              textStyle: {
-                color: "#525A6F",
-                fontFamily: "KaiTi",
-                fontSize: 14,
-              },
-            },
-          },
-        ],
+      //用于设置y轴的那一条线
+          axisLine:{
+            show:true,  //这里的show用于设置是否显示y轴那一条线 默认为true
+            lineStyle:{ //lineStyle里面写y轴那一条线的样式
+              color:'#6FC6F3',
+              width:2,    //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+            }
+          }
+        }],
+
         series: [
           {
-            name: "累计确诊",
+            name: "新增本土",
             type: "line", //图类型
             smooth: true,
-            data: this.confirm,
-            yAxisIndex: 0,
+            data: this.newconfirm,
+            // yAxisIndex: 0,
           },
           {
-            name: "现有确诊",
+            name: "新增无症状",
             type: "line", //图类型
             smooth: true,
-            data: this.nowConfirm,
-            yAxisIndex: 1,
+            data: this.asymptomatic,
+            // yAxisIndex: 1,
           },
-          {
-            name: "累计死亡",
-            type: "line", //图类型
-            smooth: true,
-            data: this.dead,
-          },
-          {
-            name: "累计治愈",
-            type: "line", //图类型
-            smooth: true,
-            data: this.heal,
-          },
+          // {
+          //   name: "累计死亡",
+          //   type: "line", //图类型
+          //   smooth: true,
+          //   data: this.dead,
+          // },
+          // {
+          //   name: "累计治愈",
+          //   type: "line", //图类型
+          //   smooth: true,
+          //   data: this.heal,
+          // },
 
           // {
           //   name: '价格',
@@ -206,10 +245,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.layout{
+  height: 100%;
+}
 .mychart {
+  border: #00bec9 2px solid;
+  border-radius: 4px;
   // position: absolute;
   width: 100%;
-  height: 600px;
+  height: 100%;
 }
 .help-icon {
   position: absolute;
@@ -221,7 +265,7 @@ export default {
   width: 20px;
   height: 20px;
 }
-/deep/.ivu-modal-header{
+/deep/.ivu-modal-header {
   background-color: #00bec9;
 }
 </style>

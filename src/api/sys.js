@@ -6,3 +6,9 @@ export const YQPathData = () => {
     url: '/shyq.json'
   })
 }
+export const YQDatePathData = () => {
+  return YQservice({
+    //   默认 get请求
+    url: '/上海增涨趋势.json'
+  })
+}
