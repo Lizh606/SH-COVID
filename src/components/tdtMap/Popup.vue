@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="layout">
     <tdt-map ref="mapdata"></tdt-map>
     <Button class="loadpoint" @click="loadpoint">加载医院</Button>
     <Button class="begin" @click="load">加载行政区划</Button>
@@ -503,6 +503,9 @@ export default {
 </script>
 
 <style scoped>
+.layout{
+  height: 100%;
+}
 .loadpoint {
   position: relative;
   left: 14px;

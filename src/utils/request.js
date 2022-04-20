@@ -3,7 +3,7 @@ import store from "@/store/index.js";
 import isCheckTimeout from "./checkTimeout";
 
 export const service = axios.create({
-  baseURL: "/api",
+  baseURL: process.env.VUE_APP_BASE_API,
   timeout: 10000,
 });
 

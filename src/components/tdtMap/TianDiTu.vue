@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="layout">
     <div ref="map" id="map"></div>
     <MapTools class="map-tools" />
     <div id="overviewDiv"><div id="extentDiv"></div></div>
@@ -40,8 +40,12 @@ export default {
       TdtMap: this.TdtMap,
     };
   },
-   
+
   mounted() {
+    if (location.href.indexOf("#reloaded") == -1) {
+      location.href = location.href + "#reloaded";
+      location.reload();
+    }
     this.$nextTick(() => {
       setTimeout(() => {
         this.createMap();
@@ -103,7 +107,7 @@ export default {
         title: "地形地图",
         id: "地形地图",
       });
-       const shBaseMap = new Basemap({
+      const shBaseMap = new Basemap({
         baseLayers: [SHSU, SHLayer_zj],
         title: "地形地图",
         id: "地形地图",
@@ -111,7 +115,7 @@ export default {
       const basemapvmodel = new BasemapGalleryVM({
         view: view,
         source: new LocalBasemapsSource({
-          basemaps: [vecBaseMap, imgBaseMap, terBaseMap,shBaseMap],
+          basemaps: [vecBaseMap, imgBaseMap, terBaseMap, shBaseMap],
         }),
       });
       window.BasemapGalleryVM = basemapvmodel;
@@ -135,23 +139,23 @@ export default {
           this.watchoverview();
         });
       });
-      const ov = document.getElementById("overviewDiv")
-      view.ui.add(ov,{
-        position:'bottom-left'
-      })
+      const ov = document.getElementById("overviewDiv");
+      view.ui.add(ov, {
+        position: "bottom-left",
+      });
 
       window.view = view;
       this.TdtMap.map = map;
       this.overviewmap = overviewmap;
       this.TdtMap.view = view;
       this.overview_view = overview_view;
-      
+
       //取消esri的缩放
       view.ui.components = [];
       //取消下面esri标志
       view.ui.remove("attribution");
     },
-    
+
     //鹰眼监听
     watchoverview() {
       const extentgraphic = new Graphic({
@@ -191,9 +195,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.layout{
+  height: 100%;
+}
 #map {
   width: 100%;
-  height: 726px;
+  height: 100%;
   position: relative;
 }
 //鹰眼
@@ -225,13 +232,13 @@ export default {
   bottom: 129px;
   right: 20px;
 }
-&/deep/.esri-expand__container  {
+&/deep/.esri-expand__container {
   position: fixed;
   bottom: 59px;
   right: 20px;
   transition: 300ms;
 }
-&/deep/.esri-expand{
+&/deep/.esri-expand {
   position: fixed;
   bottom: 59px;
   right: 20px;
