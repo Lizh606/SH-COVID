@@ -4,17 +4,20 @@
       v-if="updateDate.length > 0 && card1"
       :updateDate="updateDate"
       :xdata="xdata"
+      :legend="legend"
       :title1="title1"
     />
     <DoubleEcharts
       v-if="updateDate.length > 0 && card2"
       :updateDate="updateDate"
       :xdata="xdata"
+      :legend="legend"
+
       :title1="title1"
     />
     <!-- <Tree class="tree" :data="data1" expand-node></Tree> -->
     <ButtonGroup>
-      <Button class="btn1" @click="openCard1()" v-trigger
+      <Button class="btn1" @click="openCard1()" 
         >新增<br />本土确诊趋势</Button
       >
       <Button class="btn1" @click="openCard2()">新增<br />无症状趋势</Button>
@@ -77,28 +80,41 @@ export default {
         heal: [],
         dead: [],
       },
+      nameinfo: {
+        localName: "",
+        wzzName: "",
+        cName: "",
+        confirmName: "",
+        healName: "",
+        deadName: "",
+      },
+      legend: ["新增本土"],
+      YQdata:[]
     };
   },
-  beforeMount() {
-       if (location.href.indexOf("#reloaded") == -1) {
+  async mounted() {
+    if (location.href.indexOf("#reloaded") == -1) {
       location.href = location.href + "#reloaded";
       location.reload();
     }
+      const res = await YQDatePathData();
+      this.YQdata =res.data
     this.getData();
+    this.openCard1()
   },
-  //自定义指令
-  directives: {
-    trigger: {
-      inserted(el) {
-        el.click();
-        el.focus();
-      },
-    },
-  },
+  //自定义指令  v-trigger
+  // directives: {
+  //   trigger: {
+  //     inserted(el) {
+  //       el.click();
+  //       el.focus();
+  //     },
+  //   },
+  // },
 
   methods: {
     async getData() {
-      let res = await YQDatePathData();
+      const res = await YQDatePathData();
       res.data.trend[1].updateDate.map((item) => {
         this.updateDate.push(item);
         //返回的是[__ob__: Observer] 可视察数组 需要转为正常数组 JSON.parse(JSON.stringify()
@@ -126,10 +142,11 @@ export default {
         (this.newconfirm = JSON.parse(JSON.stringify(this.newconfirm))),
         (this.asymptomatic = JSON.parse(JSON.stringify(this.asymptomatic)));
       this.nowconfirm = JSON.parse(JSON.stringify(this.nowconfirm));
-
       // this.mycharts();
     },
     openCard1() {
+      this.legend = [this.YQdata.trend[2].list[4].name],
+
       this.xdata = this.newconfirm;
       this.title1 = "上海 新增本土趋势";
 
@@ -138,18 +155,24 @@ export default {
       this.card1 = true;
     },
     openCard2() {
-      this.xdata = this.asymptomatic;
+      this.legend = [this.YQdata.trend[2].list[5].name];
+        this.xdata = this.asymptomatic;
       this.title1 = "上海 新增无症状趋势";
       this.card2 = false;
       this.card1 = true;
     },
     openCard3() {
+      this.legend = [this.YQdata.trend[2].list[3].name];
       this.xdata = this.nowconfirm;
       this.title1 = "上海 新增确诊(包含本土)趋势";
       this.card1 = true;
       this.card2 = false;
     },
     openCard4() {
+      this.nameinfo.confirmName = this.YQdata.trend[2].list[0].name;
+      this.nameinfo.healName = this.YQdata.trend[2].list[1].name;
+      this.nameinfo.deadName = this.YQdata.trend[2].list[2].name;
+      this.legend = this.nameinfo;
       this.xdata = this.infos;
       this.title1 = "上海 累计确诊/治愈/死亡趋势";
       this.card1 = false;
@@ -332,6 +355,7 @@ export default {
   height: 100%;
   // height: calc(100%-100px);
 }
+
 // .mychart {
 //   border: #00bec9 2px solid;
 //   border-radius: 4px;
@@ -343,21 +367,25 @@ export default {
   top: 25px;
   left: 300px;
 }
+
 /deep/.ivu-btn {
   width: 180px;
   height: 48px;
   // left: 300px;
 }
+
 /deep/.ivu-btn:focus {
   background-color: #00bec9;
   color: aliceblue;
 }
+
 /deep/.ivu-btn + .ivu-btn-group,
 .ivu-btn-group .ivu-btn + .ivu-btn,
 .ivu-btn-group + .ivu-btn,
 .ivu-btn-group + .ivu-btn-group {
   margin-left: 5px;
 }
+
 // .btn1{
 //    border: #eee 1px solid;
 //   border-radius: 10px;
@@ -368,10 +396,12 @@ export default {
   top: 38px;
   left: 346px;
 }
+
 .help {
   width: 20px;
   height: 20px;
 }
+
 /deep/.ivu-modal-header {
   background-color: #00bec9;
 }

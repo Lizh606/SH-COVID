@@ -24,6 +24,12 @@ export default {
         return [];
       },
     },
+     legend: {
+      type: Array,
+      default: function () {
+        return [];
+      },
+    },
     title1: {
       type: String,
       default: "",
@@ -85,7 +91,7 @@ export default {
         },
         legend: {
           x: "right",
-          data: ["新增本土"],
+          data:[this.legend[0]],
           padding: [20, 280, 0, 0],
           textStyle: {
             color: "#525A6F",
@@ -158,7 +164,7 @@ export default {
 
         series: [
           {
-            name: "新增本土",
+            name: this.legend[0],
             type: "line", //图类型
             smooth: true,
             data: this.xdata,

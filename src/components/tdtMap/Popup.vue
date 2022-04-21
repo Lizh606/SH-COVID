@@ -502,7 +502,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang ="less" scoped>
+/deep/.ivu-layout-content {
+    overflow-x: none;
+}
 .layout{
   height: 100%;
 }
@@ -518,6 +521,9 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
+/deep/.ivu-layout-content {
+    overflow-x: none;
+}
 .ivu-modal {
   .ivu-modal-header {
     padding: 0.2rem 0.7rem;

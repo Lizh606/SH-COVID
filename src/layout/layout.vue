@@ -3,9 +3,9 @@
     <Layout class="layout-first">
       <!-------------------------------- 页眉 -------------------------------->
       <Header>
-        <Menu mode="horizontal"  class="layout-header">
+        <Menu mode="horizontal" class="layout-header">
           <!-- <div class="time-item">{{ nowDate }}</div> -->
-          <MenuItem name="user" class="user-item">
+          <!-- <MenuItem name="user" class="user-item">
             <Dropdown class="menu-item-word">
               <IconSvg iconClass="bianji" class="menu-item-icon"></IconSvg>
               <a href="javascript:void(0)">
@@ -20,12 +20,19 @@
                 <span class="menu-item-word">问题反馈</span>
               </a>
             </Dropdown>
-          </MenuItem>
+          </MenuItem> -->
           <MenuItem name="logout" class="logout-item">
+            <img
+              src="../assets/img/头像1.jpeg"
+              style="height: 50px; border-radius: 50%"
+              class="menu-item-icon"
+            />
+
             <Dropdown class="menu-item-word">
-              <IconSvg iconClass="zhanghao1" class="menu-item-icon"></IconSvg>
               <a href="javascript:void(0)">
                 <span class="menu-item-word">{{ username }}</span>
+            <IconSvg iconClass="xiala"  class="xiala-icon"></IconSvg>
+
               </a>
               <DropdownMenu slot="list">
                 <DropdownItem>个人中心</DropdownItem>
@@ -123,6 +130,13 @@
                 ></IconSvg>
                 <span class="sider-item-word-son">Echarts</span>
               </MenuItem>
+              <MenuItem name="text" @click.native="text">
+                <IconSvg
+                  iconClass="shuzhuangtu"
+                  class="sider-item-icon-son"
+                ></IconSvg>
+                <span class="sider-item-word-son">text</span>
+              </MenuItem>
             </Submenu>
           </Menu>
           <!-- </Col>
@@ -150,7 +164,8 @@ export default {
     };
   },
   mounted() {
-    console.log(this.username);
+    
+    console.log(new Date(1650547046961));
     this.currentTime();
     // 使页面更新后导航菜单的active-name与页面内容匹配
     this.$nextTick(() => {
@@ -258,6 +273,16 @@ export default {
       }
       this.$router.push("/Echarts");
     },
+    text() {
+      // 避免跳转到当前页面
+      if (this.$route.path == "/text") {
+        console.log(
+          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
+        );
+        return;
+      }
+      this.$router.push("/text");
+    },
   },
 };
 </script>
@@ -274,9 +299,12 @@ export default {
 /deep/.ivu-menu-horizontal {
   background-color: #00bec9;
 }
-/deep/ .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item-active, .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item:hover, .ivu-menu-light.ivu-menu-horizontal .ivu-menu-submenu-active, .ivu-menu-light.ivu-menu-horizontal .ivu-menu-submenu:hover{
+/deep/ .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item-active,
+.ivu-menu-light.ivu-menu-horizontal .ivu-menu-item:hover,
+.ivu-menu-light.ivu-menu-horizontal .ivu-menu-submenu-active,
+.ivu-menu-light.ivu-menu-horizontal .ivu-menu-submenu:hover {
   color: #fff;
-    border-bottom: none;
+  border-bottom: none;
 }
 .time-item {
   float: left !important;
@@ -290,31 +318,41 @@ export default {
 .feedback-item {
   right: -38px;
 }
-.logout-item {
-  right: -200px;
-}
+// .logout-item {
+//   // right: -200px;
+// }
 .user-item,
 .feedback-item,
 .logout-item {
-  width: 100px;
-  top: 13px;
+  width: 150px;
+  top: -15px;
   font-size: 14px;
   float: right !important;
 }
 .menu-item-icon {
-  margin: 0 auto;
   position: relative;
   display: block;
-  font-size: 25px;
+  top: 23px;
+  // font-size: 25px;
+  right: 30px;
+  font-size: 32px;
 }
 .menu-item-word {
   text-align: center;
   color: white;
-  line-height: 40px;
+  font-size: 20px;
+  line-height: 0px;
   display: block;
 }
 &/deep/.ivu-select-dropdown {
-  margin: -10px 0;
+  margin: 15px 0;
+}
+.xiala-icon{
+  position: relative;
+  top: -10px;
+  right: -45px;
+  font-size: 20px;
+  color: #f5f7f9;
 }
 .system-item {
   left: 0px;
@@ -417,9 +455,11 @@ export default {
   height: 100%;
 }
 #layout-content {
-  margin-top: 6px;
+  // margin-top: 6px;
   // width: 945px;
   // height: 689px;
+  height: 100%;
+  overflow: unset;
 }
 #layout {
   width: 100%;

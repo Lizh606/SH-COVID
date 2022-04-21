@@ -18,6 +18,10 @@ export default {
     xdata: {
       type: Object,
       default:()=>{}
+    }, 
+     legend: {
+          type: Object,
+      default:()=>{}
     },
     title1: {
       type: String,
@@ -71,7 +75,7 @@ export default {
         },
         legend: {
           x: "right",
-          data: ["确诊", "治愈", "死亡"],
+          data: [this.legend.confirmName, this.legend.healName, this.legend.deadName],
           padding: [20, 280, 0, 0],
           textStyle: {
             color: "#525A6F",
@@ -144,21 +148,21 @@ export default {
 
         series: [
           {
-            name: "确诊",
+            name:this.legend.confirmName, 
             type: "line", //图类型
             smooth: true,
             data: this.xdata.confirm,
             // yAxisIndex: 0,
           },
           {
-            name: "治愈",
+            name: this.legend.healName, 
             type: "line", //图类型
             smooth: true,
             data: this.xdata.heal,
             // yAxisIndex: 1,
           },
           {
-            name: "死亡",
+            name: this.legend.deadName,
             type: "line", //图类型
             smooth: true,
             data: this.xdata.dead,

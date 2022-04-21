@@ -15,6 +15,9 @@ import TopicMake from "@/components/TopicMake/Topic.vue";
 import TianDiTu from "@/components/tdtMap/TianDiTu.vue";
 import Popup from "@/components/tdtMap/Popup.vue";
 import echarts from '@/views/Echarts.vue'
+import text from '@/views/text'
+
+import isCheckTimeout from '../utils/checkTimeout.js'
 Vue.use(Router);
 const routes = [
   {
@@ -66,6 +69,14 @@ const routes = [
         component: echarts,
         meta: {
           title: "Echarts",
+        },
+      },
+      {
+        path: "/text",
+        name: "text",
+        component: text,
+        meta: {
+          title: "text",
         },
       },
     ],
@@ -132,18 +143,31 @@ if (storage.get("token")) {
 // });
 router.beforeEach((to, from, next) => {
   let token = window.localStorage.getItem("token");
+  
   // 如果token过期了
-  if (!token) {
-    if (to.path == '/' || to.path == '/register') return next()
+  if (storage.get("token")) {
+    if (to.path == '/' || to.path == '/register') {
+      next('/daping')
+    } else {
+      next()
+    }
+    if (isCheckTimeout()) {
+      store.dispatch("logout");
+
+      Message.error("登录状态过期，请重新登录")
+      return Promise.reject(new Error('token 失效'))
+      }
     // 注意要import element的Message组件
     // this.alert.error("登录状态过期，请重新登录")
-    Message.error("登录状态过期，请重新登录")
     // return next('/register')
     // 如果token没有过期，又是选择了登录页面就直接重定向到首页，不需要重新输入账户密码
-  } else if (to.path == '/') {
-    return next('/daping')
+  } else {
+    // if(to.path == '/text'){
+    //   next()
+
+    // }
+   next()
   }
-  next()
 });
 
 export default router;
