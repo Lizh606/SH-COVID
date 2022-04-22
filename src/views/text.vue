@@ -1,4 +1,3 @@
-
 <template>
   <div class="timeaxis">
     <div v-for="item in list" :key="item.index">
@@ -7,28 +6,27 @@
           <div class="center">{{ item }}</div>
         </div>
         <div class="circular"></div>
-        <div class="item2">
-        </div>
+        <div class="item2"></div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { YQDatePathData } from "@/api/sys.js";
+import { YQDatePathData } from '@/api/sys.js'
 
 export default {
   data() {
     return {
       //数据
       list: []
-    };
+    }
   },
   async mounted() {
-    const res = await YQDatePathData();
+    const res = await YQDatePathData()
     console.log(res)
     this.list = res.data.trend[1].updateDate
-  },
-};
+  }
+}
 </script>
 <style scoped lang="less">
 .timeaxis {

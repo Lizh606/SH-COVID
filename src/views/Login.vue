@@ -193,7 +193,7 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
-  background: url("/shanghai.jpg") no-repeat center;
+  background: url("/imgs/shanghai.jpg") no-repeat center;
   background-size: cover;
   &:after {
     content: "";
@@ -228,7 +228,7 @@ export default {
         width: 4.17rem;
         height: 4.17rem;
         float: right;
-        background: url("../../public/erweima.png") no-repeat center;
+        background: url("/imgs/erweima.png") no-repeat center;
         background-size: cover;
       }
       .sign-title {

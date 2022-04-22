@@ -1,61 +1,50 @@
 <template>
   <div id="home">
-    <!-- <img class="back" src="../assets/img/上海夜景.jpeg" /> -->
     <Carousel autoplay v-model="value2" loop>
-   
       <CarouselItem>
-        <img class="back" src="../assets/img/lunbo/2.jpeg" />
-      </CarouselItem>
-      <CarouselItem>
-        <img class="back" src="../assets/img/lunbo/1.jpeg" />
-      </CarouselItem>
-       <CarouselItem>
-        <img class="back" src="../assets/img/lunbo/3.gif" />
-      </CarouselItem>
-       <CarouselItem>
-        <img class="back" src="../assets/img/lunbo/4.jpeg" />
+        <img class="back" src="../assets/img/lunbo/welcome_imgs/2.jpg" />
       </CarouselItem>
       <CarouselItem>
-        <img class="back" src="../assets/img/lunbo/img3.jpeg" />
+        <img class="back" src="../assets/img/lunbo/welcome_imgs/1.jpg" />
       </CarouselItem>
-         <CarouselItem>
-        <img class="back" src="../assets/img/lunbo/上海夜景.jpeg" />
+      <CarouselItem>
+        <img class="back" src="../assets/img/lunbo/welcome_imgs/3.gif" />
+      </CarouselItem>
+      <CarouselItem>
+        <img class="back" src="../assets/img/lunbo/welcome_imgs/4.jpg" />
+      </CarouselItem>
+      <CarouselItem>
+        <img class="back" src="../assets/img/lunbo/welcome_imgs/img3.jpg" />
+      </CarouselItem>
+      <CarouselItem>
+        <img class="back" src="../assets/img/lunbo/welcome_imgs/上海夜景.jpg" />
       </CarouselItem>
     </Carousel>
-    <!-- <iframe
-      src="http://localhost:8080/public/static/index.html"
-      width="100%"
-      height="800"
-      frameborder="0"
-      scrolling="auto"
-      id="iframename"
-      name="iframename"
-    ></iframe> -->
   </div>
 </template>
 
 <script>
 export default {
-  name: "Home",
+  name: 'Home',
   data() {
     return {
-      value2: 0,
-    };
+      value2: 0
+    }
   },
-  mounted () {
-    const files = require.context("../assets/img/lunbo", true, /\.jpeg$/).keys();
-    console.log(files);
+  mounted() {
+    const files = require.context('../assets/img/lunbo', true, /\.jpeg$/).keys()
+    console.log(files)
   }
-};
+}
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 #home {
   width: 100%;
   height: 100%;
   position: relative;
 }
-&/deep/.ivu-carousel {
+/deep/.ivu-carousel {
   position: relative;
 
   width: 100%;

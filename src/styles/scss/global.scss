@@ -1,6 +1,5 @@
 @import "../font/font.css";
 $fontFamily: "KaiTi";
-
 html body {
   font-family: $fontFamily;
   line-height: 1.15; // iview设的是1.5，但ui是常规的1.15，需要覆盖

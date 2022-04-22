@@ -8,7 +8,8 @@ export default new vuex.Store({
   state: {
     token: "",
     userName: "",// 可选,
-    TimeStamp: ""
+    TimeStamp: "",
+    scale:'',
   },
   /**修改数据要通过的mutations**/
   mutations: {
@@ -31,6 +32,11 @@ export default new vuex.Store({
     set_TimeStamp(state, TimeStamp) {
       state.TimeStamp = TimeStamp;
       storage.set('TimeStamp', TimeStamp);
+    },
+    //比例尺
+    set_scale(state, scale) {
+      state.scale = scale;
+      storage.set('scale', scale);
     }
   },
   /**获取数据可以用上的getters**/

@@ -57,7 +57,7 @@
         <Divider></Divider>
         <FormItem label="地图整饰" class="black"></FormItem>
         <FormItem label="底图" class="grey">
-          <i-switch v-model="showBase" />
+          <i-switch v-model="showBase" @click="showMap" />
         </FormItem>
         <FormItem label="置灰" class="grey">
           <i-switch v-model="greyMap" />
@@ -96,7 +96,12 @@
         <p :style="{ 'font-size': wordSize }" class="map-title">
           {{ formValidate.title }}
         </p>
-           <tdt-map ref="mapdata" :style="mapStyle" class="tdtmap"></tdt-map>
+        <tdt-map
+          v-if="showBase"
+          ref="mapdata"
+          :style="mapStyle"
+          class="tdtmap"
+        ></tdt-map>
         <div class="map-bottom-left">2000国家大地坐标系</div>
         <div class="map-bottom">
           <div class="bottom-title">{{ dept }}</div>
@@ -169,112 +174,113 @@ import {
   getPrevMapSize,
   getTemplateInnerSize,
   getLegendScale,
-  dataURItoBlob,
-} from "./utils";
+  dataURItoBlob
+} from './utils'
+import DayJs from 'dayjs'
 export default {
-  name: "TopicMake",
+  name: 'TopicMake',
   data() {
     return {
       formValidate: {
-        maptemplete: "A4H",
-        title: "上海市新冠疫情可视化专题图",
-        basemap: "normal",
-        mapScale: "",
-        curTime: new Date(),
+        maptemplete: 'A4H',
+        title: '上海市新冠疫情可视化专题图',
+        basemap: 'normal',
+        // mapScale: '123',
+        curTime: new Date()
       },
       ruleValidate: {
         maptemplete: [
           {
             required: true,
-            message: "请选择制图模板",
-            trigger: "blur",
-          },
+            message: '请选择制图模板',
+            trigger: 'blur'
+          }
         ],
 
         title: [
           {
             required: true,
-            message: "制图标题不可为空",
-            trigger: "blur",
-          },
+            message: '制图标题不可为空',
+            trigger: 'blur'
+          }
         ],
 
         mapScale: [
           {
             required: true,
-            message: "选择输出比例尺",
-            trigger: "blur",
-          },
+            message: '选择输出比例尺',
+            trigger: 'blur'
+          }
         ],
 
         curTime: [
           {
             required: true,
-            message: "时间",
-            trigger: "blur",
-          },
-        ],
+            message: '时间',
+            trigger: 'blur'
+          }
+        ]
       },
       // 打印尺寸列表
       maptempletes: [
         {
-          value: "A4H",
-          label: "A4横幅",
+          value: 'A4H',
+          label: 'A4横幅'
         },
         {
-          value: "A4V",
-          label: "A4竖幅",
+          value: 'A4V',
+          label: 'A4竖幅'
         },
         {
-          value: "A3H",
-          label: "A3横幅",
+          value: 'A3H',
+          label: 'A3横幅'
         },
         {
-          value: "A3V",
-          label: "A3竖幅",
+          value: 'A3V',
+          label: 'A3竖幅'
         },
         {
-          value: "A2H",
-          label: "A2横幅",
+          value: 'A2H',
+          label: 'A2横幅'
         },
         {
-          value: "A2V",
-          label: "A2竖幅",
+          value: 'A2V',
+          label: 'A2竖幅'
         },
         {
-          value: "A1H",
-          label: "A1横幅",
+          value: 'A1H',
+          label: 'A1横幅'
         },
         {
-          value: "A1V",
-          label: "A1竖幅",
-        },
+          value: 'A1V',
+          label: 'A1竖幅'
+        }
       ],
       wordSizes: [
         {
-          label: "1",
-          value: "0.6rem",
+          label: '1',
+          value: '0.6rem'
         },
         {
-          label: "2",
-          value: "0.9rem",
+          label: '2',
+          value: '0.9rem'
         },
         {
-          label: "3",
-          value: "1.2rem",
+          label: '3',
+          value: '1.2rem'
         },
         {
-          label: "4",
-          value: "1.5rem",
+          label: '4',
+          value: '1.5rem'
         },
         {
-          label: "5",
-          value: "1.8rem",
-        },
+          label: '5',
+          value: '1.8rem'
+        }
       ],
-      wordSize: "1.5rem",
+      wordSize: '1.5rem',
       mapScaleOption: [],
-      mapScaleValue: "",
+      mapScaleValue: '1',
 
       fullMap: false,
       fullScreen: false,
@@ -284,7 +290,7 @@ export default {
       extent: {},
       mapStyle: {
         height: `calc(100% - 5rem)`,
-        border: "2px solid #000",
+        border: '2px solid #000'
       },
       disabled: false, // sumbit按钮是否激活
       wrapperWidth: 0, // 外层容器宽度
@@ -292,61 +298,62 @@ export default {
       showScaleBar: true, // 是否显示比例尺
       showNorth: true, // 是否显示指北针
       showLegend: true, // 是否显示图例
-      mapToImg: "", // 截取的地图base64编码
+      mapToImg: '', // 截取的地图base64编码
       printEnable: false, // 当前是否可以打印
       legendScale: 0.8,
       preLegendScale: 0.8,
       legendList: [],
       showBase: true,
+      renderMap: true,
       greyMap: false,
       operationLayers: [],
       newLegendInfo: [],
-      curScale: "36978669",
-      dept: "",
-    };
+      curScale: '36978669',
+      dept: ''
+    }
   },
   computed: {
     // 动态计算预览窗口尺寸
     prevMapSize() {
-      const paper = this.formValidate.maptemplete.substr(0, 2);
-      const direction = this.formValidate.maptemplete.substr(2);
+      const paper = this.formValidate.maptemplete.substr(0, 2)
+      const direction = this.formValidate.maptemplete.substr(2)
       const size = getPrevMapSize(
         paper,
         direction,
         this.wrapperWidth,
         this.wrapperHeight
-      );
+      )
 
       const style = {
         width: `${size.width}px`,
-        height: `${size.height}px`,
-      };
-      return style;
+        height: `${size.height}px`
+      }
+      return style
     },
     calScale() {
-      const paper = this.formValidate.maptemplete.substr(0, 2);
-      const direction = this.formValidate.maptemplete.substr(2);
+      const paper = this.formValidate.maptemplete.substr(0, 2)
+      const direction = this.formValidate.maptemplete.substr(2)
       const size = getPrevMapSize(
         paper,
         direction,
         this.wrapperWidth,
         this.wrapperHeight
-      );
-      return size.scale;
+      )
+      return size.scale
     },
     printMapSize() {
-      const paper = this.formValidate.maptemplete.substr(0, 2);
-      const direction = this.formValidate.maptemplete.substr(2);
-      const size = getTemplateInnerSize(paper, direction);
+      const paper = this.formValidate.maptemplete.substr(0, 2)
+      const direction = this.formValidate.maptemplete.substr(2)
+      const size = getTemplateInnerSize(paper, direction)
       const style = {
         width: `${size.width}px`,
-        height: `${size.height}px`,
-      };
+        height: `${size.height}px`
+      }
       /* const style = {
                               width: `${size.width - 34}px`,
                               height: `${size.height - 24 - 3 * 19.2}px`
                             }; // 减的值为边距+标题高宽 */
-      return style;
+      return style
     },
 
     legendStyle() {
@@ -355,50 +362,109 @@ export default {
               .legendScale * this.calScale})`
           }; */
       return {
-        transform: `scale(${this.preLegendScale}, ${this.preLegendScale})`,
-      };
+        transform: `scale(${this.preLegendScale}, ${this.preLegendScale})`
+      }
     },
     preLegendStyle() {
       return {
-        transform: `scale(${this.preLegendScale}, ${this.preLegendScale})`,
-      };
+        transform: `scale(${this.preLegendScale}, ${this.preLegendScale})`
+      }
     },
     titleStyle() {
       return {
-        "font-size": `${this.calScale * 1.5}rem`,
-        "line-height": `${this.calScale * 3}rem`,
-        height: `${this.calScale * 3}rem`,
-      };
+        'font-size': `${this.calScale * 1.5}rem`,
+        'line-height': `${this.calScale * 3}rem`,
+        height: `${this.calScale * 3}rem`
+      }
     },
     time() {
-      let year = new Date(this.formValidate.curTime).getFullYear();
-      let month = new Date(this.formValidate.curTime).getMonth() + 1;
-      return `${year}年${month}月`;
+      let year = new Date(this.formValidate.curTime).getFullYear()
+      let month = new Date(this.formValidate.curTime).getMonth() + 1
+      return `${year}年${month}月`
     },
+    scale() {
+      return this.$store.state.scale
+    }
   },
-  mounted() {
-    let esriUi = document.querySelector(".esri-ui");
-    this.cloneEsriUi = esriUi.cloneNode(true);
-    this.$refs.mapdata.appendChild(this.cloneEsriUi);
-    document.querySelector(".esri-ui-corner-container").style.display = "none";
-  },
-  methods: {
-    back(){
-      this.$router.push("/TianDiTu")
+  watch: {
+    "$store.state.scale":{
+    deep:true,//深度监听设置为 true
+    handler:function(newVal,oldVal){
+      console.log("数据发生变化啦"); //修改数据时，能看到输出结果
+      console.log(newVal,oldVal);
+      this.mapScaleValue =newVal;
+      console.log(this.mapScaleValue);
     }
   }
-};
+  },
+  mounted() {
+      // let esriUi = document.querySelector('.esri-ui')
+      // this.cloneEsriUi = esriUi.cloneNode(true)
+      // this.$refs.mapdata.appendChild(this.cloneEsriUi)
+      setTimeout(() => {
+        console.log(this.$refs.mapdata.TdtMap.view.scale.toFixed(2))
+        this.mapScaleValue = this.$refs.mapdata.TdtMap.view.scale;
+        console.log(this.mapScaleValue)
+      }, 2000)
+      document.querySelector('.esri-ui-corner-container').style.display = 'none';
+
+    
+  },
+  methods: {
+    back() {
+      this.$router.push('/TianDiTu')
+    },
+    showMap() {
+      if (this.showBase === 'true') {
+        this.showBase = false
+      } else {
+        this.showBase = true
+      }
+    },
+      handleSubmit(name) {
+        this.formValidate.curTime = DayJs(this.formValidate.curTime).format(
+          "YYYY-MM"
+        );
+        this.$refs[name].validate(valid => {
+          if (valid) {
+            this.$Spin.show({
+              render: h => {
+                return h("div", [
+                  h("Icon", {
+                    class: "map-spin-icon-load",
+                    props: {
+                      type: "ios-loading",
+                      size: 38
+                    }
+                  }),
+                  h(
+                    "div",
+                    {
+                      class: "map-load-text"
+                    },
+                    "正在保存地图图片..."
+                  )
+                ]);
+              }
+            });
+          } else {
+            this.$Message.error("有必填信息未填写!");
+          }
+        });
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-/deep/.tdtmap #map{
+/deep/.tdtmap #map {
   height: 100%;
 }
 /deep/.esri-ui-corner-container {
-  display: none ;
+  display: none;
 }
-/deep/.esri-ui-inner-container{
-  display: none ;
+/deep/.esri-ui-inner-container {
+  display: none;
 }
 .header {
   //   @include scw(0.83rem, $color1d1d1d, 700);
@@ -445,7 +511,7 @@ export default {
 
   .black /deep/ .ivu-form-item-label {
     /* color: $color1d1d1d !important; */
-    font-size: 0.92rem;
+    font-size: 0.82rem;
   }
 
   .grey {
@@ -503,7 +569,7 @@ export default {
   /* color: $color1d1d1d; */
 
   .map-title {
-    height: 3rem;
+    height: 2.5rem;
     text-align: center;
     line-height: 1.5rem;
     /* @include scw(1.5rem, $color1d1d1d, 700); */

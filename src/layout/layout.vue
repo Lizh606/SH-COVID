@@ -4,23 +4,6 @@
       <!-------------------------------- 页眉 -------------------------------->
       <Header>
         <Menu mode="horizontal" class="layout-header">
-          <!-- <div class="time-item">{{ nowDate }}</div> -->
-          <!-- <MenuItem name="user" class="user-item">
-            <Dropdown class="menu-item-word">
-              <IconSvg iconClass="bianji" class="menu-item-icon"></IconSvg>
-              <a href="javascript:void(0)">
-                <span class="menu-item-word">系统说明</span>
-              </a>
-            </Dropdown>
-          </MenuItem>
-          <MenuItem name="feedback" class="feedback-item">
-            <Dropdown class="menu-item-word">
-              <IconSvg iconClass="pinglun" class="menu-item-icon"></IconSvg>
-              <a href="javascript:void(0)">
-                <span class="menu-item-word">问题反馈</span>
-              </a>
-            </Dropdown>
-          </MenuItem> -->
           <MenuItem name="logout" class="logout-item">
             <img
               src="../assets/img/头像1.jpeg"
@@ -73,20 +56,6 @@
                 ></IconSvg>
                 <span class="sider-item-word-son">天地图</span>
               </MenuItem>
-              <MenuItem name="mapgroup" @click.native="tomap">
-                <IconSvg
-                  iconClass="erweiditu"
-                  class="sider-item-icon-son"
-                ></IconSvg>
-                <span class="sider-item-word-son">二维地图</span>
-              </MenuItem>
-              <MenuItem name="gaodemap" @click.native="togaode">
-                <IconSvg
-                  iconClass="sanweiditu"
-                  class="sider-item-icon-son"
-                ></IconSvg>
-                <span class="sider-item-word-son">三维地图</span>
-              </MenuItem>
             </Submenu>
             <Submenu name="2">
               <template slot="title">
@@ -99,22 +68,7 @@
                   iconClass="yiyuan"
                   class="sider-item-icon-son"
                 ></IconSvg>
-
-                <span class="sider-item-word-son">加载医院</span>
-              </MenuItem>
-              <MenuItem name="sidetable3" @click.native="toweather">
-                <IconSvg
-                  iconClass="tianqi"
-                  class="sider-item-icon-son"
-                ></IconSvg>
-                <span class="sider-item-word-son">天气可视化</span>
-              </MenuItem>
-              <MenuItem name="featureaffect" @click.native="tofeatureaffect">
-                <IconSvg
-                  iconClass="sanweihuanchongqu"
-                  class="sider-item-icon-son"
-                ></IconSvg>
-                <span class="sider-item-word-son">缓冲区</span>
+                <span class="sider-item-word-son">疫情可视化</span>
               </MenuItem>
               <MenuItem name="yq" @click.native="todata">
                 <IconSvg
@@ -135,7 +89,7 @@
                   iconClass="shuzhuangtu"
                   class="sider-item-icon-son"
                 ></IconSvg>
-                <span class="sider-item-word-son">text</span>
+                <span class="sider-item-word-son">测试页</span>
               </MenuItem>
             </Submenu>
           </Menu>
@@ -156,145 +110,139 @@
 </template>
 
 <script>
-import { logintext } from "../api/login.js";
+import { logintext } from '../api/login.js'
 
 export default {
-  name: "LayOut",
+  name: 'LayOut',
   data() {
     return {
       path: this.$route.path,
       siderActiveName: null,
-      nowDate: "", // 当前日期
-      username: "",
-    };
+      nowDate: '', // 当前日期
+      username: ''
+    }
   },
   mounted() {
-    console.log(this.$route.path);
-    this.currentTime();
+    console.log(this.$route.path)
+    this.currentTime()
     // 使页面更新后导航菜单的active-name与页面内容匹配
     this.$nextTick(() => {
       this.username = window.localStorage
-        .getItem("userName")
-        .replaceAll('"', "");
-      let path = this.$route.path.split("/");
-      this.changeActiveName(path);
-    });
+        .getItem('userName')
+        .replaceAll('"', '')
+      let path = this.$route.path.split('/')
+      this.changeActiveName(path)
+    })
   },
   watch: {
     // 解决手动改路径时，导航菜单的active-name不更新的问题
     // 这一监听也作用于router.push
     $route(val) {
-      let path = val.path.split("/");
-      this.changeActiveName(path);
-    },
+      let path = val.path.split('/')
+      this.changeActiveName(path)
+    }
   },
   methods: {
     currentTime() {
-      setInterval(this.formatDate, 500);
+      setInterval(this.formatDate, 500)
     },
     formatDate() {
-      let date = new Date();
-      let year = date.getFullYear(); // 年
-      let month = date.getMonth() + 1; // 月
-      let day = date.getDate(); // 日
-      let week = date.getDay(); // 星期
+      let date = new Date()
+      let year = date.getFullYear() // 年
+      let month = date.getMonth() + 1 // 月
+      let day = date.getDate() // 日
+      let week = date.getDay() // 星期
       let weekArr = [
-        "星期日",
-        "星期一",
-        "星期二",
-        "星期三",
-        "星期四",
-        "星期五",
-        "星期六",
-      ];
-      let hour = date.getHours(); // 时
-      hour = hour < 10 ? "0" + hour : hour; // 如果只有一位，则前面补零
-      let minute = date.getMinutes(); // 分
-      minute = minute < 10 ? "0" + minute : minute; // 如果只有一位，则前面补零
-      let second = date.getSeconds(); // 秒
-      second = second < 10 ? "0" + second : second; // 如果只有一位，则前面补零
-      this.nowDate = `${year}/${month}/${day} ${hour}:${minute}:${second} ${weekArr[week]}`;
+        '星期日',
+        '星期一',
+        '星期二',
+        '星期三',
+        '星期四',
+        '星期五',
+        '星期六'
+      ]
+      let hour = date.getHours() // 时
+      hour = hour < 10 ? '0' + hour : hour // 如果只有一位，则前面补零
+      let minute = date.getMinutes() // 分
+      minute = minute < 10 ? '0' + minute : minute // 如果只有一位，则前面补零
+      let second = date.getSeconds() // 秒
+      second = second < 10 ? '0' + second : second // 如果只有一位，则前面补零
+      this.nowDate = `${year}/${month}/${day} ${hour}:${minute}:${second} ${weekArr[week]}`
     },
     async GoHome() {
-      this.$router.push("/animation");
+      this.$router.push('/animation')
       // await logintext()
     },
     welcome() {
-      this.$router.push("/Welcome");
+      this.$router.push('/Welcome')
     },
     ToLogin() {
-      if (this.$store.state.token) {
-        this.$store.commit("del_token");
-        this.$router.push("/");
+      if (window.localStorage.token) {
+        this.$store.commit('del_token')
+        this.$router.push('/')
       } else {
-        this.$router.push("/");
+        this.$router.push('/')
       }
     },
     changeActiveName(path) {
-      let length = path.length;
-      let name = path[length - 1];
-      if (name == "layout") {
-        this.siderActiveName = "Map";
+      let length = path.length
+      let name = path[length - 1]
+      if (name == 'layout') {
+        this.siderActiveName = 'Map'
       } else {
-        this.siderActiveName = name;
+        this.siderActiveName = name
       }
     },
 
     totianditu() {
       // 避免跳转到当前页面
-      if (this.$route.path == "/TianDiTu") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
+      if (this.$route.path == '/TianDiTu') {
+        this.$Message.error('当前页面已经打开')
+        return
       }
-      this.$router.push("/TianDiTu");
+      this.$router.push('/TianDiTu')
     },
     tohos() {
       // 避免跳转到当前页面
-      if (this.$route.path == "/Popup") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
+      if (this.$route.path == '/Popup') {
+        this.$Message.error('当前页面已经打开')
+
+        return
       }
-      this.$router.push("/Popup");
+      this.$router.push('/Popup')
     },
     todata() {
       // 避免跳转到当前页面
-      if (this.$route.path == "/yqData") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
+      if (this.$route.path == '/yqData') {
+        this.$Message.error('当前页面已经打开')
+
+        return
       }
-      this.$router.push("/yqData");
+      this.$router.push('/yqData')
     },
     toEcharts() {
       // 避免跳转到当前页面
-      if (this.$route.path == "/Echarts") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
+      if (this.$route.path == '/Echarts') {
+        this.$Message.error('当前页面已经打开')
+
+        return
       }
-      this.$router.push("/Echarts");
+      this.$router.push('/Echarts')
     },
     text() {
       // 避免跳转到当前页面
-      if (this.$route.path == "/text") {
-        console.log(
-          "ROUTER WARNIND: I'd forget my page if it wasn't attached."
-        );
-        return;
+      if (this.$route.path == '/text') {
+        this.$Message.error('当前页面已经打开')
+
+        return
       }
-      this.$router.push("/text");
-    },
-  },
-};
+      this.$router.push('/text')
+    }
+  }
+}
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .layout-first {
   // border: 1px solid #d7dde4;
   background: #f5f7f9;
@@ -313,23 +261,8 @@ export default {
   color: #fff;
   border-bottom: none;
 }
-.time-item {
-  float: left !important;
-  color: #ffffff;
-  right: 125px;
-  width: 200px;
-}
-.user-item {
-  right: 125px;
-}
-.feedback-item {
-  right: -38px;
-}
-// .logout-item {
-//   // right: -200px;
-// }
-.user-item,
-.feedback-item,
+
+
 .logout-item {
   width: 150px;
   top: -15px;
@@ -351,7 +284,7 @@ export default {
   line-height: 0px;
   display: block;
 }
-&/deep/.ivu-select-dropdown {
+/deep/.ivu-select-dropdown {
   margin: 15px 0;
 }
 .xiala-icon {
@@ -365,13 +298,11 @@ export default {
   left: 0px;
   height: 70px;
 }
-// &/deep/.ivu-menu-light {
-//   margin-top: 5px;
-// }
-&/deep/.ivu-layout-header {
+
+/deep/.ivu-layout-header {
   padding: 0;
 }
-&/deep/.ivu-menu-horizontal {
+/deep/.ivu-menu-horizontal {
   height: 70px;
   line-height: 70px;
 }
@@ -453,7 +384,7 @@ export default {
   position: relative;
   font-weight: bold;
 }
-&/deep/.ivu-icon-ios-arrow-down {
+/deep/.ivu-icon-ios-arrow-down {
   display: none;
 }
 .content {
@@ -462,9 +393,6 @@ export default {
   height: 100%;
 }
 #layout-content {
-  // margin-top: 6px;
-  // width: 945px;
-  // height: 689px;
   height: 100%;
   overflow: unset;
 }

@@ -48,7 +48,7 @@ module.exports = {
     contentBase: "../dist",
     proxy: {
       "/services": {
-        target: "https://mape.shanghai-map.net/arcgis/rest/services/",
+        target: "http://mape.shanghai-map.net/arcgis/rest/services/",
         changeOrgin: true,
         secure: false,
         pathRewrite: {

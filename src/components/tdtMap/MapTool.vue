@@ -149,6 +149,7 @@ export default {
         watchUtils.whenTrue(this.view, "stationary", () => {
           if (this.view.extent) {
             this.curScale = this.view.viewpoint.scale.toFixed(0);
+            this.$store.commit("set_scale", this.curScale);
           }
         });
         const scale = document.getElementById("scale");

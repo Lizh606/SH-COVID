@@ -2,13 +2,11 @@
   <div class="perspective">
     <div class="wrap" id="imgwrap">
       <!-- 引入图片值页面 -->
-      <img class="f1" :src="require('../assets/img/lunbo/img' + item1.slice(1))" v-for="(item1,index) in imgList"  :key="'item1'+index"/>
-    
+      <img class="f1" :src="require('../assets/img/lunbo/phtoto_imgs' + item1.slice(1))" v-for="(item1,index) in imgList"  :key="'item1'+index"/>
       <!-- 引入图片值页面 -->
-      <img class="f2" :src="require('../assets/img/lunbo/img' + item2.slice(1))"  v-for="(item2,index) in imgList"  :key="'item2'+index"/>
-
-      <img class="f3" :src="require('../assets/img/lunbo/img' + item3.slice(1))"   v-for="(item3,index) in imgList"  :key="'item3'+index"/>
-      <img class="f4" :src="require('../assets/img/lunbo/img' + item4.slice(1))"   v-for="(item4,index) in imgList"  :key="'item4'+index"/>
+      <img class="f2" :src="require('../assets/img/lunbo/phtoto_imgs' + item2.slice(1))"  v-for="(item2,index) in imgList"  :key="'item2'+index"/>
+      <img class="f3" :src="require('../assets/img/lunbo/phtoto_imgs' + item3.slice(1))"   v-for="(item3,index) in imgList"  :key="'item3'+index"/>
+      <img class="f4" :src="require('../assets/img/lunbo/phtoto_imgs' + item4.slice(1))"   v-for="(item4,index) in imgList"  :key="'item4'+index"/>
       
       <p></p>
     </div>
@@ -28,16 +26,11 @@ export default {
   },
    beforeMount() {
       const files = require
-      .context("@/assets/img/lunbo/img", true, /\.jpg$/)
+      .context("@/assets/img/lunbo/phtoto_imgs", true, /\.jpg$/)
       .keys();
-    console.log(files);
     this.imgList = files;
   },
   mounted() {
-    //    if (location.href.indexOf("#reloaded") == -1) {
-    //   location.href = location.href + "#reloaded";
-    //   location.reload();
-    // }
     const oImg = document.getElementsByClassName("f1");
     const oImg2 = document.getElementsByClassName("f2");
     const oImg3 = document.getElementsByClassName("f3");

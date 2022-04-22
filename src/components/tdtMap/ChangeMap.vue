@@ -178,7 +178,7 @@ export default {
   background-size: 100%;
 }
 .sh {
-  background: url("/上海logo.jpeg") no-repeat;
+  background: url("/imgs/上海logo.jpg") no-repeat;
   background-size: 100%;
 }
 .swap-content-mask {

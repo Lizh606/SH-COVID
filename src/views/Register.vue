@@ -176,7 +176,7 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
-  background: url("../../public/shanghai.jpg") no-repeat center;
+  background: url("/imgs/shanghai.jpg") no-repeat center;
   background-size: cover;
   &:after {
     content: "";
