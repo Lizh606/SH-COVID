@@ -26,13 +26,13 @@
               src="../assets/img/头像1.jpeg"
               style="height: 50px; border-radius: 50%"
               class="menu-item-icon"
+              @click="GoHome"
             />
 
             <Dropdown class="menu-item-word">
               <a href="javascript:void(0)">
                 <span class="menu-item-word">{{ username }}</span>
-            <IconSvg iconClass="xiala"  class="xiala-icon"></IconSvg>
-
+                <IconSvg iconClass="xiala" class="xiala-icon"></IconSvg>
               </a>
               <DropdownMenu slot="list">
                 <DropdownItem>个人中心</DropdownItem>
@@ -46,7 +46,7 @@
           </MenuItem>
           <MenuItem name="system" class="system-item">
             <IconSvg iconClass="ziyuan" class="system-icon"></IconSvg>
-            <span class="system-name" @click="GoHome"
+            <span class="system-name" @click="welcome()"
               >上海市新冠疫情动态分布可视化系统</span
             >
           </MenuItem>
@@ -144,7 +144,11 @@
         </Sider>
         <!-------------------------------- 地图页/表格页 -------------------------------->
         <Content id="layout-content">
-          <router-view></router-view>
+          <router-view v-slot="{ Component, path }">
+            <keep-alive>
+              <component :is="Component" :key="path" />
+            </keep-alive>
+          </router-view>
         </Content>
       </Layout>
     </Layout>
@@ -158,14 +162,14 @@ export default {
   name: "LayOut",
   data() {
     return {
+      path: this.$route.path,
       siderActiveName: null,
       nowDate: "", // 当前日期
       username: "",
     };
   },
   mounted() {
-    
-    console.log(new Date(1650547046961));
+    console.log(this.$route.path);
     this.currentTime();
     // 使页面更新后导航菜单的active-name与页面内容匹配
     this.$nextTick(() => {
@@ -212,8 +216,11 @@ export default {
       this.nowDate = `${year}/${month}/${day} ${hour}:${minute}:${second} ${weekArr[week]}`;
     },
     async GoHome() {
-      this.$router.push("/Welcome");
+      this.$router.push("/animation");
       // await logintext()
+    },
+    welcome() {
+      this.$router.push("/Welcome");
     },
     ToLogin() {
       if (this.$store.state.token) {
@@ -347,7 +354,7 @@ export default {
 &/deep/.ivu-select-dropdown {
   margin: 15px 0;
 }
-.xiala-icon{
+.xiala-icon {
   position: relative;
   top: -10px;
   right: -45px;

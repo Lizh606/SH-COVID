@@ -42,6 +42,10 @@ export default {
       value2: 0,
     };
   },
+  mounted () {
+    const files = require.context("../assets/img/lunbo", true, /\.jpeg$/).keys();
+    console.log(files);
+  }
 };
 </script>
 

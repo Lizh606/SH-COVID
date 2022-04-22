@@ -76,7 +76,7 @@ export default {
         legend: {
           x: "right",
           data: [this.legend.confirmName, this.legend.healName, this.legend.deadName],
-          padding: [20, 280, 0, 0],
+          padding: [35, 280, 0, 0],
           textStyle: {
             color: "#525A6F",
             fontFamily: "KaiTi",

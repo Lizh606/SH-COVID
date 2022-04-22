@@ -9,6 +9,8 @@ import VueRouter from "vue-router";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Welcome from "@/views/Welcome.vue";
+import animation from "@/views/animation.vue";
+
 import daping from "@/views/daping.vue";
 import layout from "@/layout/layout.vue";
 import TopicMake from "@/components/TopicMake/Topic.vue";
@@ -35,6 +37,14 @@ const routes = [
         path: "/Welcome",
         name: "Welcome",
         component: Welcome,
+        meta: {
+          title: "首页",
+        },
+      },
+      {
+        path: "/animation",
+        name: "animation",
+        component: animation,
         meta: {
           title: "首页",
         },

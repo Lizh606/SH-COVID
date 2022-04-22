@@ -12,7 +12,6 @@
       :updateDate="updateDate"
       :xdata="xdata"
       :legend="legend"
-
       :title1="title1"
     />
     <!-- <Tree class="tree" :data="data1" expand-node></Tree> -->
@@ -30,7 +29,9 @@
       aria-label="数据说明"
       title="数据说明"
     >
-      <IconSvg iconClass="bangzhuyushuoming" class="help">数据说明</IconSvg>
+      <IconSvg iconClass="bangzhuyushuoming" class="help"></IconSvg>
+        <span class="word">数据说明</span>
+      
     </div>
     <Modal v-model="modal" width="1000">
       <p slot="header" style="color: #fff; text-align: center; font-size: 20px">
@@ -391,17 +392,20 @@ export default {
 //   border-radius: 10px;
 // }
 .help-icon {
-  width: 20px;
+  width: 100px;
   position: absolute;
-  top: 38px;
-  left: 346px;
+    top: 9px;
+    right: 265px;
 }
 
 .help {
   width: 20px;
   height: 20px;
 }
-
+.word{
+      top: -3px;
+    position: relative;
+}
 /deep/.ivu-modal-header {
   background-color: #00bec9;
 }

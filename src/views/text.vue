@@ -1,14 +1,13 @@
+
 <template>
   <div class="timeaxis">
     <div v-for="item in list" :key="item.index">
       <div class="box">
         <div class="item">
-          <!-- <div class="left">{{ item.warnname }}</div> -->
           <div class="center">{{ item }}</div>
         </div>
         <div class="circular"></div>
         <div class="item2">
-          <!-- <div class="bottom">{{ item.standard }}</div> -->
         </div>
       </div>
     </div>
