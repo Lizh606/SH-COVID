@@ -110,8 +110,12 @@
 </template>
 
 <script>
+import {
+  tdtAdministrative,
+  publicTransportPlanning,
+  getCoordinate
+} from '@/api/tdt_web_api/tdt_api.js'
 import { logintext } from '../api/login.js'
-
 export default {
   name: 'LayOut',
   data() {
@@ -122,7 +126,7 @@ export default {
       username: ''
     }
   },
-  mounted() {
+  async mounted() {
     console.log(this.$route.path)
     this.currentTime()
     // 使页面更新后导航菜单的active-name与页面内容匹配
@@ -133,6 +137,50 @@ export default {
       let path = this.$route.path.split('/')
       this.changeActiveName(path)
     })
+
+    //获取行政区划
+    //请求参数
+    const getAdministrative = {
+      postStr: {
+        searchWord: '上海市',
+        searchType: '1',
+        needSubInfo: 'true',
+        needAll: 'true',
+        needPolygon: 'true',
+        needPre: 'true'
+      },
+      tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+    }
+    const res = await tdtAdministrative(getAdministrative)
+    console.log(res)
+    //公交规划
+    const getbus = {
+      type: 'busline',
+      postStr: {
+        startposition: '116.427562,39.939677',
+        endposition: '116.349329,39.939132',
+        linetype: '1'
+      },
+      tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+    }
+    const res1 = await publicTransportPlanning(getbus)
+    console.log(res1)
+    //地名获取坐标
+    const data = {
+       ds: { keyWord: '上海市浦东新区玉兰香苑三期' },
+      tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+    }
+    const res2 = await getCoordinate(data)
+    console.log(res2)
+    //坐标获取地名
+     const data1 = {
+       postStr:{'lon':121.63121,'lat':31.19935,'ver':1},
+      type:'geocode',
+      tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+     
+    }
+    const res3 = await getCoordinate(data1)
+    console.log(res3)
   },
   watch: {
     // 解决手动改路径时，导航菜单的active-name不更新的问题
@@ -261,7 +309,6 @@ export default {
   color: #fff;
   border-bottom: none;
 }
-
 
 .logout-item {
   width: 150px;

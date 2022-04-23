@@ -2,7 +2,7 @@
   <div>
     <!-- 切换底图弹窗内容 -->
     <ButtonGroup class="toolbar-container" id="toolbar">
-       <Dropdown class="btns-common-style">
+      <Dropdown class="btns-common-style">
         <a href="javascript:void(0)" style="color: #515a6e" @click="topicmake">
           <IconSvg iconClass="zhuantitu"></IconSvg>
           <span> 专题制图</span>
@@ -81,6 +81,22 @@
     <change-map></change-map>
     <!-- 比例尺和经纬度 -->
     <p id="scale" class="coordinate-scale">
+      <Poptip v-model="pop">
+        <!-- 坐标定位 -->
+
+        <span @click="locateCoordinate()">
+          <IconSvg iconClass="sousuo" class="export-button-icon"></IconSvg>
+        </span>
+
+        <div slot="title"><b>坐标定位</b></div>
+        <div slot="content">
+          经度:  <Input v-model="longitude" placeholder="请输入经度" style="width: 200px " /><br>
+          <slot></slot>
+          纬度:  <Input v-model="latitude" placeholder="请输入纬度" style="width: 200px"  class="pop_input"/><br>
+          <Button class="pop_btn" @click="Coordinate">搜索</Button>
+        </div>
+      </Poptip>
+
       <span id="mouse-position" class="mouse-position"
         >经度:{{ lon }} &nbsp; 纬度:{{ lat }}</span
       >
@@ -91,140 +107,145 @@
 </template>
 
 <script>
-import * as locator from "@arcgis/core/rest/locator";
-import Draw from "@arcgis/core/views/draw/Draw";
-import Polygon from "@arcgis/core/geometry/Polygon";
-import Graphic from "@arcgis/core/Graphic";
-import Polyline from "@arcgis/core/geometry/Polyline";
-import Search from "@arcgis/core/widgets/Search";
-import Home from "@arcgis/core/widgets/Home";
-import Fullscreen from "@arcgis/core/widgets/Fullscreen";
-import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
-import Swipe from "@arcgis/core/widgets/Swipe";
-import Legend from "@arcgis/core/widgets/Legend";
-import LegendViewModel from "@arcgis/core/widgets/Legend/LegendViewModel";
-import Expand from "@arcgis/core/widgets/Expand";
-import * as watchUtils from "@arcgis/core/core/watchUtils";
+import * as locator from '@arcgis/core/rest/locator'
+import Draw from '@arcgis/core/views/draw/Draw'
+import Polygon from '@arcgis/core/geometry/Polygon'
+import Graphic from '@arcgis/core/Graphic'
+import Polyline from '@arcgis/core/geometry/Polyline'
+import Search from '@arcgis/core/widgets/Search'
+import Home from '@arcgis/core/widgets/Home'
+import Fullscreen from '@arcgis/core/widgets/Fullscreen'
+import * as geometryEngine from '@arcgis/core/geometry/geometryEngine'
+import Swipe from '@arcgis/core/widgets/Swipe'
+import Legend from '@arcgis/core/widgets/Legend'
+import LegendViewModel from '@arcgis/core/widgets/Legend/LegendViewModel'
+import Expand from '@arcgis/core/widgets/Expand'
+import PictureMarkerSymbol from "@arcgis/core/symbols/PictureMarkerSymbol";
+import * as watchUtils from '@arcgis/core/core/watchUtils'
 
-import createWmtsLayer from "./layers/wmtsLayer";
+import createWmtsLayer from './layers/wmtsLayer'
 
-import screentake from "./Screentake.vue";
-import changemap from "./ChangeMap.vue";
+import screentake from './Screentake.vue'
+import changemap from './ChangeMap.vue'
 
-import html2canvas from "html2canvas";
+import html2canvas from 'html2canvas'
 
 export default {
-  name: "MapTools",
+  name: 'MapTools',
   components: { ChangeMap: changemap, Screentake: screentake },
-  inject: ["TdtMap"],
+  inject: ['TdtMap'],
   data() {
     return {
-      loc: "",
-      curScale: "36978669",
-      lon: "121.60",
-      lat: "31.18",
-    };
+      loc: '',
+      curScale: '36978669',
+      lon: '121.60',
+      lat: '31.18',
+      pop: false,
+      //坐标定位值
+      longitude:121.477331 ,
+      latitude:31.2379 ,
+    }
   },
   created() {},
 
   mounted() {
     this.$nextTick(() => {
       setTimeout(() => {
-        this.map = this.TdtMap.map;
-        this.view = this.TdtMap.view;
+        this.map = this.TdtMap.map
+        this.view = this.TdtMap.view
         //经纬度
-        let that = this;
-        this.view.on("pointer-move", function (event) {
+        let that = this
+        this.view.on('pointer-move', function (event) {
           let mapPoistion = that.view.toMap({
             x: event.x,
-            y: event.y,
-          });
+            y: event.y
+          })
 
-          let lon = mapPoistion.x;
-          let lat = mapPoistion.y;
-          that.lon = lon.toFixed(2);
-          that.lat = lat.toFixed(2);
-        });
+          let lon = mapPoistion.x
+          let lat = mapPoistion.y
+          that.lon = lon.toFixed(2)
+          that.lat = lat.toFixed(2)
+        })
         //比例尺
-        watchUtils.whenTrue(this.view, "stationary", () => {
+        watchUtils.whenTrue(this.view, 'stationary', () => {
           if (this.view.extent) {
-            this.curScale = this.view.viewpoint.scale.toFixed(0);
-            this.$store.commit("set_scale", this.curScale);
+            this.curScale = this.view.viewpoint.scale.toFixed(0)
+            this.$store.commit('set_scale', this.curScale)
           }
-        });
-        const scale = document.getElementById("scale");
-        this.view.ui.add(scale);
+        })
+        const scale = document.getElementById('scale')
+        this.view.ui.add(scale)
         //toolbar
-        const toolbar = document.getElementById("toolbar");
-        this.view.ui.add(toolbar);
+        const toolbar = document.getElementById('toolbar')
+        this.view.ui.add(toolbar)
         //导出地图
-        const exportbtn = document.getElementById("export");
+        const exportbtn = document.getElementById('export')
         this.view.ui.add(exportbtn, {
-          position: "bottom-right",
-        });
+          position: 'bottom-right'
+        })
         //图例
         const legendvm = new LegendViewModel({
-          view: this.view,
-        });
+          view: this.view
+        })
         const legend = new Legend({
           view: this.view,
           layerInfos: {
-            title: "中国城市累计确诊",
-            levelOne: "累计确诊: 0 ~ 5000人",
-            levelTwo: "累计确诊: 5000 ~ 10000人",
-            levelThree: "累计确诊: 10000 ~ 50000人",
-            levelFour: "累计确诊: 50000 ~ 1000000人",
-          },
-        });
+            title: '中国城市累计确诊',
+            levelOne: '累计确诊: 0 ~ 5000人',
+            levelTwo: '累计确诊: 5000 ~ 10000人',
+            levelThree: '累计确诊: 10000 ~ 50000人',
+            levelFour: '累计确诊: 50000 ~ 1000000人'
+          }
+        })
         legend.style = {
-          type: "card",
-          layout: "auto",
-        };
+          type: 'card',
+          layout: 'auto'
+        }
         const legendExpand = new Expand({
           // view: this.view,
           // content: legend,
           view: this.view,
-          mode: "floating",
+          mode: 'floating',
           content: legend,
-          collapseIconClass: "esri-icon-overview-arrow-bottom-right",
-          collapseTooltip: "隐藏图例",
-          expandIconClass: "esri-icon-media",
-          expandTooltip: "显示图例",
-        });
+          collapseIconClass: 'esri-icon-overview-arrow-bottom-right',
+          collapseTooltip: '隐藏图例',
+          expandIconClass: 'esri-icon-media',
+          expandTooltip: '显示图例'
+        })
         this.view.ui.add(legendExpand, {
-          position: "bottom-right",
-        });
+          position: 'bottom-right'
+        })
 
         //搜索
         const searchWidgets = new Search({
-          view: this.view,
-        });
+          view: this.view
+        })
         this.view.ui.add(searchWidgets, {
-          position: "top-left",
-        });
+          position: 'top-left'
+        })
         const homeWidget = new Home({
-          view: this.view,
-        });
+          view: this.view
+        })
 
-        this.view.ui.add(homeWidget);
+        this.view.ui.add(homeWidget)
 
         const fullscreen = new Fullscreen({
-          view: this.view,
-        });
-        this.view.ui.add(fullscreen);
-      }, 100);
-    });
+          view: this.view
+        })
+        this.view.ui.add(fullscreen)
+      }, 100)
+    })
     //解决html2canvas截图空白问题
     HTMLCanvasElement.prototype.getContext = (function (origFn) {
       return function (type, attributes) {
-        if (type === "webgl") {
+        if (type === 'webgl') {
           attributes = Object.assign({}, attributes, {
-            preserveDrawingBuffer: true,
-          });
+            preserveDrawingBuffer: true
+          })
         }
-        return origFn.call(this, type, attributes);
-      };
-    })(HTMLCanvasElement.prototype.getContext);
+        return origFn.call(this, type, attributes)
+      }
+    })(HTMLCanvasElement.prototype.getContext)
   },
 
   computed: {},
@@ -232,327 +253,327 @@ export default {
   methods: {
     measureDistance() {
       const draw = new Draw({
-        view: this.view,
-      });
-      let action = draw.create("polyline"); //画线实例
-      this.view.focus();
-      let that = this;
+        view: this.view
+      })
+      let action = draw.create('polyline') //画线实例
+      this.view.focus()
+      let that = this
       action.on(
         [
-          "vertex-add",
-          "vertex-remove",
-          "cursor-update",
-          "redo",
-          "undo",
-          "draw-complete",
+          'vertex-add',
+          'vertex-remove',
+          'cursor-update',
+          'redo',
+          'undo',
+          'draw-complete'
         ],
 
         function (evt) {
-          that.createLine(evt.vertices);
+          that.createLine(evt.vertices)
         }
-      );
+      )
     },
     measureArea() {
       const draw = new Draw({
-        view: this.view,
-      });
-      let action = draw.create("polygon"); //画线实例
-      this.view.focus();
-      let that = this;
+        view: this.view
+      })
+      let action = draw.create('polygon') //画线实例
+      this.view.focus()
+      let that = this
       action.on(
         [
-          "vertex-add",
-          "vertex-remove",
-          "cursor-update",
-          "redo",
-          "undo",
-          "draw-complete",
+          'vertex-add',
+          'vertex-remove',
+          'cursor-update',
+          'redo',
+          'undo',
+          'draw-complete'
         ],
 
         that.createPolygon
-      );
+      )
     },
     createLine(vertices) {
-      this.view.graphics.removeAll();
+      this.view.graphics.removeAll()
       let pointsymbol = {
-        type: "simple-marker",
+        type: 'simple-marker',
         color: [255, 255, 255],
         size: 6,
         outline: {
           color: [255, 0, 0],
-          width: 1.5, // points
-        },
-      };
+          width: 1.5 // points
+        }
+      }
 
       let linegraphics = new Graphic({
         geometry: new Polyline({
           paths: vertices,
-          spatialReference: this.view.spatialReference,
+          spatialReference: this.view.spatialReference
         }),
 
         symbol: {
-          type: "simple-line", // autocasts as new SimpleFillSymbol
+          type: 'simple-line', // autocasts as new SimpleFillSymbol
           color: [255, 116, 3],
           width: 2,
-          cap: "round",
-          join: "round",
-        },
-      });
+          cap: 'round',
+          join: 'round'
+        }
+      })
 
-      this.view.graphics.add(linegraphics);
+      this.view.graphics.add(linegraphics)
 
       let firsttextSymbol = {
-        type: "text",
-        color: "white",
-        haloColor: "black",
-        haloSize: "2px",
-        text: "起点",
-        xoffset: "10px",
-        yoffset: "10px",
+        type: 'text',
+        color: 'white',
+        haloColor: 'black',
+        haloSize: '2px',
+        text: '起点',
+        xoffset: '10px',
+        yoffset: '10px',
         font: {
           size: 12,
-          family: "KaiTi",
-          weight: "bold",
-        },
-      };
+          family: 'KaiTi',
+          weight: 'bold'
+        }
+      }
 
       let firstpoint = {
-        type: "point",
+        type: 'point',
         x: vertices[0][0], //当底图是投影坐标系时用x,地理坐标系用longitude
         y: vertices[0][1], //当底图是投影坐标系时用y,地理坐标系用latitude
-        spatialReference: this.view.spatialReference, //和底图相同的坐标系
-      };
+        spatialReference: this.view.spatialReference //和底图相同的坐标系
+      }
       let firstTextGraphics = new Graphic({
         geometry: firstpoint,
-        symbol: firsttextSymbol,
-      });
+        symbol: firsttextSymbol
+      })
       let firstGraphics = new Graphic({
         geometry: firstpoint,
-        symbol: pointsymbol,
-      });
-      this.view.graphics.add(firstTextGraphics);
-      this.view.graphics.add(firstGraphics);
+        symbol: pointsymbol
+      })
+      this.view.graphics.add(firstTextGraphics)
+      this.view.graphics.add(firstGraphics)
 
       //
-      let path = [];
-      let arr1 = [];
-      arr1.push(vertices[0][0]);
-      arr1.push(vertices[0][1]);
-      path.push(arr1);
+      let path = []
+      let arr1 = []
+      arr1.push(vertices[0][0])
+      arr1.push(vertices[0][1])
+      path.push(arr1)
       for (let i = 1; i < vertices.length; i++) {
         let point = {
-          type: "point",
+          type: 'point',
           x: vertices[i][0],
           y: vertices[i][1], //当底图是投影坐标系时用y,地理坐标系用latitude
-          spatialReference: this.view.spatialReference, //和底图相同的坐标系
-        };
+          spatialReference: this.view.spatialReference //和底图相同的坐标系
+        }
         let mouseGraphics = new Graphic({
           geometry: point,
-          symbol: pointsymbol,
-        });
-        let arr = [];
-        arr.push(vertices[i][0]);
-        arr.push(vertices[i][1]);
+          symbol: pointsymbol
+        })
+        let arr = []
+        arr.push(vertices[i][0])
+        arr.push(vertices[i][1])
 
-        path.push(arr);
+        path.push(arr)
 
         let line = new Polyline({
           hasZ: false,
           hasM: true,
           paths: path,
-          spatialReference: this.view.spatialReference,
-        });
+          spatialReference: this.view.spatialReference
+        })
 
-        let dislen;
-        let unit;
+        let dislen
+        let unit
         if (this.view.scale > 5000) {
-          dislen = geometryEngine.geodesicLength(line, "kilometers");
-          unit = "千米";
+          dislen = geometryEngine.geodesicLength(line, 'kilometers')
+          unit = '千米'
         } else {
-          dislen = geometryEngine.geodesicLength(line, "meters");
-          unit = "米";
+          dislen = geometryEngine.geodesicLength(line, 'meters')
+          unit = '米'
         }
 
         let textSymbol = {
-          type: "text",
-          color: "white",
-          haloColor: "black",
-          haloSize: "2px",
+          type: 'text',
+          color: 'white',
+          haloColor: 'black',
+          haloSize: '2px',
           text: Math.abs(Math.round(dislen * 100) / 100) + unit,
-          xoffset: "50px",
-          yoffset: "-5px",
+          xoffset: '50px',
+          yoffset: '-5px',
           font: {
             size: 12,
             // family: "sans-serif",
-            weight: "bold",
-          },
-        };
+            weight: 'bold'
+          }
+        }
 
         let textGraphics = new Graphic({
           geometry: point,
-          symbol: textSymbol,
-        });
+          symbol: textSymbol
+        })
 
         let Graphics = new Graphic({
           geometry: point,
-          symbol: pointsymbol,
-        });
+          symbol: pointsymbol
+        })
 
-        this.view.graphics.add(textGraphics);
-        this.view.graphics.add(Graphics);
-        this.view.graphics.add(mouseGraphics);
+        this.view.graphics.add(textGraphics)
+        this.view.graphics.add(Graphics)
+        this.view.graphics.add(mouseGraphics)
       }
     },
     createPolygon(event) {
-      const vertices = event.vertices;
+      const vertices = event.vertices
 
       const symbol = {
-        type: "simple-marker",
+        type: 'simple-marker',
         color: [255, 255, 255],
         size: 6,
         outline: {
           color: [255, 0, 0],
-          width: 1.5, // points
-        },
-      };
+          width: 1.5 // points
+        }
+      }
 
       const fillSymbol = {
-        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        type: 'simple-fill', // autocasts as new SimpleFillSymbol()
         color: [3, 255, 240, 0.1],
         outline: {
           // autocasts as new SimpleLineSymbol()
           color: [255, 116, 3],
-          width: 2,
-        },
-      };
+          width: 2
+        }
+      }
 
       const polygon = new Polygon({
         rings: vertices,
-        spatialReference: this.view.spatialReference,
-      });
+        spatialReference: this.view.spatialReference
+      })
 
-      this.view.graphics.removeAll();
+      this.view.graphics.removeAll()
       const polygonGraphics = new Graphic({
         geometry: polygon,
-        symbol: fillSymbol,
-      });
+        symbol: fillSymbol
+      })
 
-      this.view.graphics.add(polygonGraphics);
+      this.view.graphics.add(polygonGraphics)
 
-      const center = polygon.centroid;
+      const center = polygon.centroid
 
-      let area = 0;
-      let unit;
+      let area = 0
+      let unit
       if (this.view.scale > 5000) {
         area = geometryEngine.geodesicArea(
           polygonGraphics.geometry,
-          "square-kilometers"
-        );
-        unit = "平方千米";
+          'square-kilometers'
+        )
+        unit = '平方千米'
       } else {
         area = geometryEngine.geodesicArea(
           polygonGraphics.geometry,
-          "square-meters"
-        );
-        unit = "平方米";
+          'square-meters'
+        )
+        unit = '平方米'
       }
 
       for (let i = 0; i < vertices.length; i++) {
         const point = {
-          type: "point",
+          type: 'point',
           x: vertices[i][0],
           y: vertices[i][1],
-          spatialReference: this.view.spatialReference,
-        };
+          spatialReference: this.view.spatialReference
+        }
 
         const pointGraphics = new Graphic({
           geometry: point,
-          symbol: symbol,
-        });
-        this.view.graphics.add(pointGraphics);
+          symbol: symbol
+        })
+        this.view.graphics.add(pointGraphics)
       }
       const pointcenter = {
-        type: "point",
+        type: 'point',
         x: center.x,
         y: center.y,
-        spatialReference: this.view.spatialReference,
-      };
+        spatialReference: this.view.spatialReference
+      }
 
       const textSymbol = {
-        type: "text",
-        color: "white",
-        haloColor: "black",
-        haloSize: "2px",
+        type: 'text',
+        color: 'white',
+        haloColor: 'black',
+        haloSize: '2px',
         text: Math.abs(Math.round(area * 100) / 100) + unit,
         font: {
           size: 12,
           // family: "sans-serif",
-          weight: "bold",
-        },
-      };
+          weight: 'bold'
+        }
+      }
       const textGraphics = new Graphic({
         geometry: pointcenter,
-        symbol: textSymbol,
-      });
+        symbol: textSymbol
+      })
 
-      this.view.graphics.add(textGraphics);
+      this.view.graphics.add(textGraphics)
     },
     clear() {
-      this.view.graphics.removeAll();
-      this.map.basemap.baseLayers.items[1].visible = true;
+      this.view.graphics.removeAll()
+      this.map.basemap.baseLayers.items[1].visible = true
     },
     locate() {
-      let view = this.view;
-      view.popup.autoOpenEnabled = false;
-      const loc = view.on("click", (event) => {
-        const lat = Math.round(event.mapPoint.latitude * 1000) / 1000;
-        const lon = Math.round(event.mapPoint.longitude * 1000) / 1000;
+      let view = this.view
+      view.popup.autoOpenEnabled = false
+      const loc = view.on('click', (event) => {
+        const lat = Math.round(event.mapPoint.latitude * 1000) / 1000
+        const lon = Math.round(event.mapPoint.longitude * 1000) / 1000
         view.popup.open({
-          title: "坐标:[" + lon + "," + lat + "]",
+          title: '坐标:[' + lon + ',' + lat + ']',
           location: event.mapPoint,
           symbol: {
             font: {
-              family: "KaiTi",
-            },
-          },
-        });
+              family: 'KaiTi'
+            }
+          }
+        })
         const params = {
-          location: event.mapPoint,
-        };
+          location: event.mapPoint
+        }
         const locatorUrl =
-          " https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer";
+          ' https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer'
 
         locator
           .locationToAddress(locatorUrl, params)
           .then((response) => {
-            view.popup.content = response.address;
+            view.popup.content = response.address
           })
           .catch(() => {
-            view.popup.content = "未找到位置";
-          });
-        watchUtils.whenTrue(view.popup, "visible", function () {
-          watchUtils.whenFalseOnce(view.popup, "visible", function () {
+            view.popup.content = '未找到位置'
+          })
+        watchUtils.whenTrue(view.popup, 'visible', function () {
+          watchUtils.whenFalseOnce(view.popup, 'visible', function () {
             view.popup = {
               // collapseEnabled: false, // 移除title点击折叠功能
               // dockOptions: {
               //   buttonEnabled: false, // 隐藏固定标签页
               // },
-              actions: [], // 清空事件按钮 （缩放至、...）
-            };
-          });
-        });
-      });
-      return loc;
+              actions: [] // 清空事件按钮 （缩放至、...）
+            }
+          })
+        })
+      })
+      return loc
     },
     exportbtn() {
       this.$Modal.confirm({
-        title: "提示",
-        content: "<p>是否导出地图？</p>",
+        title: '提示',
+        content: '<p>是否导出地图？</p>',
         onOk: () => {
-          this.exportMap();
+          this.exportMap()
         },
-        onCancel: () => {},
-      });
+        onCancel: () => {}
+      })
     },
     async exportMap() {
       // this.$nextTick(() => {
@@ -573,87 +594,85 @@ export default {
       // });
       this.$Spin.show({
         render: (h) => {
-          return h("div", [
-            h("Icon", {
-              class: "map-spin-icon-load",
+          return h('div', [
+            h('Icon', {
+              class: 'map-spin-icon-load',
               props: {
-                type: "ios-loading",
-                size: 38,
-              },
+                type: 'ios-loading',
+                size: 38
+              }
             }),
             h(
-              "div",
+              'div',
               {
-                class: "map-load-text",
+                class: 'map-load-text'
               },
-              "正在保存地图图片..."
-            ),
-          ]);
-        },
-      });
-      this.$refs.exportDiv.classList.remove("map-export-div-default");
-      this.$refs.exportDiv.classList.add("map-export-div");
+              '正在保存地图图片...'
+            )
+          ])
+        }
+      })
+      this.$refs.exportDiv.classList.remove('map-export-div-default')
+      this.$refs.exportDiv.classList.add('map-export-div')
 
-      let esriUi = document.querySelector(".esri-ui");
-      this.cloneEsriUi = esriUi.cloneNode(true);
-      this.$refs.exportDiv.appendChild(this.cloneEsriUi);
-      document.querySelector(".esri-ui-corner-container").style.display =
-        "none";
+      let esriUi = document.querySelector('.esri-ui')
+      this.cloneEsriUi = esriUi.cloneNode(true)
+      this.$refs.exportDiv.appendChild(this.cloneEsriUi)
+      document.querySelector('.esri-ui-corner-container').style.display = 'none'
       // const canvas = document.getElement("canvas");
-      const resCanvas = await this.view.takeScreenshot(false);
-      let dataURL = resCanvas.dataUrl;
-      let blob = this.dataURItoBlob(dataURL);
+      const resCanvas = await this.view.takeScreenshot(false)
+      let dataURL = resCanvas.dataUrl
+      let blob = this.dataURItoBlob(dataURL)
 
-      let aLink = document.createElement("a");
-      let evt = document.createEvent("HTMLEvents");
-      evt.initEvent("click", true, true); // initEvent 不加后两个参数在FF下会报错  事件类型，是否冒泡，是否阻止浏览器的默认行为
-      aLink.download = "map.png";
-      aLink.href = URL.createObjectURL(blob);
+      let aLink = document.createElement('a')
+      let evt = document.createEvent('HTMLEvents')
+      evt.initEvent('click', true, true) // initEvent 不加后两个参数在FF下会报错  事件类型，是否冒泡，是否阻止浏览器的默认行为
+      aLink.download = 'map.png'
+      aLink.href = URL.createObjectURL(blob)
 
       aLink.dispatchEvent(
-        new MouseEvent("click", {
+        new MouseEvent('click', {
           bubbles: true,
           cancelable: true,
-          view: window,
+          view: window
         })
-      ); // 兼容火狐
-      this.$refs.exportDiv.classList.remove("map-export-div");
-      this.$refs.exportDiv.classList.add("map-export-div-default");
-      document.querySelector(".esri-ui-corner-container").style.display =
-        "flex";
+      ) // 兼容火狐
+      this.$refs.exportDiv.classList.remove('map-export-div')
+      this.$refs.exportDiv.classList.add('map-export-div-default')
+      document.querySelector('.esri-ui-corner-container').style.display = 'flex'
       if (this.cloneEsriUi) {
-        this.$refs.exportDiv.removeChild(this.cloneEsriUi);
-        this.cloneEsriUi = null;
+        this.$refs.exportDiv.removeChild(this.cloneEsriUi)
+        this.cloneEsriUi = null
       }
-      this.$Spin.hide();
+      this.$Spin.hide()
     },
     dataURItoBlob(dataURI) {
-      let byteString = atob(dataURI.split(",")[1]);
-      let mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
-      let ab = new ArrayBuffer(byteString.length);
-      let dw = new DataView(ab);
+      let byteString = atob(dataURI.split(',')[1])
+      let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+      let ab = new ArrayBuffer(byteString.length)
+      let dw = new DataView(ab)
       for (let i = 0; i < byteString.length; i++) {
-        dw.setUint8(i, byteString.charCodeAt(i));
+        dw.setUint8(i, byteString.charCodeAt(i))
       }
-      return new Blob([ab], { type: mimeString });
+      return new Blob([ab], { type: mimeString })
     },
     query() {
-      let that = this;
-      that.view.on("click", function (evt) {
+      let that = this
+      that.view.on('click', function (evt) {
         that.view.hitTest(evt).then(function (response) {
-          let result = response.results[0];
+          let result = response.results[0]
           if (result && result.graphic) {
-            if (result.graphic.symbol.type === "simple-fill") {
-              let graphic = result.graphic;
+            if (result.graphic.symbol.type === 'simple-fill') {
+              let graphic = result.graphic
               graphic.symbol = {
-                type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
+                type: 'simple-fill', // autocasts as new SimpleMarkerSymbol()
                 // color: [226, 119, 40],
                 outline: {
                   // autocasts as new SimpleLineSymbol()
                   color: [255, 255, 255],
-                  width: 1,
-                },
-              };
+                  width: 1
+                }
+              }
               // graphic.popupTemplate = {
               //   title: graphic.attributes.Name,
               //   content: [
@@ -678,78 +697,118 @@ export default {
               //   ],
               // };
               // that.view.graphics.removeAll(); //清除上一次点击目标
-              that.view.graphics.add(graphic); //添加新的点击目标
+              that.view.graphics.add(graphic) //添加新的点击目标
             } else {
-              let graphic = result.graphic;
+              let graphic = result.graphic
 
               //自定义高亮
               //这里的几何图形是面状，配置graphic的symbol为fillSymbol
               graphic.symbol = {
-                type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+                type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
                 color: [226, 119, 40],
                 outline: {
                   // autocasts as new SimpleLineSymbol()
                   color: [255, 255, 255],
-                  width: 2,
-                },
-              };
+                  width: 2
+                }
+              }
               graphic.popupTemplate = {
                 title: graphic.attributes.Name,
                 content: [
                   {
                     // Pass in the fields to display
-                    type: "fields",
+                    type: 'fields',
                     fieldInfos: [
                       {
-                        fieldName: "Name",
-                        label: "Name",
+                        fieldName: 'Name',
+                        label: 'Name'
                       },
                       {
-                        fieldName: "Addres",
-                        label: "Addres",
+                        fieldName: 'Addres',
+                        label: 'Addres'
                       },
                       {
-                        fieldName: "Phone",
-                        label: "Phone",
-                      },
-                    ],
-                  },
-                ],
-              };
+                        fieldName: 'Phone',
+                        label: 'Phone'
+                      }
+                    ]
+                  }
+                ]
+              }
               // that.view.graphics.removeAll(); //清除上一次点击目标
-              that.view.graphics.add(graphic); //添加新的点击目标
+              that.view.graphics.add(graphic) //添加新的点击目标
             }
           }
-        });
-      });
+        })
+      })
     },
-    topicmake(){
-       this.$router.push("/TopicMake")
+    topicmake() {
+      this.$router.push('/TopicMake')
     },
     swipemap() {
       //卷帘、
-      this.view.ui.remove("swipe");
+      this.view.ui.remove('swipe')
       let imgtdtUrl =
-        "http://{subDomain}.tianditu.gov.cn/DataServer?T=img_c&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1";
-      const imgtiledLayer = createWmtsLayer(imgtdtUrl);
+        'http://{subDomain}.tianditu.gov.cn/DataServer?T=img_c&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1'
+      const imgtiledLayer = createWmtsLayer(imgtdtUrl)
       let tdtjzUrl =
-        "http://{subDomain}.tianditu.gov.cn/DataServer?T=cva_c&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1";
-      const tiledjzLayer = createWmtsLayer(tdtjzUrl);
-      this.map.add(tiledjzLayer);
-      this.map.add(imgtiledLayer);
+        'http://{subDomain}.tianditu.gov.cn/DataServer?T=cva_c&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1'
+      const tiledjzLayer = createWmtsLayer(tdtjzUrl)
+      this.map.add(tiledjzLayer)
+      this.map.add(imgtiledLayer)
 
       const swipe = new Swipe({
         leadingLayers: this.map.basemap.baseLayers,
         trailingLayers: [tiledjzLayer, imgtiledLayer],
         // direction:"vertical",
         position: 50,
-        view: this.view,
-      });
-      this.view.ui.add(swipe);
+        view: this.view
+      })
+      this.view.ui.add(swipe)
       // this.view.ui.remove(swipe);
     },
-  },
+    locateCoordinate() {
+    },
+    Coordinate() {
+      if(this.longitude !== "" && this.latitude !== ''){
+        this.longitude = parseFloat(this.longitude);
+        this.latitude = parseFloat(this.latitude);
+      let center = [this.longitude, this.latitude];
+    //  const ptsymbol = new PictureMarkerSymbol(
+    //       require("@/assets/img/定位.png"),
+    //       200,
+    //       200,
+    //     );
+        const ptsymbol = {
+  type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
+  url: "/定位.png",
+  width: "64px",
+  height: "64px"
 };
+      let point = {
+        type: 'point',
+        longitude: this.longitude, //当底图是投影坐标系时用x,地理坐标系用longitude
+        latitude: this.latitude, //当底图是投影坐标系时用y,地理坐标系用latitude
+        spatialReference: this.view.spatialReference //和底图相同的坐标系
+      }
+      let graphic = new Graphic({
+    geometry: point, // Add the geometry created in step 4
+    symbol: ptsymbol // Add the symbol created in step 5
+    //attributes: lineAtt // Add the attributes created in step 6
+  });
+      this.view.goTo({
+    center: center,
+    zoom: 14
+  },2000)
+   this.view.graphics.add(graphic);
+      this.pop = false
+         
+      }else{
+        this.$Message.error('请输入经纬度');
+      }
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
 .title {
@@ -858,7 +917,7 @@ export default {
   box-sizing: inherit;
   color: rgba(128, 134, 149, 1);
   font-size: 18px;
-  content: "";
+  content: '';
   color: inherit;
   display: block;
   margin: 0 auto;
@@ -870,7 +929,7 @@ export default {
   bottom: 30.5px;
   right: 65px;
   z-index: 2;
-  width: 290px;
+  width: 320px;
   height: 32px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
@@ -898,4 +957,12 @@ export default {
   font-size: 0.74rem;
 }
 //esri ui
+
+.pop_btn,
+.pop_input {
+  margin-top: 3px;
+}
+.pop_btn{
+  float: right;
+}
 </style>

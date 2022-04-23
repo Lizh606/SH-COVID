@@ -123,18 +123,6 @@ const createWmtsLayer = function (wmtsUrl) {
         resolution: 5.3644180297851563e-6,
         scale: 2254.4677204799655,
       },
-      {
-        level: 18,
-        levelValue: 19,
-        resolution: 2.68220901489257815e-6,
-        scale: 1127.23386023998275,
-      },
-      {
-        level: 19,
-        levelValue: 20,
-        resolution: 1.341104507446289075e-6,
-        scale: 563.616930119991375,
-      },
     ],
   });
   if (wmtsUrl && tileInfo) {
