@@ -153,7 +153,6 @@ export default {
         symbol: ptsymbol, // Add the symbol created in step 5
         attributes: polygonAttr,
         popupTemplate: popupTemplate
-        //attributes: lineAtt // Add the attributes created in step 6
       })
       this.view.graphics.add(graphic)
 
