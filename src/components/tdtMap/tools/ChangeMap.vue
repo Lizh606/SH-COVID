@@ -108,7 +108,7 @@ export default {
 .swap-btn {
   position: relative;
   display: block;
-  background: url("../../assets/img/vec.png") no-repeat;
+  background: url("../../../assets/img/vec.png") no-repeat;
   background-size: 100%;
   margin: 4px auto;
 }
@@ -166,15 +166,15 @@ export default {
   position: relative;
 }
 .vec {
-  background: url("../../assets/img/vec.png") no-repeat;
+  background: url("../../../assets/img/vec.png") no-repeat;
   background-size: 100%;
 }
 .img {
-  background: url("../../assets/img/img.png") no-repeat;
+  background: url("../../../assets/img/img.png") no-repeat;
   background-size: 100%;
 }
 .ter {
-  background: url("../../assets/img/ter.png") no-repeat;
+  background: url("../../../assets/img/ter.png") no-repeat;
   background-size: 100%;
 }
 .sh {

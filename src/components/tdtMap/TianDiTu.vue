@@ -206,6 +206,7 @@ export default {
 //鹰眼
 #overviewDiv {
   position: relative;
+  left: 20px;
   bottom: 15px;
   width: 180px;
   height: 150px;

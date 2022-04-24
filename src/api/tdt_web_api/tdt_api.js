@@ -17,3 +17,10 @@ export const publicTransportPlanning = (data) => {
       params: data
     })
   }
+  export const getSearch = (data) => {
+    return service({
+      url: '/search',
+      params: data
+    })
+  }
+  

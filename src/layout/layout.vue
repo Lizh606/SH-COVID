@@ -167,7 +167,7 @@ export default {
     console.log(res1)
     //地名获取坐标
     const data = {
-       ds: { keyWord: '上海市浦东新区玉兰香苑三期' },
+       ds: { keyWord: '玉兰香苑' },
       tk: '6156b0fb9f9e853e3f64234d82d9abf1'
     }
     const res2 = await getCoordinate(data)

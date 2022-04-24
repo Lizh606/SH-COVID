@@ -1,3 +1,4 @@
+/* eslint-disable no-control-regex */
 <template>
   <div>
     <!-- 切换底图弹窗内容 -->
@@ -90,9 +91,20 @@
 
         <div slot="title"><b>坐标定位</b></div>
         <div slot="content">
-          经度:  <Input v-model="longitude" placeholder="请输入经度" style="width: 200px " /><br>
+          经度:
+          <Input
+            v-model="longitude"
+            placeholder="请输入经度"
+            style="width: 200px"
+          /><br />
           <slot></slot>
-          纬度:  <Input v-model="latitude" placeholder="请输入纬度" style="width: 200px"  class="pop_input"/><br>
+          纬度:
+          <Input
+            v-model="latitude"
+            placeholder="请输入纬度"
+            style="width: 200px"
+            class="pop_input"
+          /><br />
           <Button class="pop_btn" @click="Coordinate">搜索</Button>
         </div>
       </Poptip>
@@ -102,7 +114,10 @@
       >
       <span id="scale" class="scale"> 比例尺 1:{{ curScale }} </span>
     </p>
+    <!-- 导出底图 -->
     <div ref="exportDiv" class="map-export-div-default"></div>
+    <!-- 搜索框 -->
+    <Search />
   </div>
 </template>
 
@@ -120,19 +135,19 @@ import Swipe from '@arcgis/core/widgets/Swipe'
 import Legend from '@arcgis/core/widgets/Legend'
 import LegendViewModel from '@arcgis/core/widgets/Legend/LegendViewModel'
 import Expand from '@arcgis/core/widgets/Expand'
-import PictureMarkerSymbol from "@arcgis/core/symbols/PictureMarkerSymbol";
 import * as watchUtils from '@arcgis/core/core/watchUtils'
 
 import createWmtsLayer from './layers/wmtsLayer'
 
-import screentake from './Screentake.vue'
-import changemap from './ChangeMap.vue'
+import search from './tools/Search.vue'
+import screentake from './tools/Screentake.vue'
+import changemap from './tools/ChangeMap.vue'
 
 import html2canvas from 'html2canvas'
 
 export default {
   name: 'MapTools',
-  components: { ChangeMap: changemap, Screentake: screentake },
+  components: { ChangeMap: changemap, Screentake: screentake ,Search :search },
   inject: ['TdtMap'],
   data() {
     return {
@@ -142,8 +157,8 @@ export default {
       lat: '31.18',
       pop: false,
       //坐标定位值
-      longitude:121.477331 ,
-      latitude:31.2379 ,
+      longitude: 121.477331,
+      latitude: 31.2379,
     }
   },
   created() {},
@@ -174,7 +189,9 @@ export default {
           }
         })
         const scale = document.getElementById('scale')
-        this.view.ui.add(scale)
+        this.view.ui.add(scale, {
+          position: 'top-left'
+        })
         //toolbar
         const toolbar = document.getElementById('toolbar')
         this.view.ui.add(toolbar)
@@ -183,6 +200,7 @@ export default {
         this.view.ui.add(exportbtn, {
           position: 'bottom-right'
         })
+       
         //图例
         const legendvm = new LegendViewModel({
           view: this.view
@@ -216,13 +234,11 @@ export default {
           position: 'bottom-right'
         })
 
-        //搜索
-        const searchWidgets = new Search({
-          view: this.view
-        })
-        this.view.ui.add(searchWidgets, {
-          position: 'top-left'
-        })
+        // 搜索
+        // const searchWidgets = new Search({
+        //   view: this.view
+        // })
+        // this.view.ui.add(searchWidgets)
         const homeWidget = new Home({
           view: this.view
         })
@@ -248,7 +264,7 @@ export default {
     })(HTMLCanvasElement.prototype.getContext)
   },
 
-  computed: {},
+  
 
   methods: {
     measureDistance() {
@@ -767,46 +783,48 @@ export default {
       this.view.ui.add(swipe)
       // this.view.ui.remove(swipe);
     },
-    locateCoordinate() {
-    },
+    locateCoordinate() {},
     Coordinate() {
-      if(this.longitude !== "" && this.latitude !== ''){
-        this.longitude = parseFloat(this.longitude);
-        this.latitude = parseFloat(this.latitude);
-      let center = [this.longitude, this.latitude];
-    //  const ptsymbol = new PictureMarkerSymbol(
-    //       require("@/assets/img/定位.png"),
-    //       200,
-    //       200,
-    //     );
+      if (this.longitude !== '' && this.latitude !== '') {
+        this.longitude = parseFloat(this.longitude)
+        this.latitude = parseFloat(this.latitude)
+        let center = [this.longitude, this.latitude]
+        //  const ptsymbol = new PictureMarkerSymbol(
+        //       require("@/assets/img/定位.png"),
+        //       200,
+        //       200,
+        //     );
         const ptsymbol = {
-  type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
-  url: "/定位.png",
-  width: "64px",
-  height: "64px"
-};
-      let point = {
-        type: 'point',
-        longitude: this.longitude, //当底图是投影坐标系时用x,地理坐标系用longitude
-        latitude: this.latitude, //当底图是投影坐标系时用y,地理坐标系用latitude
-        spatialReference: this.view.spatialReference //和底图相同的坐标系
+          type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+          url: '/定位.png',
+          width: '64px',
+          height: '64px'
+        }
+        let point = {
+          type: 'point',
+          longitude: this.longitude, //当底图是投影坐标系时用x,地理坐标系用longitude
+          latitude: this.latitude, //当底图是投影坐标系时用y,地理坐标系用latitude
+          spatialReference: this.view.spatialReference //和底图相同的坐标系
+        }
+        let graphic = new Graphic({
+          geometry: point, // Add the geometry created in step 4
+          symbol: ptsymbol // Add the symbol created in step 5
+          //attributes: lineAtt // Add the attributes created in step 6
+        })
+        this.view.goTo(
+          {
+            center: center,
+            zoom: 14
+          },
+          2000
+        )
+        this.view.graphics.add(graphic)
+        this.pop = false
+      } else {
+        this.$Message.error('请输入经纬度')
       }
-      let graphic = new Graphic({
-    geometry: point, // Add the geometry created in step 4
-    symbol: ptsymbol // Add the symbol created in step 5
-    //attributes: lineAtt // Add the attributes created in step 6
-  });
-      this.view.goTo({
-    center: center,
-    zoom: 14
-  },2000)
-   this.view.graphics.add(graphic);
-      this.pop = false
-         
-      }else{
-        this.$Message.error('请输入经纬度');
-      }
-    }
+    },
+    
   }
 }
 </script>
@@ -874,17 +892,6 @@ export default {
 .btn-item {
   margin-left: 0.5rem;
 }
-// //弹窗样式
-// .esri-view-height-less-than-medium .esri-popup__main-container {
-//   font-family: "KaiTi";
-// }
-// .esri-feature__content-element:last-child {
-//   font-family: "KaiTi";
-// }
-// &/deep/.esri-popup__main-container {
-//   font-family: "KaiTi";
-// }
-//下来菜单样式
 &/deep/.ivu-dropdown-item {
   white-space: nowrap;
 }
@@ -962,7 +969,9 @@ export default {
 .pop_input {
   margin-top: 3px;
 }
-.pop_btn{
+.pop_btn {
   float: right;
 }
+
+
 </style>
