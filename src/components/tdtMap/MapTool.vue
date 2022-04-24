@@ -16,20 +16,12 @@
         </a>
       </Dropdown>
       <Dropdown class="btns-common-style">
-        <!-- <Button @click="query">
-          <Icon custom="iconfont icon-gongjuxiang" />
-          <span>属性查询</span>
-        </Button> -->
         <a href="javascript:void(0)" style="color: #515a6e" @click="query">
           <IconSvg iconClass="tishishuoming"></IconSvg>
           <span> 属性查询</span>
         </a>
       </Dropdown>
       <Dropdown class="btns-common-style">
-        <!-- <Button>
-          <Icon custom="iconfont icon-gongjuxiang" />
-          <span> 工具箱</span>
-        </Button> -->
         <a href="javascript:void(0)" style="color: #515a6e">
           <IconSvg iconClass="gongjuxiang"></IconSvg>
           <span> 工具箱</span>
@@ -147,7 +139,7 @@ import html2canvas from 'html2canvas'
 
 export default {
   name: 'MapTools',
-  components: { ChangeMap: changemap, Screentake: screentake ,Search :search },
+  components: { ChangeMap: changemap, Screentake: screentake, Search: search },
   inject: ['TdtMap'],
   data() {
     return {
@@ -158,7 +150,7 @@ export default {
       pop: false,
       //坐标定位值
       longitude: 121.477331,
-      latitude: 31.2379,
+      latitude: 31.2379
     }
   },
   created() {},
@@ -200,7 +192,7 @@ export default {
         this.view.ui.add(exportbtn, {
           position: 'bottom-right'
         })
-       
+
         //图例
         const legendvm = new LegendViewModel({
           view: this.view
@@ -263,8 +255,6 @@ export default {
       }
     })(HTMLCanvasElement.prototype.getContext)
   },
-
-  
 
   methods: {
     measureDistance() {
@@ -823,8 +813,7 @@ export default {
       } else {
         this.$Message.error('请输入经纬度')
       }
-    },
-    
+    }
   }
 }
 </script>
@@ -972,6 +961,4 @@ export default {
 .pop_btn {
   float: right;
 }
-
-
 </style>
