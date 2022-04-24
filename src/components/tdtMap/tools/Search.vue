@@ -16,9 +16,10 @@
 
       <div slot="content" v-if="pop2">
         <div
+          class="search_list"
           v-for="(item, index) in pois"
           :key="index"
-          @click="locateToLocation(item.lonlat)"
+          @click="locateToLocation(item)"
         >
           <IconSvg iconClass="dingwei-" slot="prefix"></IconSvg>
           {{ item.name }}
@@ -65,16 +66,16 @@ export default {
     searchValue: {
       // immediate: true, // 这句重要
       handler(val) {
-          if(val === ''){
-              this.pop = true;
-              this.pop1 = true;
-              this.pop2 =false
-          }else{
-               this.pop = false
-        this.pop1 = false
-              this.pop2 =true
-          }
-       
+        if (val === '') {
+          this.pop = true
+          this.pop1 = true
+          this.pop2 = false
+        } else {
+          this.pop = false
+          this.pop1 = false
+          this.pop2 = true
+        }
+
         //   this.searchName = val
       }
     }
@@ -92,8 +93,9 @@ export default {
     })
   },
   methods: {
-    locate() {
-        this.view.graphics.removeAll()
+    locate(item) {
+      this.view.graphics.removeAll()
+      console.log(item)
       let center = [this.lng, this.lat]
       const ptsymbol = {
         type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
@@ -107,9 +109,50 @@ export default {
         latitude: this.lat, //当底图是投影坐标系时用y,地理坐标系用latitude
         spatialReference: this.view.spatialReference //和底图相同的坐标系
       }
+
+      const polygonAttr = {
+        Name: item.name,
+        address: item.address,
+        ename: item.ename,
+        lonlat: item.lonlat
+      }
+      const popupTemplate = {
+        title: item.name,
+        content: [
+          {
+            // Pass in the fields to display
+            type: 'fields',
+            fieldInfos: [
+              {
+                fieldName: 'address',
+                label: '详细地址'
+              },
+
+              {
+                fieldName: 'ename',
+                label: '英文名'
+              },
+              {
+                fieldName: 'lonlat',
+                label: '经纬度'
+              }
+            ]
+          }
+        ]
+      }
+      if (item.phone !== '') {
+        const info = {
+          fieldName: 'phone',
+          label: '联系方式'
+        }
+        polygonAttr['phone'] = item.phone
+        popupTemplate.content[0].fieldInfos.push(info)
+      }
       let graphic = new Graphic({
         geometry: point, // Add the geometry created in step 4
-        symbol: ptsymbol // Add the symbol created in step 5
+        symbol: ptsymbol, // Add the symbol created in step 5
+        attributes: polygonAttr,
+        popupTemplate: popupTemplate
         //attributes: lineAtt // Add the attributes created in step 6
       })
       this.view.graphics.add(graphic)
@@ -146,13 +189,12 @@ export default {
       }
     },
     locateToLocation(item) {
-      const res = item.split(/\s+/)
+      const res = item.lonlat.split(/\s+/)
       console.log(res)
       this.lng = parseFloat(res[0])
       this.lat = parseFloat(res[1])
-      console.log(this.lng)
 
-      this.locate()
+      this.locate(item)
     },
     async getPois() {
       console.log(this.searchValue)
@@ -171,6 +213,7 @@ export default {
       }
       const res = await getSearch(data)
       console.log(res)
+      this.pois = []
       for (let i = 0; i < res.data.pois.length; i++) {
         this.pois.push(res.data.pois[i])
       }
@@ -192,5 +235,8 @@ export default {
 #search {
   top: 20px;
   left: 35px;
+}
+.search_list {
+  border-bottom: 1px solid rgba(220, 220, 220, 1);
 }
 </style>

@@ -31,7 +31,7 @@
           <span> 工具箱</span>
         </Button> -->
         <a href="javascript:void(0)" style="color: #515a6e">
-          <Icon custom="iconfont icon-gongjuxiang" />
+          <IconSvg iconClass="gongjuxiang"></IconSvg>
           <span> 工具箱</span>
         </a>
         <DropdownMenu slot="list">
@@ -933,7 +933,7 @@ export default {
 //坐标和比例尺
 .coordinate-scale {
   position: fixed;
-  bottom: 30.5px;
+  bottom: 16px;
   right: 65px;
   z-index: 2;
   width: 320px;
