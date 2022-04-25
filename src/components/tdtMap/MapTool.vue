@@ -136,6 +136,7 @@ import screentake from './tools/Screentake.vue'
 import changemap from './tools/ChangeMap.vue'
 
 import html2canvas from 'html2canvas'
+import { getSearch, getCoordinate } from '@/api/tdt_web_api/tdt_api.js'
 
 export default {
   name: 'MapTools',
@@ -774,16 +775,36 @@ export default {
       // this.view.ui.remove(swipe);
     },
     locateCoordinate() {},
-    Coordinate() {
+    async Coordinate() {
       if (this.longitude !== '' && this.latitude !== '') {
         this.longitude = parseFloat(this.longitude)
         this.latitude = parseFloat(this.latitude)
         let center = [this.longitude, this.latitude]
-        //  const ptsymbol = new PictureMarkerSymbol(
-        //       require("@/assets/img/定位.png"),
-        //       200,
-        //       200,
-        //     );
+        const data1 = {
+          postStr: { lon: this.longitude, lat: this.latitude, ver: 1 },
+          type: 'geocode',
+          tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+        }
+        const res1 = await getCoordinate(data1)
+        const polygonAttr = {
+          name: res1.data.result.formatted_address,
+          lonlat: [center[0], center[1]]
+        }
+        const popupTemplate = {
+          title: polygonAttr.name,
+          content: [
+            {
+              // Pass in the fields to display
+              type: 'fields',
+              fieldInfos: [
+                {
+                  fieldName: 'lonlat',
+                  label: '经纬度'
+                }
+              ]
+            }
+          ]
+        }
         const ptsymbol = {
           type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
           url: '/定位.png',
@@ -798,7 +819,9 @@ export default {
         }
         let graphic = new Graphic({
           geometry: point, // Add the geometry created in step 4
-          symbol: ptsymbol // Add the symbol created in step 5
+          symbol: ptsymbol, // Add the symbol created in step 5
+          attributes: polygonAttr,
+          popupTemplate: popupTemplate
           //attributes: lineAtt // Add the attributes created in step 6
         })
         this.view.goTo(
@@ -813,6 +836,9 @@ export default {
       } else {
         this.$Message.error('请输入经纬度')
       }
+    },
+    async getData(data1) {
+      await getCoordinate(data1)
     }
   }
 }

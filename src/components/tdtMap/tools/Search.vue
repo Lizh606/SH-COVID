@@ -31,7 +31,7 @@
 
 <script>
 import Graphic from '@arcgis/core/Graphic'
-import { getSearch } from '@/api/tdt_web_api/tdt_api.js'
+import { getSearch, getCoordinate } from '@/api/tdt_web_api/tdt_api.js'
 export default {
   name: 'Search',
   inject: ['TdtMap'],
@@ -43,7 +43,8 @@ export default {
       pois: [],
       pop: false,
       pop1: true,
-      pop2: false
+      pop2: false,
+      cureentinfos: []
     }
   },
   computed: {
@@ -164,7 +165,7 @@ export default {
         2000
       )
     },
-    locateToCurrentLocation() {
+    async locateToCurrentLocation() {
       //定位到当前位置
 
       if (navigator.geolocation) {
@@ -177,15 +178,77 @@ export default {
             // 经度
             this.lng = position.coords.longitude
             // performance
-            this.locate()
+            this.view.graphics.removeAll()
+            let center = [this.lng, this.lat]
+            //   //坐标获取地名
+            //   const data1 = {
+            //     postStr: { lon: this.lng, lat: this.lat, ver: 1 },
+            //     type: 'geocode',
+            //     tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+            //   }
+            //  this.getData(data1);
+            //     console.log(this.cureentinfos.length >0)
+
+            const ptsymbol = {
+              type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+              url: '/定位.png',
+              width: '64px',
+              height: '64px'
+            }
+
+            let point = {
+              type: 'point',
+              longitude: this.lng, //当底图是投影坐标系时用x,地理坐标系用longitude
+              latitude: this.lat, //当底图是投影坐标系时用y,地理坐标系用latitude
+              spatialReference: this.view.spatialReference //和底图相同的坐标系
+            }
+
+            const polygonAttr = {
+              location: center
+            }
+            const popupTemplate = {
+              title: '当前位置',
+              content: [
+                {
+                  // Pass in the fields to display
+                  type: 'fields',
+                  fieldInfos: [
+                    {
+                      fieldName: 'location',
+                      label: '经纬度'
+                    }
+                  ]
+                }
+              ]
+            }
+            let graphic = new Graphic({
+              geometry: point, // Add the geometry created in step 4
+              symbol: ptsymbol, // Add the symbol created in step 5
+              attributes: polygonAttr,
+              popupTemplate: popupTemplate
+            })
+            this.view.graphics.add(graphic)
+
+            this.view.goTo(
+              {
+                center: center,
+                zoom: 16
+              },
+              2000
+            )
           },
           (err) => {
-            console.log('无法获取当前位置')
+            this.$Message.error('无法获取当前位置')
           }
         )
       } else {
         this.$Message.error('无法获取当前位置')
       }
+    },
+    async getData(data1) {
+      const res3 = await getCoordinate(data1)
+      this.cureentinfos = res3.data
+      console.log(this.cureentinfos)
     },
     locateToLocation(item) {
       const res = item.lonlat.split(/\s+/)
