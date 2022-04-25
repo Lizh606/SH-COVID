@@ -17,7 +17,7 @@ import '@arcgis/core/assets/esri/themes/light/main.css'
 //style
 import './styles/scss/global.scss'
 
-import 'default-passive-events'
+
 
 
 Vue.config.productionTip = false

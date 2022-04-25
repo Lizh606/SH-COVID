@@ -339,7 +339,6 @@ export default {
         yoffset: '10px',
         font: {
           size: 12,
-          family: 'KaiTi',
           weight: 'bold'
         }
       }
@@ -539,9 +538,6 @@ export default {
           title: '坐标:[' + lon + ',' + lat + ']',
           location: event.mapPoint,
           symbol: {
-            font: {
-              family: 'KaiTi'
-            }
           }
         })
         const params = {

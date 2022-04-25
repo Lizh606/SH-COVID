@@ -71,7 +71,7 @@ export default {
           text: this.title1,
           textStyle: {
             color: "#525A6F",
-            fontFamily: "KaiTi",
+            fontFamily: "楷体",
             fontSize: 16,
             marginLeft: 20,
           },
@@ -95,7 +95,7 @@ export default {
           padding: [35, 280, 0, 0],
           textStyle: {
             color: "#525A6F",
-            fontFamily: "KaiTi",
+            fontFamily: "楷体",
             fontSize: 14,
           },
         },
@@ -117,7 +117,7 @@ export default {
 
             textStyle: {
               color: "#525A6F",
-              fontFamily: "KaiTi",
+              fontFamily: "楷体",
               fontSize: 16,
             },
           },
@@ -140,7 +140,7 @@ export default {
               show: true, //这里的show用于设置是否显示y轴下的字体 默认为true
               textStyle: {
                 color: "#525A6F",
-                fontFamily: "KaiTi",
+                fontFamily: "楷体",
                 fontSize: 14,
               },
             },

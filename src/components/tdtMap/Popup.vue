@@ -45,6 +45,7 @@ export default {
     };
   },
   beforeRouteEnter(to, from, next) {
+   console.log(from, 'beforeRouteEnter');
     if (to.params.id === 2) {
       next((vm) => {
         vm.$nextTick(() => {
@@ -401,10 +402,6 @@ export default {
           borderLineColor: "#2152AC",
           text: this.shPolygon.features[j].properties.name,
 
-          // font: {
-          //   size: 12,
-          //   family: "KaiTi",
-          // },
         };
         const pointgeo = {
           type: "point",
@@ -482,7 +479,6 @@ export default {
           text: this.shPolygon.features[j].properties.name,
           font: {
             size: 12,
-            family: "KaiTi",
           },
         };
         const pointgeo = {

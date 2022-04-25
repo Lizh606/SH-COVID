@@ -11,10 +11,9 @@ export default {
 </script>
 
 <style lang="less">
-@import "./styles/font/font.css";
 html,
 body {
-  // font-family: "KaiTi";
+  font-family: '楷体';
   height: 100%;
 }
 
