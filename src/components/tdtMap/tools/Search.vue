@@ -9,12 +9,12 @@
       >
         <Icon type="ios-search" slot="suffix" @click="getPois()" />
       </Input>
-      <div slot="content" v-if="pop1" @click="locateToCurrentLocation">
+      <div slot="content" v-if="pop1" @click="locateToCurrentLocation" style="white-space: normal">
         <IconSvg iconClass="dingwei-" slot="prefix"></IconSvg>
         {{ searchName }}
       </div>
 
-      <div slot="content" v-if="pop2">
+      <div slot="content" v-if="pop2" style="white-space: normal">
         <div
           class="search_list"
           v-for="(item, index) in pois"
@@ -294,7 +294,11 @@ export default {
   right: 0;
   box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
 }
+/deep/.ivu-input-with-suffix {
+    padding-right: 100px;
+}
 #search {
+  width: 200pxx;
   top: 20px;
   left: 35px;
 }

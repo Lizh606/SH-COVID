@@ -15,6 +15,13 @@ import Graphic from '@arcgis/core/Graphic'
 import * as watchUtils from '@arcgis/core/core/watchUtils'
 import BasemapGalleryVM from '@arcgis/core/widgets/BasemapGallery/BasemapGalleryViewModel'
 import LocalBasemapsSource from '@arcgis/core/widgets/BasemapGallery/support/LocalBasemapsSource'
+import GeoJSONLayer from '@arcgis/core/layers/GeoJSONLayer'
+
+import LabelClass from '@arcgis/core/layers/support/LabelClass'
+import FeatureFilter from '@arcgis/core/layers/support/FeatureFilter'
+import FeatureEffect from '@arcgis/core/layers/support/FeatureEffect'
+import Query from '@arcgis/core/tasks/support/Query'
+import QueryTask from '@arcgis/core/tasks/QueryTask'
 
 //js组件
 import createWmtsLayer from './layers/wmtsLayer'
@@ -22,6 +29,7 @@ import createTileLayer from './layers/tileLayer'
 
 //组件
 import maptool from './MapTool.vue'
+import { white } from 'color-name'
 // import Swipe from '@arcgis/core/widgets/Swipe';
 
 export default {
@@ -40,19 +48,23 @@ export default {
       TdtMap: this.TdtMap
     }
   },
-  beforeRouteEnter(to, from, next) {
-    if (from.path === '/yqData') {
-      next()
-    } else {
-      next()
+  // beforeRouteEnter(to, from, next) {
+  //   // if (from.path === '/yqData' || from.path === '/TianDiTu') {
+  //   //   next()
+  //   // } else {
+  //   //   next()
 
-      if (location.href.indexOf('#reloaded') == -1) {
-        location.href = location.href + '#reloaded'
-        location.reload()
-      }
-    }
-  },
+  //   //   if (location.href.indexOf('#reloaded') == -1) {
+  //   //     location.href = location.href + '#reloaded'
+  //   //     location.reload()
+  //   //   }
+  //   // }
+  // },
   mounted() {
+    // if (location.href.indexOf('#reloaded') == -1) {
+    //   location.href = location.href + '#reloaded'
+    //   location.reload()
+    // }
     this.$nextTick(() => {
       setTimeout(() => {
         this.createMap()
@@ -79,11 +91,8 @@ export default {
 
       //上海地图
       const SHLayer = createTileLayer('/services/SHMAP_D/MapServer', 'SHMAP_D')
-      const SHSU = createTileLayer('/services/SHMAP_SU/MapServer', 'SHMAP_SU')
-      const SHLayer_zj = createTileLayer(
-        '/services/SHMAP_DZJ/MapServer',
-        'SHMAP_DZJ'
-      )
+      const SHSU = createTileLayer('/SHMAP_SU/MapServer', 'SHMAP_SU')
+      const SHLayer_zj = createTileLayer('/SHMAP_DZJ/MapServer', 'SHMAP_DZJ')
 
       const map = new Map({
         basemap: {
@@ -97,7 +106,127 @@ export default {
         zoom: 8,
         spatialReference: { wkid: 4326 }
       })
+      
+      const template = {
+        title: '{name}',
+        // content: '{center}'
+        // fieldInfos: [
+        //   {
+        //     fieldName: 'time',
+        //     format: {
+        //       dateFormat: 'short-date-short-time'
+        //     }
+        //   }
+        // ]
+      }
+      // const renderer = {
+      //     // type: "simple",
+      //     // field: "name",
+      //     // symbol: {
+      //     //   type: "simple-marker",
+      //     //   color: "orange",
+      //     //   outline: {
+      //     //     color: "white"
+      //     //   }
+      //     // },
+      //     // visualVariables: [
+      //     //   {
+      //     //     type: "size",
+      //     //     field: "name",
+      //     //     stops: [
+      //     //       {
+      //     //         value: 2.5,
+      //     //         size: "4px"
+      //     //       },
+      //     //       {
+      //     //         value: 8,
+      //     //         size: "name"
+      //     //       }
+      //     //     ]
+      //     //   }
+      //     // ]
+      //   };
+      const geojsonlayer = new GeoJSONLayer({
+        url: 'https://geo.datav.aliyun.com/areas_v3/bound/geojson?code=310000_full',
+        popupTemplate: template,
+        outFields: ['*']
+        //  renderer: renderer,
+        // copyright: "USGS Earthquakes",
+        //   renderer: {
+        // type: "simple",  // autocasts as new SimpleRenderer()
+        // symbol: {
+        //   type: "simple-fill",  // autocasts as new SimpleFillSymbol()
+        //   outline: {  // autocasts as new SimpleLineSymbol()
+        //     width: 3,
+        //   },
 
+        // },
+        // visualVariables: [
+        //   {
+        //     type: "color",
+        //     field: "name",
+        //     stops: [
+        //       {
+        //         value: "浦东新区",
+        //         color: "blue"
+        //       },
+        //       {
+        //         value: "闵行区",
+        //         size: "red"
+        //       }
+        //     ]
+        //   }
+        // ]
+        // },
+      })
+      geojsonlayer.on('update-end', function (e) {
+        map.setExtent(e.target.extent.expand(1.2));
+        console.log(e.target);
+      })
+      map.add(geojsonlayer) // adds the layer to the map
+      // geojsonlayer.definitionExpression = "adcode = 310101";
+      const statesLabelClass = new LabelClass({
+        labelExpressionInfo: { expression: '$feature.name' },
+
+        // labelPlacement: "above-left",
+        // where: "adcode = 310101",
+        symbol: {
+          type: 'text', // autocasts as new TextSymbol()
+          color: 'black',
+          haloSize: 10,
+          haloColor: 'white'
+        }
+      })
+      //       const featureFilter = new FeatureFilter({
+      //   // where: " adcode = 310101"
+      // });
+      // geojsonlayer.featureEffect = new FeatureEffect({
+      //   filter: featureFilter,
+      //   includedEffect: "opacity(100%)",
+      //   excludedEffect: "opacity(50%)"
+      // });
+      // geojsonlayer.when(function(){
+      //   // view.extent = geojsonlayer.fullExtent;
+      // });
+      geojsonlayer.labelingInfo = [statesLabelClass]
+      console.log(geojsonlayer)
+      
+      let query = geojsonlayer.createQuery()
+      query.where = "name = '浦东新区'"
+      query.outFields = ['name']
+
+      geojsonlayer.queryFeatures(query).then(function (response) {
+        console.log(response)
+       
+        
+        // returns a feature set with features containing the following attributes
+        // STATE_NAME, COUNTY_NAME, POPULATION, POP_DENSITY
+      })
+    
+
+      // if (field) {
+      //   console.log(field.name); // SomeField
+      // }
       // 底图逻辑
       const vecBaseMap = new Basemap({
         baseLayers: [vectiledLayer, tiledjzLayer],
@@ -114,19 +243,28 @@ export default {
         title: '地形地图',
         id: '地形地图'
       })
-      const shBaseMap = new Basemap({
-        baseLayers: [SHSU, SHLayer_zj],
-        title: '地形地图',
-        id: '地形地图'
-      })
+      // const shBaseMap = new Basemap({
+      //   baseLayers: [SHSU, SHLayer_zj],
+      //   title: '地形地图',
+      //   id: '地形地图'
+      // })
       const basemapvmodel = new BasemapGalleryVM({
         view: view,
         source: new LocalBasemapsSource({
-          basemaps: [vecBaseMap, imgBaseMap, terBaseMap, shBaseMap]
+          basemaps: [vecBaseMap, imgBaseMap, terBaseMap]
         })
       })
       window.BasemapGalleryVM = basemapvmodel
-
+      view.when().then(function () {
+        view.on('click', function (event) {
+          view.hitTest(event).then(function (event) {
+            let results = event.results.filter(function (result) {
+              console.log(result) //attributes are contained in result.graphic.attributes
+              //you can do data processing here, or bind this result to a data
+            })
+          })
+        })
+      })
       //鹰眼
       const overview_zj = createWmtsLayer(tdtjzUrl)
       const overviewmap = new Map({
@@ -161,6 +299,7 @@ export default {
       view.ui.components = []
       //取消下面esri标志
       view.ui.remove('attribution')
+      
     },
 
     //鹰眼监听
@@ -175,27 +314,32 @@ export default {
       })
       this.overview_view.graphics.add(extentgraphic)
 
-      watchUtils.init(this.TdtMap.view, 'extent',(extent) => {
+      watchUtils.init(
+        this.TdtMap.view,
+        'extent',
+        (extent) => {
           if (this.TdtMap.view.stationary) {
-          this.overview_view
-            .goTo({
-              center: this.TdtMap.view.center,
-              scale:
-                this.TdtMap.view.scale *
-                2 *
-                Math.max(
-                  this.TdtMap.view.width / this.overview_view.width,
-                  this.TdtMap.view.height / this.overview_view.height
-                )
-            })
-            .catch((error) => {
-              if (error.name != 'view:goto-interrupted') {
-                console.error(error)
-              }
-            })
-        }
-        extentgraphic.geometry = extent
-      },{ passive: false })
+            this.overview_view
+              .goTo({
+                center: this.TdtMap.view.center,
+                scale:
+                  this.TdtMap.view.scale *
+                  2 *
+                  Math.max(
+                    this.TdtMap.view.width / this.overview_view.width,
+                    this.TdtMap.view.height / this.overview_view.height
+                  )
+              })
+              .catch((error) => {
+                if (error.name != 'view:goto-interrupted') {
+                  console.error(error)
+                }
+              })
+          }
+          extentgraphic.geometry = extent
+        },
+        { passive: false }
+      )
     }
   }
 }
@@ -220,14 +364,14 @@ export default {
   border: 1px solid black;
   z-index: 98;
   overflow: hidden;
-  touch-action:none
+  touch-action: none;
 }
 
 #extentDiv {
   background-color: rgba(0, 0, 0, 0.5);
   position: relative;
   z-index: 99;
-  touch-action:none
+  touch-action: none;
 }
 
 //esri ui组件

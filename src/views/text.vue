@@ -1,5 +1,5 @@
 <template>
-  <div class="timeaxis">
+  <!-- <div class="timeaxis">
     <div v-for="item in list" :key="item.index">
       <div class="box">
         <div class="item">
@@ -9,11 +9,20 @@
         <div class="item2"></div>
       </div>
     </div>
-  </div>
+  </div> -->
+      <div ref="map" id="map"></div>
+
 </template>
 <script>
 import { YQDatePathData } from '@/api/sys.js'
 
+import Map from '@arcgis/core/Map'
+import MapView from '@arcgis/core/views/MapView'
+import TileLayer from "@arcgis/core/layers/TileLayer";
+
+import GeoJSONLayer from "@arcgis/core/layers/GeoJSONLayer";
+import { GET } from "@/utils/axios.js";
+import axios from 'axios';
 export default {
   data() {
     return {
@@ -25,10 +34,46 @@ export default {
     const res = await YQDatePathData()
     console.log(res)
     this.list = res.data.trend[1].updateDate
+    this.init()
+  },
+  methods: {
+    async init(){
+      // const url = '/services'
+      // axios.get(url)
+      //   .then((res) => {
+      //     console.log(res)
+      //   })
+      // // console.log(res)
+      // const shmap  = new TileLayer({
+      //   url:'/services' 
+      // });
+    //   this.$http.get('/SHMAP_SU/MapServer' + "?f=json").then(res => {
+    //   console.log
+    // });
+    
+      const map = new Map({
+            // basemap: "oceans",
+          // layers: [shmap]
+      });
+  
+      const view = new MapView({
+        container: 'map',
+        map: map,
+        center: [121.477331, 31.2379],
+        zoom: 8,
+        spatialReference: { wkid: 4326 }
+      })
+      
+    }
   }
 }
 </script>
 <style scoped lang="less">
+#map {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
 .timeaxis {
   width: 1000px;
   height: 100%;

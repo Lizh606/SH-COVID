@@ -1,120 +1,112 @@
-import Login from "@/views/Login.vue";
-import Register from "@/views/Register.vue";
-import Welcome from "@/views/Welcome.vue";
-import animation from "@/views/animation.vue";
-
-import daping from "@/views/daping.vue";
-import layout from "@/layout/layout.vue";
-import TopicMake from "@/components/TopicMake/Topic.vue";
-import TianDiTu from "@/components/tdtMap/TianDiTu.vue";
-import Popup from "@/components/tdtMap/Popup.vue";
-import echarts from '@/views/Echarts.vue'
-import text from '@/views/text'
-const menuRoutes =  [
+const menuRoutes = [
   {
-    path: "/layout",
-    component: layout,
+    path: '/layout',
+    component: (resolve) => require(['@/layout/layout.vue'], resolve),
     children: [
       {
-        path: "",
-        component: Welcome,
+        path: '',
+        component: (resolve) => require(['@/views/Welcome.vue'], resolve),
         meta: {
-          title: "首页",
-        },
+          title: '首页'
+        }
       },
       {
-        path: "/Welcome",
-        name: "Welcome",
-        component: Welcome,
+        path: '/Welcome',
+        name: 'Welcome',
+        component: (resolve) => require(['@/views/Welcome.vue'], resolve),
         meta: {
-          title: "首页",
-        },
+          title: '首页'
+        }
       },
       {
-        path: "/animation",
-        name: "animation",
-        component: animation,
+        path: '/animation',
+        name: 'animation',
+        component: (resolve) => require(['@/views/animation.vue'], resolve),
         meta: {
-          title: "照片墙",
-        },
+          title: '照片墙'
+        }
       },
       {
-        path: "/TianDiTu",
-        name: "TianDiTu",
-        component: TianDiTu,
+        path: '/TianDiTu',
+        name: 'TianDiTu',
+        component: (resolve) =>
+          require(['@/components/tdtMap/TianDiTu.vue'], resolve),
         meta: {
-          title: "天地图",
-        },
+          title: '天地图'
+        }
       },
       {
-        path: "/yqData",
-        name: "yqData",
-        component: (resolve) => require(["@/views/yqData.vue"], resolve),
+        path: '/yqData',
+        name: 'yqData',
+        component: (resolve) => require(['@/views/yqData.vue'], resolve),
         meta: {
-          title: "疫情",
-        },
+          title: '疫情'
+        }
       },
       {
-        path: "/Popup",
-        name: "Popup",
-        component: Popup,
+        path: '/Popup',
+        name: 'Popup',
+        component: (resolve) =>
+          require(['@/components/tdtMap/Popup.vue'], resolve),
         meta: {
-          title: "弹窗",
-        },
+          title: '弹窗'
+        }
       },
       {
-        path: "/Echarts",
-        name: "Echarts",
-        component: echarts,
+        path: '/Echarts',
+        name: 'Echarts',
+        component: (resolve) => require(['@/views/Echarts.vue'], resolve),
         meta: {
-          title: "Echarts",
-        },
+          title: 'Echarts'
+        }
       },
       {
-        path: "/text",
-        name: "text",
-        component: text,
+        path: '/text',
+        name: 'text',
+        component: (resolve) => require(['@/views/text'], resolve),
         meta: {
-          title: "text",
-        },
-      },
-    ],
+          title: 'text'
+        }
+      }
+    ]
   },
   {
-    path: "/layout",
-    component: layout,
+    path: '/layout',
+    component: (resolve) => require(['@/layout/layout.vue'], resolve)
   },
   {
-    path: "/",
-    name: "Login",
-    component: Login,
+    path: '/',
+    name: 'Login',
+    component: (resolve) => require(['@/views/Login.vue'], resolve),
     meta: {
-      title: "登录",
-    },
+      title: '登录'
+    }
   },
   {
-    path: "/register",
-    name: "register",
-    component: Register,
+    path: '/register',
+    name: 'register',
+    component: (resolve) => require(['@/views/Register.vue'], resolve),
+
     meta: {
-      title: "注册",
-    },
+      title: '注册'
+    }
   },
   {
-    path: "/daping",
-    name: "daping",
-    component: daping,
+    path: '/daping',
+    name: 'daping',
+    component: (resolve) => require(['@/views/daping.vue'], resolve),
     meta: {
-      title: "大屏",
-    },
+      title: '大屏'
+    }
   },
   {
-    path: "/TopicMake",
-    name: "TopicMake",
-    component: TopicMake,
+    path: '/TopicMake',
+    name: 'TopicMake',
+    component: (resolve) =>
+      require(['@/components/TopicMake/Topic.vue'], resolve),
     meta: {
-      title: "专题制图",
-    },
-  },
-];
-export default menuRoutes;
+      title: '专题制图'
+    }
+  }
+]
+export default menuRoutes

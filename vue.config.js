@@ -9,6 +9,8 @@ const productionGzipExtensions = ['js', 'css']
 const productionGzip = true
 
 module.exports = {
+  //打包不生成map文件
+  productionSourceMap:false ,
   // publicPath: '/SH-COVID-19/',
   lintOnSave: false,
   chainWebpack: (config) => {
@@ -51,11 +53,11 @@ module.exports = {
     contentBase: '../dist',
     proxy: {
       '/services': {
-        target: 'http://mape.shanghai-map.net/arcgis/rest/services/',
-        changeOrgin: true,
+        target: 'https://mape.shanghai-map.net/arcgis/rest/services/SHMAP_SU/MapServer/0',
+        changeOrigin: true,
         secure: false,
         pathRewrite: {
-          '^/services': ''
+          '^/services': '/' 
         }
       },
       '/api': {

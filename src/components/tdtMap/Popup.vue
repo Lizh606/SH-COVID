@@ -44,10 +44,12 @@ export default {
       shPolygon: shanghai,
     };
   },
+
   beforeRouteEnter(to, from, next) {
-   console.log(from, 'beforeRouteEnter');
+   
     if (to.params.id === 2) {
       next((vm) => {
+       
         vm.$nextTick(() => {
           vm.map = window.map;
           vm.view = window.view;
@@ -63,9 +65,11 @@ export default {
       next();
     }
   },
+
   mounted() {
     this.$nextTick(() => {
       setTimeout(() => {
+        
         if (this.level.levelOne !== "") {
           this.loadroute();
           //   console.log(window.textGraphic)

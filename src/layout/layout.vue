@@ -152,7 +152,7 @@ export default {
       tk: '6156b0fb9f9e853e3f64234d82d9abf1'
     }
     const res = await tdtAdministrative(getAdministrative)
-    console.log(res)
+    // console.log(res)
     //公交规划
     const getbus = {
       type: 'busline',
@@ -164,14 +164,14 @@ export default {
       tk: '6156b0fb9f9e853e3f64234d82d9abf1'
     }
     const res1 = await publicTransportPlanning(getbus)
-    console.log(res1)
+    // console.log(res1)
     //地名获取坐标
     const data = {
        ds: { keyWord: '玉兰香苑' },
       tk: '6156b0fb9f9e853e3f64234d82d9abf1'
     }
     const res2 = await getCoordinate(data)
-    console.log(res2)
+    // console.log(res2)
     //坐标获取地名
      const data1 = {
        postStr:{'lon':121.63121,'lat':31.19935,'ver':1},
@@ -179,8 +179,8 @@ export default {
       tk: '6156b0fb9f9e853e3f64234d82d9abf1'
      
     }
-    const res3 = await getCoordinate(data1)
-    console.log(res3)
+    // const res3 = await getCoordinate(data1)
+    // console.log(res3)
   },
   watch: {
     // 解决手动改路径时，导航菜单的active-name不更新的问题

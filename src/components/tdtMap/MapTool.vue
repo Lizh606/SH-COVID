@@ -195,37 +195,37 @@ export default {
         })
 
         //图例
-        const legendvm = new LegendViewModel({
-          view: this.view
-        })
-        const legend = new Legend({
-          view: this.view,
-          layerInfos: {
-            title: '中国城市累计确诊',
-            levelOne: '累计确诊: 0 ~ 5000人',
-            levelTwo: '累计确诊: 5000 ~ 10000人',
-            levelThree: '累计确诊: 10000 ~ 50000人',
-            levelFour: '累计确诊: 50000 ~ 1000000人'
-          }
-        })
-        legend.style = {
-          type: 'card',
-          layout: 'auto'
-        }
-        const legendExpand = new Expand({
-          // view: this.view,
-          // content: legend,
-          view: this.view,
-          mode: 'floating',
-          content: legend,
-          collapseIconClass: 'esri-icon-overview-arrow-bottom-right',
-          collapseTooltip: '隐藏图例',
-          expandIconClass: 'esri-icon-media',
-          expandTooltip: '显示图例'
-        })
-        this.view.ui.add(legendExpand, {
-          position: 'bottom-right'
-        })
+        // const legendvm = new LegendViewModel({
+        //   view: this.view
+        // })
+        // const legend = new Legend({
+        //   view: this.view,
+        //   layerInfos: {
+        //     title: '中国城市累计确诊',
+        //     levelOne: '累计确诊: 0 ~ 5000人',
+        //     levelTwo: '累计确诊: 5000 ~ 10000人',
+        //     levelThree: '累计确诊: 10000 ~ 50000人',
+        //     levelFour: '累计确诊: 50000 ~ 1000000人'
+        //   }
+        // })
+        // legend.style = {
+        //   type: 'card',
+        //   layout: 'auto'
+        // }
+        // const legendExpand = new Expand({
+        //   // view: this.view,
+        //   // content: legend,
+        //   view: this.view,
+        //   mode: 'floating',
+        //   content: legend,
+        //   collapseIconClass: 'esri-icon-overview-arrow-bottom-right',
+        //   collapseTooltip: '隐藏图例',
+        //   expandIconClass: 'esri-icon-media',
+        //   expandTooltip: '显示图例'
+        // })
+        // this.view.ui.add(legendExpand, {
+        //   position: 'bottom-right'
+        // })
 
         // 搜索
         // const searchWidgets = new Search({

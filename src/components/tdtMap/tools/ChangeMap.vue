@@ -1,13 +1,13 @@
 <template>
   <div id="swapmap">
-    <div class="swap-popup" @click="isSwapOn = !isSwapOn">
+    <div class="swap-popup" @click="isSwapOn = !isSwapOn " v-trigger>
       <div class="swap-btn"></div>
       <div class="swap-btn-cover"></div>
     </div>
-    <div class="swap-content" v-if="isSwapOn">
+    <div class="swap-content" v-if="isSwapOn" >
       <!--切换行政区划地图按钮-->
       <div class="vec-collection">
-        <Button type="primary" class="vec" @click="swapmap(0)"> </Button>
+        <Button type="primary" class="vec" @click="swapmap(0)" v-trigger> </Button>
         <p class="swap-content-mask">电子底图</p>
       </div>
       <!--切换遥感影像地图按钮-->
@@ -47,6 +47,15 @@ export default {
       isSwapOn: false,
       isSwitchOn: true,
     };
+  },
+      // 自定义指令  
+  directives: {
+    trigger: {
+      inserted(el) {
+        // el.click();
+        // el.focus();
+      },
+    },
   },
   mounted() {
     this.$nextTick(() => {

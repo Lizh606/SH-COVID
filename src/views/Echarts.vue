@@ -103,15 +103,7 @@ export default {
     this.getData();
     this.openCard1()
   },
-  //自定义指令  v-trigger
-  // directives: {
-  //   trigger: {
-  //     inserted(el) {
-  //       el.click();
-  //       el.focus();
-  //     },
-  //   },
-  // },
+
 
   methods: {
     async getData() {
