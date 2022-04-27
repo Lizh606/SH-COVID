@@ -56,6 +56,13 @@
                 ></IconSvg>
                 <span class="sider-item-word-son">天地图</span>
               </MenuItem>
+              <MenuItem name="shanghai" @click.native="toSH">
+                <IconSvg
+                  iconClass="ditu4"
+                  class="sider-item-icon-son"
+                ></IconSvg>
+                <span class="sider-item-word-son">上海底图</span>
+              </MenuItem>
             </Submenu>
             <Submenu name="2">
               <template slot="title">
@@ -167,17 +174,16 @@ export default {
     // console.log(res1)
     //地名获取坐标
     const data = {
-       ds: { keyWord: '玉兰香苑' },
+      ds: { keyWord: '玉兰香苑' },
       tk: '6156b0fb9f9e853e3f64234d82d9abf1'
     }
     const res2 = await getCoordinate(data)
     // console.log(res2)
     //坐标获取地名
-     const data1 = {
-       postStr:{'lon':121.63121,'lat':31.19935,'ver':1},
-      type:'geocode',
+    const data1 = {
+      postStr: { lon: 121.63121, lat: 31.19935, ver: 1 },
+      type: 'geocode',
       tk: '6156b0fb9f9e853e3f64234d82d9abf1'
-     
     }
     // const res3 = await getCoordinate(data1)
     // console.log(res3)
@@ -249,6 +255,14 @@ export default {
         return
       }
       this.$router.push('/TianDiTu')
+    },
+    toSH() {
+      // 避免跳转到当前页面
+      if (this.$route.path == '/GeoJsonLayer') {
+        this.$Message.error('当前页面已经打开')
+        return
+      }
+      this.$router.push('/GeoJsonLayer')
     },
     tohos() {
       // 避免跳转到当前页面

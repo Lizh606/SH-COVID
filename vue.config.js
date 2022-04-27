@@ -52,12 +52,12 @@ module.exports = {
     },
     contentBase: '../dist',
     proxy: {
-      '/services': {
-        target: 'https://mape.shanghai-map.net/arcgis/rest/services/SHMAP_SU/MapServer/0',
+      '/yq': {
+        target: 'https://interface.sina.cn/news/wap/fymap2020_data.d.json',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
-          '^/services': '/' 
+          '^/yq': '/' 
         }
       },
       '/api': {

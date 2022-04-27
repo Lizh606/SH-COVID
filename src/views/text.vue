@@ -31,10 +31,13 @@ export default {
     }
   },
   async mounted() {
-    const res = await YQDatePathData()
-    console.log(res)
-    this.list = res.data.trend[1].updateDate
-    this.init()
+  //  axios.get('/yq').then((res)=>{
+  //    console.log(res);
+  //  })
+  axios.get('/yq').then((res)=>{
+     console.log(res)
+   })
+  //  console.log(res);
   },
   methods: {
     async init(){

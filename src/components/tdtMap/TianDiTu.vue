@@ -15,13 +15,7 @@ import Graphic from '@arcgis/core/Graphic'
 import * as watchUtils from '@arcgis/core/core/watchUtils'
 import BasemapGalleryVM from '@arcgis/core/widgets/BasemapGallery/BasemapGalleryViewModel'
 import LocalBasemapsSource from '@arcgis/core/widgets/BasemapGallery/support/LocalBasemapsSource'
-import GeoJSONLayer from '@arcgis/core/layers/GeoJSONLayer'
 
-import LabelClass from '@arcgis/core/layers/support/LabelClass'
-import FeatureFilter from '@arcgis/core/layers/support/FeatureFilter'
-import FeatureEffect from '@arcgis/core/layers/support/FeatureEffect'
-import Query from '@arcgis/core/tasks/support/Query'
-import QueryTask from '@arcgis/core/tasks/QueryTask'
 
 //js组件
 import createWmtsLayer from './layers/wmtsLayer'
@@ -29,7 +23,6 @@ import createTileLayer from './layers/tileLayer'
 
 //组件
 import maptool from './MapTool.vue'
-import { white } from 'color-name'
 // import Swipe from '@arcgis/core/widgets/Swipe';
 
 export default {
@@ -97,7 +90,8 @@ export default {
       const map = new Map({
         basemap: {
           baseLayers: [vectiledLayer, tiledjzLayer]
-        }
+        },
+        showLabels : true 
       })
       const view = new MapView({
         container: 'map',
@@ -107,126 +101,7 @@ export default {
         spatialReference: { wkid: 4326 }
       })
       
-      const template = {
-        title: '{name}',
-        // content: '{center}'
-        // fieldInfos: [
-        //   {
-        //     fieldName: 'time',
-        //     format: {
-        //       dateFormat: 'short-date-short-time'
-        //     }
-        //   }
-        // ]
-      }
-      // const renderer = {
-      //     // type: "simple",
-      //     // field: "name",
-      //     // symbol: {
-      //     //   type: "simple-marker",
-      //     //   color: "orange",
-      //     //   outline: {
-      //     //     color: "white"
-      //     //   }
-      //     // },
-      //     // visualVariables: [
-      //     //   {
-      //     //     type: "size",
-      //     //     field: "name",
-      //     //     stops: [
-      //     //       {
-      //     //         value: 2.5,
-      //     //         size: "4px"
-      //     //       },
-      //     //       {
-      //     //         value: 8,
-      //     //         size: "name"
-      //     //       }
-      //     //     ]
-      //     //   }
-      //     // ]
-      //   };
-      const geojsonlayer = new GeoJSONLayer({
-        url: 'https://geo.datav.aliyun.com/areas_v3/bound/geojson?code=310000_full',
-        popupTemplate: template,
-        outFields: ['*']
-        //  renderer: renderer,
-        // copyright: "USGS Earthquakes",
-        //   renderer: {
-        // type: "simple",  // autocasts as new SimpleRenderer()
-        // symbol: {
-        //   type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-        //   outline: {  // autocasts as new SimpleLineSymbol()
-        //     width: 3,
-        //   },
-
-        // },
-        // visualVariables: [
-        //   {
-        //     type: "color",
-        //     field: "name",
-        //     stops: [
-        //       {
-        //         value: "浦东新区",
-        //         color: "blue"
-        //       },
-        //       {
-        //         value: "闵行区",
-        //         size: "red"
-        //       }
-        //     ]
-        //   }
-        // ]
-        // },
-      })
-      geojsonlayer.on('update-end', function (e) {
-        map.setExtent(e.target.extent.expand(1.2));
-        console.log(e.target);
-      })
-      map.add(geojsonlayer) // adds the layer to the map
-      // geojsonlayer.definitionExpression = "adcode = 310101";
-      const statesLabelClass = new LabelClass({
-        labelExpressionInfo: { expression: '$feature.name' },
-
-        // labelPlacement: "above-left",
-        // where: "adcode = 310101",
-        symbol: {
-          type: 'text', // autocasts as new TextSymbol()
-          color: 'black',
-          haloSize: 10,
-          haloColor: 'white'
-        }
-      })
-      //       const featureFilter = new FeatureFilter({
-      //   // where: " adcode = 310101"
-      // });
-      // geojsonlayer.featureEffect = new FeatureEffect({
-      //   filter: featureFilter,
-      //   includedEffect: "opacity(100%)",
-      //   excludedEffect: "opacity(50%)"
-      // });
-      // geojsonlayer.when(function(){
-      //   // view.extent = geojsonlayer.fullExtent;
-      // });
-      geojsonlayer.labelingInfo = [statesLabelClass]
-      console.log(geojsonlayer)
-      
-      let query = geojsonlayer.createQuery()
-      query.where = "name = '浦东新区'"
-      query.outFields = ['name']
-
-      geojsonlayer.queryFeatures(query).then(function (response) {
-        console.log(response)
-       
-        
-        // returns a feature set with features containing the following attributes
-        // STATE_NAME, COUNTY_NAME, POPULATION, POP_DENSITY
-      })
-    
-
-      // if (field) {
-      //   console.log(field.name); // SomeField
-      // }
+     
       // 底图逻辑
       const vecBaseMap = new Basemap({
         baseLayers: [vectiledLayer, tiledjzLayer],

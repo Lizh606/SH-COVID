@@ -67,6 +67,14 @@ const menuRoutes = [
         meta: {
           title: 'text'
         }
+      },
+      {
+        path: '/GeoJsonLayer',
+        name: 'GeoJsonLayer',
+        component: (resolve) => require(['@/views/GeoJsonLayer'], resolve),
+        meta: {
+          title: 'text'
+        }
       }
     ]
   },

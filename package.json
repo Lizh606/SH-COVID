@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@arcgis/core": "^4.22.2",
+    "animate.css": "^4.1.1",
     "axios": "^0.26.0",
     "core-js": "^3.6.5",
     "dayjs": "^1.11.1",

@@ -1,4 +1,10 @@
 import { service } from "./request";
+// import axios from 'axios'
+
+// const service = axios.create({
+//   baseURL: process.env.VUE_APP_BASE_API,
+//   timeout: 10000,
+// });
 /**
  * get方法
  * @param {String} url [请求的url地址]

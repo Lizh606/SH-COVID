@@ -18,8 +18,8 @@ import '@arcgis/core/assets/esri/themes/light/main.css'
 import './styles/scss/global.scss'
 
 
-
-
+import animated from "animate.css";
+Vue.use(animated)
 Vue.config.productionTip = false
 Vue.use(less)
 Vue.prototype.$axios = axios;
