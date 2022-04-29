@@ -28,6 +28,8 @@ service.interceptors.request.use(
     if (window.localStorage.getItem("token")) {
       config.headers.common["Access-Token"] =
         window.localStorage.getItem("token");
+        config.headers.Authorization = `Bearer ${store.state.token}`
+
       if (isCheckTimeout()) {
         store.dispatch("logout");
       }

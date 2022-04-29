@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { login } from "../api/login.js";
+import { login ,getUserInfo} from "../api/login.js";
 export default {
   name: "Login",
 
@@ -164,13 +164,16 @@ export default {
               password: loginpwd,
             });
             this.loading = false;
-            if (result.data) {
+            if (result.token) {
               // 存储token开始时间
+             
               let nowData = Date.now()
               this.$store.commit("set_TimeStamp", nowData);
-              this.$store.commit("set_token", result.data.token);
-              this.$store.commit("setUserInfo", result.data.realname);
-              this.setCookie("realname", result.data.realname, 7);
+              this.$store.commit("set_token", result.token);
+              const userinfo = await getUserInfo();
+              console.log(userinfo.nickName);
+              this.$store.commit("setUserInfo", userinfo.nickName);
+              this.setCookie("realname", userinfo.nickName, 7);
               this.$router.push("/daping");
             } else {
               alert("登陆失败");

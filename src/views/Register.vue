@@ -144,7 +144,10 @@ export default {
             const result = await register({
               username: loginname,
               password: loginpwd,
-              realname:realname
+              retypedPassword:loginpwd,
+              nickName:realname,
+              email:'915194732@qq.com',
+              imgUrl:'https://www.baidu.com/'
             });
             if (result.code === "200") {
                this.$store.commit("set_token", realname);

@@ -4,18 +4,19 @@
       <!-------------------------------- 页眉 -------------------------------->
       <Header>
         <Menu mode="horizontal" class="layout-header">
-          <MenuItem name="logout" class="logout-item">
-            <img
-              src="../assets/img/头像1.jpeg"
-              style="height: 50px; border-radius: 50%"
-              class="menu-item-icon"
-              @click="GoHome"
-            />
-
-            <Dropdown class="menu-item-word">
+          <img
+            src="../assets/img/头像1.jpeg"
+            style="height: 50px; border-radius: 50%"
+            class="menu-item-icon"
+            @click="GoHome"
+          />
+          <MenuItem name="logout" class="menu-item-word">
+            <Dropdown>
               <a href="javascript:void(0)">
-                <span class="menu-item-word">{{ username }}</span>
-                <IconSvg iconClass="xiala" class="xiala-icon"></IconSvg>
+                <span>
+                  <span style="color: aliceblue">{{ username }}</span>
+                  <IconSvg iconClass="xiala" class="xiala-icon"></IconSvg>
+                </span>
               </a>
               <DropdownMenu slot="list">
                 <DropdownItem>个人中心</DropdownItem>
@@ -324,34 +325,23 @@ export default {
   border-bottom: none;
 }
 
-.logout-item {
-  width: 150px;
-  top: -15px;
-  font-size: 14px;
-  float: right !important;
-}
 .menu-item-icon {
+  float: right !important;
   position: relative;
-  display: block;
-  top: 23px;
+  top: 7px;
   // font-size: 25px;
-  right: 30px;
+  right: 130px;
   font-size: 32px;
 }
 .menu-item-word {
-  text-align: center;
-  color: white;
-  font-size: 20px;
-  line-height: 0px;
-  display: block;
-}
-/deep/.ivu-select-dropdown {
-  margin: 15px 0;
-}
-.xiala-icon {
+  float: right !important;
   position: relative;
-  top: -10px;
-  right: -45px;
+  right: -70px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.xiala-icon {
   font-size: 20px;
   color: #f5f7f9;
 }

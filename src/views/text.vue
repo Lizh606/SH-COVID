@@ -10,37 +10,48 @@
       </div>
     </div>
   </div> -->
-      <div ref="map" id="map"></div>
-
+  <!-- <div ref="map" id="map"></div> -->
+  <div>
+    <Input v-model="name" placeholder="shuru" />
+    <button type="primary" @click="sure">确定</button>
+  </div>
 </template>
 <script>
 import { YQDatePathData } from '@/api/sys.js'
 
 import Map from '@arcgis/core/Map'
 import MapView from '@arcgis/core/views/MapView'
-import TileLayer from "@arcgis/core/layers/TileLayer";
+import TileLayer from '@arcgis/core/layers/TileLayer'
+import { changeUserinfo, getUserInfo } from '@/api/login.js'
 
-import GeoJSONLayer from "@arcgis/core/layers/GeoJSONLayer";
-import { GET } from "@/utils/axios.js";
-import axios from 'axios';
+import GeoJSONLayer from '@arcgis/core/layers/GeoJSONLayer'
+import { GET } from '@/utils/axios.js'
+import axios from 'axios'
 export default {
   data() {
     return {
       //数据
-      list: []
+      list: [],
+      name: ''
     }
   },
   async mounted() {
-  //  axios.get('/yq').then((res)=>{
-  //    console.log(res);
-  //  })
-  axios.get('/yq').then((res)=>{
-     console.log(res)
-   })
-  //  console.log(res);
+    //  axios.get('/yq').then((res)=>{
+    //    console.log(res);
+    //  })
+    //  console.log(res);
   },
   methods: {
-    async init(){
+    async sure() {
+      console.log(this.name);
+      const param = {
+        nickName: '给劳资更新'
+      }
+      await changeUserinfo(2, param)
+      const res = await getUserInfo()
+      console.log(res)
+    },
+    async init() {
       // const url = '/services'
       // axios.get(url)
       //   .then((res) => {
@@ -48,17 +59,17 @@ export default {
       //   })
       // // console.log(res)
       // const shmap  = new TileLayer({
-      //   url:'/services' 
+      //   url:'/services'
       // });
-    //   this.$http.get('/SHMAP_SU/MapServer' + "?f=json").then(res => {
-    //   console.log
-    // });
-    
+      //   this.$http.get('/SHMAP_SU/MapServer' + "?f=json").then(res => {
+      //   console.log
+      // });
+
       const map = new Map({
-            // basemap: "oceans",
-          // layers: [shmap]
-      });
-  
+        // basemap: "oceans",
+        // layers: [shmap]
+      })
+
       const view = new MapView({
         container: 'map',
         map: map,
@@ -66,7 +77,6 @@ export default {
         zoom: 8,
         spatialReference: { wkid: 4326 }
       })
-      
     }
   }
 }

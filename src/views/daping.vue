@@ -46,19 +46,20 @@ export default {
 
 #iframename {
   position: relative;
-  // height: 718.5px;
+  height: 100%;
   // top: -3px;
-  overflow: hidden;
 }
 #layout-content {
   margin-top: 6px;
   width: 100%;
   position: relative;
-  height: 718.5px;
+  height: 100%;
+
 }
 
 #layout {
   width: 100%;
+  overflow: hidden;
   height: 100%;
   // position: absolute;
 }
