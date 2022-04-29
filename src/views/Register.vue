@@ -4,7 +4,9 @@
       <div class="signIn-left"></div>
       <div class="signIn-right">
         <div class="sign-qr-code"></div>
-        <div class="sign-title">上海市新冠疫情COVID-19<br>动态分布可视化系统</div>
+        <div class="sign-title">
+          上海市新冠疫情COVID-19<br />动态分布可视化系统
+        </div>
         <div class="sign-center" @keyup.enter="handleSubmit">
           <Form
             id="form"
@@ -28,14 +30,14 @@
                 placeholder="请输入密码"
               ></i-input>
             </FormItem>
-               <FormItem label="昵称" prop="realname">
+            <FormItem label="昵称" prop="realname">
               <i-input
                 id="realname"
                 v-model="formValidate.realname"
                 placeholder="请输入昵称"
               ></i-input>
             </FormItem>
-          
+
             <FormItem>
               <Button
                 type="primary"
@@ -46,9 +48,7 @@
               >
             </FormItem>
           </Form>
-           <div type="‘button’" class="login" @click="ToLogin">
-            立即登录
-          </div>
+          <div type="‘button’" class="login" @click="ToLogin">立即登录</div>
         </div>
       </div>
     </div>
@@ -56,54 +56,54 @@
 </template>
 
 <script>
-import { register } from "../api/login.js";
+import { register } from '../api/login.js'
 export default {
-  name: "Login",
+  name: 'Login',
 
   data() {
     return {
       loading: false,
       formValidate: {
-        user: "",
-        password: "",
-        realname:""
+        user: '',
+        password: '',
+        realname: ''
       },
       ruleValidate: {
         user: [
           {
             required: true,
-            message: "用户名不能为空",
-            trigger: "blur",
+            message: '用户名不能为空',
+            trigger: 'blur'
           },
           {
-            trigger: "blur",
-          },
+            trigger: 'blur'
+          }
         ],
         password: [
           {
             required: true,
-            message: "用户密码不能为空",
-            trigger: "blur",
+            message: '用户密码不能为空',
+            trigger: 'blur'
           },
           {
-            type: "string",
+            type: 'string',
             min: 6,
-            message: "密码不能少于6位",
-            trigger: "blur",
-          },
+            message: '密码不能少于6位',
+            trigger: 'blur'
+          }
         ],
         realname: [
           {
             required: true,
-            message: "昵称不能为空",
-            trigger: "blur",
+            message: '昵称不能为空',
+            trigger: 'blur'
           },
           {
-            trigger: "blur",
-          },
-        ],
-      },
-    };
+            trigger: 'blur'
+          }
+        ]
+      }
+    }
   },
 
   mounted() {
@@ -118,57 +118,57 @@ export default {
     //复选框勾选状态发生改变时，如果未勾选则清除cookie
 
     setCookie(name, value, day) {
-      var date = new Date();
-      date.setDate(date.getDate() + day);
-      document.cookie = name + "=" + value + ";expires=" + date;
+      var date = new Date()
+      date.setDate(date.getDate() + day)
+      document.cookie = name + '=' + value + ';expires=' + date
     },
     getCookie(name) {
-      var reg = RegExp(name + "=([^;]+)");
-      var arr = document.cookie.match(reg);
+      var reg = RegExp(name + '=([^;]+)')
+      var arr = document.cookie.match(reg)
       if (arr) {
-        return arr[1];
+        return arr[1]
       } else {
-        return "";
+        return ''
       }
     },
 
     async handleSubmit(info) {
-        this.loading = true
-      const loginname = this.formValidate.user.trim();
-
-      const loginpwd = this.formValidate.password;
-      const realname = this.formValidate.realname.trim();
+      this.loading = true
+      const loginname = this.formValidate.user.trim()
+      const loginpwd = this.formValidate.password
+      const realname = this.formValidate.realname.trim()
       this.$refs[info].validate(async (valid) => {
         if (valid) {
           try {
             const result = await register({
               username: loginname,
               password: loginpwd,
-              retypedPassword:loginpwd,
-              nickName:realname,
-              email:'915194732@qq.com',
-              imgUrl:'https://www.baidu.com/'
-            });
-            if (result.code === "200") {
-               this.$store.commit("set_token", realname);
-              this.$store.commit("set_token", result.data.token);
-              this.setCookie("user", loginname, 7); //保存帐号到cookie，有效期7天
-              this.setCookie("password", loginpwd, 7); //保存密码到cookie，有效期7天
-              this.$router.push("/daping");
+              retypedPassword: loginpwd,
+              nickName: realname,
+              email: loginpwd + '@qq.com',
+              imgUrl: 'https://5fou.com/i/2022/04/29/x6feaf.jpeg'
+            })
+            this.loading = false
+
+            if (result.username) {
+              this.$store.commit('set_token', result.token)
+              this.setCookie('user', loginname, 7) //保存帐号到cookie，有效期7天
+              this.setCookie('password', loginpwd, 7) //保存密码到cookie，有效期7天
+              this.$router.push('/daping')
             } else {
-              alert("用户名已存在");
+              alert('用户名已存在')
             }
           } catch (e) {
-            alert("请求失败");
+            alert('请求失败')
           }
         }
-      });
+      })
     },
-     ToLogin() {
-      this.$router.push("/");
-    },
-  },
-};
+    ToLogin() {
+      this.$router.push('/')
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -179,10 +179,10 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
-  background: url("/imgs/shanghai.jpg") no-repeat center;
+  background: url('/imgs/shanghai.jpg') no-repeat center;
   background-size: cover;
   &:after {
-    content: "";
+    content: '';
     width: 100%;
     height: 100%;
     position: absolute;
@@ -214,7 +214,7 @@ export default {
         width: 4.17rem;
         height: 4.17rem;
         float: right;
-        background: url("/erweima.png") no-repeat center;
+        background: url('/erweima.png') no-repeat center;
         background-size: cover;
       }
       .sign-title {

@@ -3,13 +3,10 @@
 </template>
 
 <script>
-import { YQDatePathData } from "@/api/sys.js";
 export default {
   name: "Echarts",
   data() {
-    return {
-      myCharts: "",
-    };
+    return {};
   },
   props: {
     updateDate: {
@@ -19,54 +16,50 @@ export default {
       },
     },
     xdata: {
-      type: Array,
-      default: function () {
-        return [];
-      },
-    },
+      type: Object,
+      default:()=>{}
+    }, 
      legend: {
-      type: Array,
-      default: function () {
-        return [];
-      },
+          type: Array,
+      default:()=>[]
     },
     title1: {
       type: String,
       default: "",
     },
   },
-  mounted() {
-    if (
-      this.myCharts != null &&
-      this.myCharts != "" &&
-      this.myCharts != undefined
-    ) {
-      this.myCharts.dispose(); //解决echarts dom已经加载的报错
-    }
-
-    this.mycharts(this.myCharts);
-  },
-  watch: {
-    xdata: {
-      // immediate: true, // 这句重要
+  watch:{
+    xdata:{
+      // immediate:true,
       handler(val) {
-        if (
+         if (
           this.myCharts != null &&
           this.myCharts != "" &&
           this.myCharts != undefined
         ) {
           this.myCharts.dispose(); //解决echarts dom已经加载的报错
         }
-        this.xdata = val;
+         this.xdata = val
         this.mycharts(this.myCharts);
-      },
-    },
-  },
-  methods: {
-    mycharts() {
-      this.myCharts = this.$echarts.init(document.getElementById("echarts"));
 
-      this.myCharts.setOption({
+      },
+      deep: true // 深度监听父组件传过来对象变化
+    }
+  },
+  mounted() {
+    let myCharts;
+    if (myCharts != null && myCharts != "" && myCharts != undefined) {
+      myCharts.dispose(); //解决echarts dom已经加载的报错
+    }
+
+    this.mycharts(myCharts);
+  },
+
+  methods: {
+    mycharts(myCharts) {
+      myCharts = this.$echarts.init(document.getElementById("echarts"));
+
+      myCharts.setOption({
         title: {
           text: this.title1,
           textStyle: {
@@ -81,17 +74,17 @@ export default {
           trigger: "axis",
           fontSize: 16,
         }, //鼠标放到上面出现数据
-        color: ["red", "yellow", "blue", "green"],
+        color: ["red", "orange", "black"],
         grid: {
           top: "10%",
           left: "20%",
           right: "20%",
-          // bottom: "20%",
+          bottom: "5%",
           containLabel: true,
         },
         legend: {
           x: "right",
-          data:[this.legend[0]],
+          data: this.legend,
           padding: [35, 280, 0, 0],
           textStyle: {
             color: "#525A6F",
@@ -164,19 +157,19 @@ export default {
 
         series: [
           {
-            name: this.legend[0],
-            type: "line", //图类型
+            name:this.legend[0], 
+            type: "bar", //图类型
             smooth: true,
-            data: this.xdata,
+            data: this.xdata.wzz_add,
             // yAxisIndex: 0,
           },
-          //   {
-          //     name: "新增无症状",
-          //     type: "line", //图类型
-          //     smooth: true,
-          //     data: this.asymptomatic,
-          //     // yAxisIndex: 1,
-          //   },
+          {
+            name: this.legend[1], 
+            type: "line", //图类型
+            smooth: true,
+            data: this.xdata.wzz,
+            // yAxisIndex: 1,
+          },
         ],
       });
     },
@@ -190,6 +183,6 @@ export default {
   border-radius: 4px;
   // position: absolute;
   width: 100%;
-  height: calc(100% - 100px);
+  height: calc(100% - 150px);
 }
 </style>

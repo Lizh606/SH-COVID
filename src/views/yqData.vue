@@ -133,7 +133,8 @@
         </Table>
       </Card>
     </Card>
-    <Modal v-model="modal" width="1000">
+    <smModal :modal="modal" @ok="okHandler"></smModal>
+    <!-- <Modal v-model="modal" width="1000">
       <p
         slot="header"
         style="background-color: #00bec9; text-align: center; font-size: 20px"
@@ -168,17 +169,20 @@
       <div slot="footer">
         <Button @click="okHandler">确定</Button>
       </div>
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import smModal from '@/components/Modals/smDataModal.vue'
 import { txGet } from '@/api/yq_api/tx_api.js'
-import { txDateGet } from '@/api/yq_api/tx_api.js'
 
 export default {
   name: 'yqData',
+  components: {
+    smModal: smModal
+  },
   data() {
     return {
       columns1: [
@@ -280,29 +284,55 @@ export default {
           className: 'header',
           align: 'center',
           render: (h, params) => {
-            return h('div', [
-              h(
-                'Button',
-                {
-                  props: {
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px',
-                    font: {
-                      size: 18
+            if (params.row.name === '上海') {
+              return h('div', [
+                h(
+                  'Button',
+                  {
+                    props: {
+                      size: 'small'
                     },
-                    color: '#00bec9'
-                  },
-                  on: {
-                    click: () => {
-                      this.handleThematicMap()
+                    style: {
+                      marginRight: '5px',
+                      font: {
+                        size: 18
+                      },
+                      color: '#00bec9'
+                    },
+                    on: {
+                      click: () => {
+                        this.handleThematicMap()
+                      }
                     }
-                  }
-                },
-                '专题渲染'
-              )
-            ])
+                  },
+                  '专题渲染'
+                )
+              ])
+            } else{
+               return h('div', [
+                h(
+                  'Button',
+                  {
+                    props: {
+                      size: 'small'
+                    },
+                    style: {
+                      marginRight: '5px',
+                      font: {
+                        size: 18
+                      },
+                      color: '#00bec9'
+                    },
+                    on: {
+                      click: () => {
+                        this.$Message.info('暂无操作哦！')
+                      }
+                    }
+                  },
+                  '查看详情'
+                )
+              ])
+            }
           }
         }
       ],
@@ -358,13 +388,8 @@ export default {
       res.data.data.diseaseh5Shelf.chinaAdd[key1] = value1
       this.data1[0].today = res.data.data.diseaseh5Shelf.chinaAdd
       this.chinaAdd = res.data.data.diseaseh5Shelf.chinaAdd
-      const param1 = {
-        province: '上海',
-        limit: '60'
-      }
-      const res1 = await txDateGet(param1)
-      console.log(res1)
-      console.log(this.data1[0])
+     
+    
 
       this.loading = false
     },
@@ -386,48 +411,47 @@ export default {
       for (let i = 0; i < this.data1[0].children[2].children.length; i++) {
         if (this.data1[0].children[2].children[i]) {
           let cityInfos = this.data1[0].children[2].children[i]
-            let cityName = cityInfos.name
-            let confirm = cityInfos.total.confirm
-            let nowConfirm = cityInfos.total.nowConfirm
-            let dead = cityInfos.total.dead
-            let heal = cityInfos.total.heal
-            if (confirm <= 4000) {
-              if (confirm <= 2000) {
-                groupCollection.levelOne.push([
-                  cityName,
-                  nowConfirm,
-                  confirm,
-                  dead,
-                  heal
-                ])
-              } else {
-                groupCollection.levelTwo.push([
-                  cityName,
-                  nowConfirm,
-                  confirm,
-                  dead,
-                  heal
-                ])
-              }
+          let cityName = cityInfos.name
+          let confirm = cityInfos.total.confirm
+          let nowConfirm = cityInfos.total.nowConfirm
+          let dead = cityInfos.total.dead
+          let heal = cityInfos.total.heal
+          if (confirm <= 4000) {
+            if (confirm <= 2000) {
+              groupCollection.levelOne.push([
+                cityName,
+                nowConfirm,
+                confirm,
+                dead,
+                heal
+              ])
             } else {
-              if (confirm <= 6000) {
-                groupCollection.levelThree.push([
-                  cityName,
-                  nowConfirm,
-                  confirm,
-                  dead,
-                  heal
-                ])
-              } else {
-                groupCollection.levelFour.push([
-                  cityName,
-                  nowConfirm,
-                  confirm,
-                  dead,
-                  heal
-                ])
-              }
-            
+              groupCollection.levelTwo.push([
+                cityName,
+                nowConfirm,
+                confirm,
+                dead,
+                heal
+              ])
+            }
+          } else {
+            if (confirm <= 6000) {
+              groupCollection.levelThree.push([
+                cityName,
+                nowConfirm,
+                confirm,
+                dead,
+                heal
+              ])
+            } else {
+              groupCollection.levelFour.push([
+                cityName,
+                nowConfirm,
+                confirm,
+                dead,
+                heal
+              ])
+            }
           }
         }
       }
@@ -454,6 +478,13 @@ export default {
         columns: this.columns1,
         original: false
       })
+      //花钱导出
+      // this.$Table.export({
+      //   type: 'xlsx',
+      //   filename: '新冠疫情数据表',
+      //   data: this.data1,
+      //   columns: this.columns1
+      // })
     }
   },
   mounted() {
@@ -571,6 +602,8 @@ export default {
   padding: 16px;
 }
 .cnCard {
+  box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.5);
+
   border-radius: 50%;
   text-align: center;
 }

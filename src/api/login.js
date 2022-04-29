@@ -18,10 +18,10 @@ export function getUserInfo() {
   return GET(`/user/profile`, '获取用户信息')
 }
 //修改用户信息
-export function changeUserinfo(id, param) {
+export function changeUserinfo(id, data) {
   return service({
     url: `/user-profile/${id}`,
     method: 'PATCH',
-    data:param
+    data
   })
 }

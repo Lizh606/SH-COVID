@@ -20,7 +20,14 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   // 如果token过期了
-  if (storage.get("token")) {
+  console.log(storage.get("token"));
+  if (storage.get("token") === null) {
+    if (to.path == '/' || to.path == '/register') {
+      next()
+    } else {
+      next("/")
+    }
+  } else {
     if (to.path == '/' || to.path == '/register') {
       next('/daping')
     } else {
@@ -32,8 +39,7 @@ router.beforeEach((to, from, next) => {
       Message.error("登录状态过期，请重新登录")
       return Promise.reject(new Error('token 失效'))
       }
-  } else {
-   next()
+   return
   }
 });
 

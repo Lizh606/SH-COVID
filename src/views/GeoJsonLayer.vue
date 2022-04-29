@@ -399,7 +399,7 @@ export default {
             [121.627049, 31.444993]
           ])
         }
-        const getmap = this.map
+        const getmap = this.$refs.mapdata.TdtMap.map
         getmap.basemap.baseLayers.items[1].visible = false
         const textGraohicsLayer = new GraohicsLayer()
         //level one
@@ -463,7 +463,7 @@ export default {
               attributes: polygonAttr,
               popupTemplate: popupTemplate
             })
-            this.view.graphics.add(onepolygonGraphic)
+          //  this.$refs.mapdata.TdtMap.view.graphics.add(onepolygonGraphic)
             textGraohicsLayer.add(onepolygonGraphic)
           }
         }
@@ -528,7 +528,7 @@ export default {
               attributes: polygonAttr2,
               popupTemplate: popupTemplate2
             })
-            this.view.graphics.add(twopolygonGraphic)
+          //  this.$refs.mapdata.TdtMap.view.graphics.add(twopolygonGraphic)
             textGraohicsLayer.add(twopolygonGraphic)
           }
         }
@@ -594,7 +594,7 @@ export default {
               attributes: polygonAttr3,
               popupTemplate: popupTemplate3
             })
-            this.view.graphics.add(threepolygonGraphic)
+            // this.$refs.mapdata.TdtMap.view.graphics.add(threepolygonGraphic)
             textGraohicsLayer.add(threepolygonGraphic)
           }
         }
@@ -651,56 +651,6 @@ export default {
                 }
               ]
             }
-            // if (this.shPolygon.features[j].properties.name === '浦东新区') {
-            //   polygon.addRing([
-            //     [121.943244, 31.215465],
-            //     [121.941826, 31.207678],
-            //     [121.942619, 31.198465],
-            //     [121.944843, 31.186878],
-            //     [121.948027, 31.176405],
-            //     [121.952629, 31.1672],
-            //     [121.959637, 31.159278],
-            //     [121.965685, 31.15754],
-            //     [121.970773, 31.157552],
-            //     [121.975862, 31.158834],
-            //     [121.99573, 31.1608],
-            //     [121.999554, 31.165079],
-            //     [122.010593, 31.188004],
-            //     [122.012011, 31.192043],
-            //     [122.012609, 31.210002],
-            //     [122.011038, 31.217405],
-            //     [122.008563, 31.220987],
-            //     [121.989655, 31.224521],
-            //     [121.980659, 31.22809],
-            //     [121.969188, 31.230282],
-            //     [121.957259, 31.230414],
-            //     [121.951044, 31.228821],
-            //     [121.946595, 31.224365],
-            //     [121.943244, 31.215465]
-            //   ])
-            //   // polygon.addRing([
-            //   //   [
-            //   //     [121.882625, 31.240857],
-            //   //     [121.880873, 31.23633],
-            //   //     [121.882541, 31.225611],
-            //   //     [121.885155, 31.22052],
-            //   //     [121.889271, 31.214997],
-            //   //     [121.901645, 31.20146],
-            //   //     [121.908777, 31.195266],
-            //   //     [121.913852, 31.19384],
-            //   //     [121.918788, 31.194319],
-            //   //     [121.922445, 31.196859],
-            //   //     [121.925448, 31.205438],
-            //   //     [121.927519, 31.224017],
-            //   //     [121.926727, 31.229731],
-            //   //     [121.923557, 31.233863],
-            //   //     [121.915451, 31.236558],
-            //   //     [121.897363, 31.242115],
-            //   //     [121.88991, 31.242594],
-            //   //     [121.882625, 31.240857]
-            //   //   ]
-            //   // ])
-            // }
             const fourpolygonGraphic = new Graphic({
               //创建面图斑
               geometry: polygon,
@@ -708,7 +658,7 @@ export default {
               attributes: polygonAttr4,
               popupTemplate: popupTemplate4
             })
-            this.view.graphics.add(fourpolygonGraphic)
+            // this.$refs.mapdata.TdtMap.view.graphics.add(fourpolygonGraphic)
             textGraohicsLayer.add(fourpolygonGraphic)
           }
         }

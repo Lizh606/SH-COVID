@@ -4,23 +4,25 @@
       <!-------------------------------- 页眉 -------------------------------->
       <Header>
         <Menu mode="horizontal" class="layout-header">
-          <img
-            src="../assets/img/头像1.jpeg"
-            style="height: 50px; border-radius: 50%"
-            class="menu-item-icon"
-            @click="GoHome"
-          />
           <MenuItem name="logout" class="menu-item-word">
             <Dropdown>
               <a href="javascript:void(0)">
                 <span>
-                  <span style="color: aliceblue">{{ username }}</span>
-                  <IconSvg iconClass="xiala" class="xiala-icon"></IconSvg>
+                  <span style="color: aliceblue" class="info_name">{{ userinfos.nickName }}</span>
+                  <img
+                    :src="userinfos.imgUrl"
+                    style="height: 50px; border-radius: 50%"
+                    class="menu-item-icon"
+                    @click="GoHome"
+                  />
+                  <!-- <IconSvg iconClass="xiala" class="xiala-icon"></IconSvg> -->
                 </span>
               </a>
               <DropdownMenu slot="list">
                 <DropdownItem>个人中心</DropdownItem>
-                <DropdownItem>修改密码</DropdownItem>
+                <DropdownItem
+                  ><div @click="changeInfos()">修改信息</div></DropdownItem
+                >
                 <DropdownItem>
                   <!-- <IconSvg iconClass="tuichu"></IconSvg> -->
                   <div @click="ToLogin()">退出登录</div></DropdownItem
@@ -114,6 +116,7 @@
         </Content>
       </Layout>
     </Layout>
+    <infosModal :modal="modal"  :userinfos="userinfos"></infosModal>
   </div>
 </template>
 
@@ -123,7 +126,8 @@ import {
   publicTransportPlanning,
   getCoordinate
 } from '@/api/tdt_web_api/tdt_api.js'
-import { logintext } from '../api/login.js'
+import { getUserInfo } from '@/api/login.js'
+import infosModal from './infosModal.vue'
 export default {
   name: 'LayOut',
   data() {
@@ -131,17 +135,31 @@ export default {
       path: this.$route.path,
       siderActiveName: null,
       nowDate: '', // 当前日期
-      username: ''
+      info: {},
+      userinfos: {
+        userName:'',
+        nickName: '',
+        imgUrl: ''
+      },
+      modal: false
     }
   },
+  components: {
+    infosModal: infosModal
+  },
+
   async mounted() {
-    console.log(this.$route.path)
+    console.log(this.userinfos.imgUrl)
     this.currentTime()
+    const getinfo = await getUserInfo()
+    this.info = getinfo
     // 使页面更新后导航菜单的active-name与页面内容匹配
     this.$nextTick(() => {
-      this.username = window.localStorage
-        .getItem('userName')
-        .replaceAll('"', '')
+      console.log(this.info)
+      this.userinfos.userName = this.info.username
+
+      this.userinfos.nickName = this.info.nickName
+      this.userinfos.imgUrl = this.info.imgUrl
       let path = this.$route.path.split('/')
       this.changeActiveName(path)
     })
@@ -198,6 +216,9 @@ export default {
     }
   },
   methods: {
+    changeInfos() {
+      this.modal = true
+    },
     currentTime() {
       setInterval(this.formatDate, 500)
     },
@@ -225,6 +246,8 @@ export default {
       this.nowDate = `${year}/${month}/${day} ${hour}:${minute}:${second} ${weekArr[week]}`
     },
     async GoHome() {
+      const res = await getUserInfo()
+      this.userinfos.imgUrl = res.imgUrl
       this.$router.push('/animation')
       // await logintext()
     },
@@ -330,8 +353,12 @@ export default {
   position: relative;
   top: 7px;
   // font-size: 25px;
-  right: 130px;
+  right: 60px;
   font-size: 32px;
+}
+.info_name{
+  position: relative;
+  right: 65px;
 }
 .menu-item-word {
   float: right !important;

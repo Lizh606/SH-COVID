@@ -537,8 +537,7 @@ export default {
         view.popup.open({
           title: '坐标:[' + lon + ',' + lat + ']',
           location: event.mapPoint,
-          symbol: {
-          }
+          symbol: {}
         })
         const params = {
           location: event.mapPoint
@@ -751,18 +750,19 @@ export default {
     swipemap() {
       //卷帘、
       this.view.ui.remove('swipe')
-      let imgtdtUrl =
-        'http://{subDomain}.tianditu.gov.cn/DataServer?T=img_c&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1'
-      const imgtiledLayer = createWmtsLayer(imgtdtUrl)
+      let vectdtUrl =
+        'http://{subDomain}.tianditu.gov.cn/DataServer?T=ter_c&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1'
+      const tertiledLayer = createWmtsLayer(vectdtUrl)
       let tdtjzUrl =
         'http://{subDomain}.tianditu.gov.cn/DataServer?T=cva_c&x={col}&y={row}&l={level}&tk=6156b0fb9f9e853e3f64234d82d9abf1'
       const tiledjzLayer = createWmtsLayer(tdtjzUrl)
-      this.map.add(tiledjzLayer)
-      this.map.add(imgtiledLayer)
-
+      // this.map.add(tiledjzLayer)
+      // this.map.add(imgtiledLayer)
+      const geomap =  this.map.allLayers.get('items')[2]
+      const tmap = this.map.basemap.baseLayers
       const swipe = new Swipe({
-        leadingLayers: this.map.basemap.baseLayers,
-        trailingLayers: [tiledjzLayer, imgtiledLayer],
+        leadingLayers: this.map.allLayers,
+        trailingLayers: [geomap],
         // direction:"vertical",
         position: 50,
         view: this.view

@@ -20,13 +20,31 @@ export default {
       default:()=>{}
     }, 
      legend: {
-          type: Object,
-      default:()=>{}
+          type: Array,
+      default:()=>[]
     },
     title1: {
       type: String,
       default: "",
     },
+  },
+  watch:{
+    xdata:{
+      // immediate:true,
+      handler(val) {
+         if (
+          this.myCharts != null &&
+          this.myCharts != "" &&
+          this.myCharts != undefined
+        ) {
+          this.myCharts.dispose(); //解决echarts dom已经加载的报错
+        }
+         this.xdata = val
+        this.mycharts(this.myCharts);
+
+      },
+      deep: true // 深度监听父组件传过来对象变化
+    }
   },
   mounted() {
     let myCharts;
@@ -36,16 +54,7 @@ export default {
 
     this.mycharts(myCharts);
   },
-  watch: {
-    // xdata: {
-    //   immediate: true, // 这句重要
-    //   handler(val) {
-    //     this.$echarts.init(document.getElementById("echarts"));
-    //     this.xdata =val
-    //     this.mycharts()
-    //   },
-    // },
-  },
+
   methods: {
     mycharts(myCharts) {
       myCharts = this.$echarts.init(document.getElementById("echarts"));
@@ -70,12 +79,12 @@ export default {
           top: "10%",
           left: "20%",
           right: "20%",
-          // bottom: "20%",
+          bottom: "5%",
           containLabel: true,
         },
         legend: {
           x: "right",
-          data: [this.legend.confirmName, this.legend.healName, this.legend.deadName],
+          data: this.legend,
           padding: [35, 280, 0, 0],
           textStyle: {
             color: "#525A6F",
@@ -148,21 +157,21 @@ export default {
 
         series: [
           {
-            name:this.legend.confirmName, 
+            name:this.legend[0], 
             type: "line", //图类型
             smooth: true,
             data: this.xdata.confirm,
             // yAxisIndex: 0,
           },
           {
-            name: this.legend.healName, 
+            name: this.legend[1], 
             type: "line", //图类型
             smooth: true,
             data: this.xdata.heal,
             // yAxisIndex: 1,
           },
           {
-            name: this.legend.deadName,
+            name: this.legend[2],
             type: "line", //图类型
             smooth: true,
             data: this.xdata.dead,
@@ -181,6 +190,6 @@ export default {
   border-radius: 4px;
   // position: absolute;
   width: 100%;
-  height: calc(100% - 100px);
+  height: calc(100% - 150px);
 }
 </style>
