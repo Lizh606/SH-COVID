@@ -20,7 +20,6 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   // 如果token过期了
-  console.log(storage.get("token"));
   if (storage.get("token") === null) {
     if (to.path == '/' || to.path == '/register') {
       next()

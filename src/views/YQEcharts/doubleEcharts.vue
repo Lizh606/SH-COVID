@@ -125,8 +125,7 @@ export default {
 
   methods: {
     mycharts(myCharts, myCharts1, source) {
-      console.log(source)
-      ;(myCharts = this.$echarts.init(document.getElementById('echarts'))),
+      myCharts = this.$echarts.init(document.getElementById('echarts')),
       myCharts.clear();
         myCharts.setOption({
           title: {
@@ -296,7 +295,6 @@ export default {
           op.dataset[0].source.map((item) => {
             handleVal.push(item[handleIndex+1])
           })
-          console.log(handleVal);
         }
       })
       //饼状图
@@ -448,8 +446,6 @@ export default {
       }),
         myCharts1.getZr().off('click')
       myCharts1.getZr().on('click', function (params) {
-        console.log(params)
-
         let point = [params.offsetX, params.offsetY]
 
         if (myCharts1.containPixel('grid', point)) {
@@ -466,7 +462,6 @@ export default {
           })
           let date = op.xAxis[0].data[handleIndex]
           handleVal.push(date)
-          console.log(handleVal)
         }
       })
     }

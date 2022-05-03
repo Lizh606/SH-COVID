@@ -33,7 +33,6 @@ export default {
   },
   mounted() {
     const files = require.context('../assets/img/lunbo', true, /\.jpeg$/).keys()
-    console.log(files)
   }
 }
 </script>

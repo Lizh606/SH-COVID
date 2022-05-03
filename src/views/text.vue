@@ -58,7 +58,6 @@
     </div>
 </template>
 <script>
-import { YQDatePathData } from '@/api/sys.js'
 import {
   tdtAdministrative,
   publicTransportPlanning,
@@ -95,7 +94,6 @@ export default {
     const destinationzuobiao = await getCoordinate(destinationata)
     const originloc = orginzuobiao.data.location.lon + ',' + orginzuobiao.data.location.lat
     const destinationloc = destinationzuobiao.data.location.lon + ',' + destinationzuobiao.data.location.lat
-    console.log(originloc,destinationloc);
       //公交规划
     const getbus = {
       type: 'busline',
@@ -107,7 +105,6 @@ export default {
       tk: '6156b0fb9f9e853e3f64234d82d9abf1'
     }
     const res1 = await publicTransportPlanning(getbus)
-     console.log(res1);
   },
   methods: {
     async sure() {
@@ -119,23 +116,8 @@ export default {
       this.$store.commit('setUserInfo', res.data.nickName)
       this.$store.commit('setUserImg', res.data.imgUrl)
       const res1 = await getUserInfo()
-      console.log(res)
-      console.log(res1);
     },
     async init() {
-      // const url = '/services'
-      // axios.get(url)
-      //   .then((res) => {
-      //     console.log(res)
-      //   })
-      // // console.log(res)
-      // const shmap  = new TileLayer({
-      //   url:'/services'
-      // });
-      //   this.$http.get('/SHMAP_SU/MapServer' + "?f=json").then(res => {
-      //   console.log
-      // });
-
       const map = new Map({
         // basemap: "oceans",
         // layers: [shmap]

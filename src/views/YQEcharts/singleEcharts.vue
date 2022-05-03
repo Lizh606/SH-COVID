@@ -168,7 +168,6 @@ export default {
         }),
         myCharts.getZr().off('click')
       myCharts.getZr().on('click', function (params) {
-        console.log(params)
 
         let point = [params.offsetX, params.offsetY]
 
@@ -186,7 +185,6 @@ export default {
           })
           let date = op.xAxis[0].data[handleIndex]
           handleVal.push(date)
-          console.log(handleVal)
         }
       })
     }

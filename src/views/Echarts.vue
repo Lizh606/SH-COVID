@@ -136,12 +136,10 @@ export default {
       }
       const res = await txGet(param)
       res.data.data.diseaseh5Shelf.areaTree[0].children[2].children.sort(this.compare('today'))
-      console.log(res.data.data.diseaseh5Shelf.areaTree[0].children[2].children);
       res.data.data.diseaseh5Shelf.areaTree[0].children[2].children.map((item)=>{
         this.qhAdd.push(item.today.confirm)
         this.SHqh.push(item.name)
       });
-      console.log(this.SHqh,this.qhAdd);
     },
     compare(propertyName) {
      return  function( object1,  object2) {

@@ -41,7 +41,6 @@ export default {
     const oImg4 = document.getElementsByClassName("f4");
 
     const len = oImg.length;
-    console.log(len);
     const deg = 360 / len;
 
     const oWrap = document.getElementById("imgwrap");

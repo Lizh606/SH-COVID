@@ -8,7 +8,9 @@
             <Dropdown>
               <a href="javascript:void(0)">
                 <span>
-                  <span style="color: aliceblue" class="info_name">{{ userinfos.nickName }}</span>
+                  <span style="color: aliceblue" class="info_name">{{
+                    userinfos.nickName
+                  }}</span>
                   <img
                     :src="userinfos.imgUrl"
                     style="height: 50px; border-radius: 50%"
@@ -116,7 +118,7 @@
         </Content>
       </Layout>
     </Layout>
-    <infosModal :modal="modal"  :userinfos="userinfos"></infosModal>
+    <infosModal :modal="modal" :userinfos="userinfos"></infosModal>
   </div>
 </template>
 
@@ -124,8 +126,12 @@
 import {
   tdtAdministrative,
   publicTransportPlanning,
+  getSearch,
+  queryExtent,
   getCoordinate
 } from '@/api/tdt_web_api/tdt_api.js'
+import Graphic from '@arcgis/core/Graphic'
+
 import { getUserInfo } from '@/api/login.js'
 import infosModal from './infosModal.vue'
 export default {
@@ -137,7 +143,7 @@ export default {
       nowDate: '', // 当前日期
       info: {},
       userinfos: {
-        userName:'',
+        userName: '',
         nickName: '',
         imgUrl: ''
       },
@@ -177,7 +183,24 @@ export default {
     }
     const res = await tdtAdministrative(getAdministrative)
     console.log(res)
-   
+    // 120.878948,31.882906,121.97232,30.690742999999998
+// http://api.tianditu.gov.cn/v2/search?postStr={%22keyWord%22:%22%E5%8C%BB%E9%99%A2%22,%22level%22:11,%22queryRadius%22:5000,%22pointLonlat%22:%22121.63269,31.20122%22,%22queryType%22:3,%22start%22:0,%22count%22:10}
+    const hosdata = {
+      postStr: {
+        keyWord: '医院',
+        level: 11,
+        queryRadius: 5000,
+        pointLonlat: '121.63269,31.20122',
+        queryType: 3,
+        start: 0,
+        count: 10
+      },
+     type: 'query',
+      tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+    }
+    const re = await queryExtent(hosdata)
+    console.log(re, 1111)
+
     // console.log(res1)
     //地名获取坐标
     const data = {
@@ -344,7 +367,7 @@ export default {
   right: 60px;
   font-size: 32px;
 }
-.info_name{
+.info_name {
   position: relative;
   right: 65px;
 }

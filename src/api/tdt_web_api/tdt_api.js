@@ -23,4 +23,11 @@ export const publicTransportPlanning = (data) => {
       params: data
     })
   }
-  
+  //周边搜索
+  // http://api.tianditu.gov.cn/v2/search?postStr={"keyWord":"公园","level":12,"queryRadius":5000,"pointLonlat":"116.48016,39.93136","queryType":3,"start":0,"count":10}&type=query&tk=您的密钥
+  export const queryExtent = (data) => {
+    return service({
+      url: '/v2/search',
+      params: data
+    })
+  }

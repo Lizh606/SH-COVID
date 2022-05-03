@@ -117,7 +117,6 @@ export default {
   methods: {
     //复选框勾选状态发生改变时，如果未勾选则清除cookie
     change() {
-      console.log(this.formValidate.savePwd)
       if (this.formValidate.savePwd === true) {
         this.formValidate.savePwd === false
         // this.delCookie("user");

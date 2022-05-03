@@ -1,7 +1,6 @@
 import axios from "axios";
 import store from "@/store/index.js";
 import isCheckTimeout from "./checkTimeout";
-console.log(process.env.VUE_APP_BASE_API);
 export const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   timeout: 10000,

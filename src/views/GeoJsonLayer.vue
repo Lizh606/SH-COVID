@@ -42,7 +42,7 @@ export default {
           vm.map = window.map
           vm.view = window.view
           // vm.handleThematicMap(to.params.collection, to.params.keyId);
-          console.log(to.params.collection)
+          // console.log(to.params.collection)
           vm.data1 = to.params.collection
         })
       })
@@ -142,7 +142,6 @@ export default {
       })
       geojsonlayer.on('update-end', function (e) {
         this.map.setExtent(e.target.extent.expand(1.2))
-        console.log(e.target)
       })
       window.BasemapGalleryVM.source.basemaps.get('items').push(geojsonlayer)
       this.map.basemap.baseLayers.add(geojsonlayer)
@@ -181,16 +180,13 @@ export default {
       // });
       geojsonlayer.labelingInfo = [statesLabelClass]
       let test = '浦东新区'
-      console.log(geojsonlayer)
-      //  geojsonlayer.definitionExpression = "name = '浦东新区'"
-      console.log(geojsonlayer, 1)
 
       let query = geojsonlayer.createQuery()
       query.where = "name = '浦东新区'"
       query.outFields = ['name']
 
       geojsonlayer.queryFeatures(query).then(function (response) {
-        console.log(response)
+        // console.log(response)
 
         // returns a feature set with features containing the following attributes
         // STATE_NAME, COUNTY_NAME, POPULATION, POP_DENSITY
@@ -512,7 +508,6 @@ export default {
           type: 'integer' //整数类型
         }
       ] //除了上面的三种类型，还有 double、date。。。
-      console.log(features)
       const res = Object.keys(features[0].attributes)
       res.map((item1) => {
         fields.push({
@@ -595,42 +590,113 @@ export default {
         // geometryType: 'polygon',
         // objectIdField: 'ObjectID'
       })
+      let that = this
       window.view.on('click', function (evt) {
         window.view.hitTest(evt).then(function (response) {
           let result = response.results[0]
           const Name = result.graphic.attributes.Name
-          const popupTemplate = {
-            title: Name,
-            content: [
-              {
-                // Pass in the fields to display
-                type: 'fields',
-                fieldInfos: [
-                  {
-                    fieldName: 'newConfirm',
-                    label: '新增确诊'
-                  },
-                  {
-                    fieldName: 'nowConfirm',
-                    label: '现有确诊'
-                  },
-                  {
-                    fieldName: 'confirm',
-                    label: '累计确诊'
-                  },
-                  {
-                    fieldName: 'dead',
-                    label: '累计死亡'
-                  },
-                  {
-                    fieldName: 'heal',
-                    label: '累计治愈'
+          let data = []
+
+          features.map((item) => {
+            if (item.attributes.Name === result.graphic.attributes.Name) {
+              data.push(item.attributes)
+            }
+          })
+          //  data.push (result.graphic.attributes)
+          if (data[0].Name) {
+            delete data[0].Name
+            delete data[0].ObjectID
+            if (document.getElementById('echart')) {
+              //每次点击都判断是否存在echart容器div，如果存在，则删除
+              let div = document.getElementById('echart')
+              div.parentNode.removeChild(div)
+            }
+            let divChart = document.createElement('div') //创建容器div
+            divChart.id = 'echart' //赋予id
+            divChart.style = 'width:380px;height:240px;' //容器size大小
+            document.body.appendChild(divChart) //添加到节点
+            //根据div创建echart实例和配置
+            let myChart = that.$echarts.init(document.getElementById('echart')) //根据id创建echart实例
+            let option = {
+              //配置，本例采用最简单的柱状图
+              title: {
+                text: Name + '区详细疫情数据'
+              },
+              tooltip: {},
+              color: ['red'],
+              legend: {
+                data: Object.keys(data[0])
+              },
+              xAxis: {
+                type: 'category',
+
+                data: Object.keys(data[0]),
+                axisTick: {
+                  alignWithLabel: true
+                },
+                axisLabel: {
+                  show: true,
+                  // interval: 3,
+                  rotate: 45, //倾斜度 -90 至 90 默认为0
+                  margin: 2,
+
+                  color: '#525A6F',
+                  fontFamily: '楷体',
+                  fontSize: 12
+                },
+                axisLine: {
+                  show: true, //这里的show用于设置是否显示x轴那一条线 默认为true
+                  lineStyle: {
+                    //lineStyle里面写x轴那一条线的样式
+                    color: '#6FC6F3',
+                    width: 2 //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
                   }
-                ]
-              }
-            ]
+                }
+              },
+              yAxis: {
+                type: 'value'
+              },
+              grid: {
+                top: '15%',
+                // right: '20%',
+                bottom: '15%',
+                containLabel: true
+              },
+              series: [
+                {
+                  name: Object.keys(data[0]),
+                  type: 'bar',
+                  data: Object.values(data[0]),
+                  label: {
+                    textStyle: {
+                      //数值样式
+                      fontSize: '2rpx',
+                      height: '20',
+                      color: '#666'
+                    },
+                    padding: [3, 10, 10, 5],
+                    normal: {
+                      show: true,
+                      position: 'top',
+                      // formatter: '{c}cm'//c后面加单位{a}{b}:
+                      formatter: function (params) {
+                        let key = params.name + params.data
+                        // let unit=echarList[key]===null?'':echarList[key]
+                        return params.data
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+
+            myChart.setOption(option) //echart实例加载配置
+
+            const popupTemplate = {
+              content: divChart
+            }
+            featureLayer.popupTemplate = popupTemplate
           }
-          featureLayer.popupTemplate = popupTemplate
         })
       })
 
@@ -644,7 +710,7 @@ export default {
         }
       })
       featureLayer.source.get('items').map((item) => {
-        console.log(item.attributes)
+        // console.log(item.attributes)
       })
       featureLayer.labelingInfo = [statesLabelClass]
       const getmap = this.$refs.mapdata.TdtMap.map
@@ -673,7 +739,12 @@ export default {
       })
       window.view.ui.add(legendExpand, {
         position: 'bottom-right'
-      })
+      }),
+        //监听
+        featureLayer.on('click', function (evt) {
+          //获取图层属性信息
+          // console.log(evt)
+        })
     }
   }
 }

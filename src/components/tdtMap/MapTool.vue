@@ -176,11 +176,15 @@ import screentake from './tools/Screentake.vue'
 import changemap from './tools/ChangeMap.vue'
 
 import html2canvas from 'html2canvas'
-import { getSearch, getCoordinate } from '@/api/tdt_web_api/tdt_api.js'
-
+import { getSearch, getCoordinate ,queryExtent} from '@/api/tdt_web_api/tdt_api.js'
 export default {
   name: 'MapTools',
-  components: { ChangeMap: changemap, Screentake: screentake, Search: search ,RouterPlanning:routerPlanning},
+  components: {
+    ChangeMap: changemap,
+    Screentake: screentake,
+    Search: search,
+    RouterPlanning: routerPlanning
+  },
   inject: ['TdtMap'],
   data() {
     return {
@@ -192,8 +196,8 @@ export default {
       //坐标定位值
       longitude: 121.477331,
       latitude: 31.2379,
-      modal:false
-      
+      modal: false,
+      center: []
     }
   },
   created() {},
@@ -883,52 +887,167 @@ export default {
     async getData(data1) {
       await getCoordinate(data1)
     },
-    loadHos() {
-      const hospitalfeature = data.ThemeData.hospital.features
+    async locateToCurrentLocation() {
+      //定位到当前位置
 
-      for (let i = 0; i < hospitalfeature.length; i++) {
-        const ptsymbol = new PictureMarkerSymbol(
-          require('@/assets/img/hospital.png'),
-          20,
-          20
+      if (navigator.geolocation) {
+        // regular get location
+        navigator.geolocation.watchPosition(
+          (position) => {
+            // performance
+            this.view.graphics.removeAll()
+            this.center = [position.coords.longitude, position.coords.latitude]
+            //   //坐标获取地名
+            //   const data1 = {
+            //     postStr: { lon: this.lng, lat: this.lat, ver: 1 },
+            //     type: 'geocode',
+            //     tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+            //   }
+            //  this.getData(data1);
+            //     console.log(this.cureentinfos.length >0)
+
+            const ptsymbol = {
+              type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+              url: '/定位.png',
+              width: '64px',
+              height: '64px'
+            }
+
+            let point = {
+              type: 'point',
+              longitude: position.coords.longitude, //当底图是投影坐标系时用x,地理坐标系用longitude
+              latitude: position.coords.latitude, //当底图是投影坐标系时用y,地理坐标系用latitude
+              spatialReference: this.view.spatialReference //和底图相同的坐标系
+            }
+
+            const polygonAttr = {
+              location: this.center
+            }
+            const popupTemplate = {
+              title: '当前位置',
+              content: [
+                {
+                  // Pass in the fields to display
+                  type: 'fields',
+                  fieldInfos: [
+                    {
+                      fieldName: 'location',
+                      label: '经纬度'
+                    }
+                  ]
+                }
+              ]
+            }
+            let graphic = new Graphic({
+              geometry: point, // Add the geometry created in step 4
+              symbol: ptsymbol, // Add the symbol created in step 5
+              attributes: polygonAttr,
+              popupTemplate: popupTemplate
+            })
+            this.view.graphics.add(graphic)
+
+            this.view.goTo(
+              {
+                center: this.center,
+                zoom: 16
+              },
+              2000
+            )
+            console.log( this.center[0] + "," + this.center[1]);
+            const query = {
+              postStr: {
+                keyWord: '医院',
+                level: 11,
+                queryRadius: 8000,
+                pointLonlat:"121.63269,31.20122",
+                queryType: 3,
+                start: 0,
+                count: 10
+              },
+              type: "query",
+              tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+            }
+            this.querySearch(query)
+          },
+          (err) => {
+            this.$Message.error('无法获取当前位置')
+          }
         )
-
-        const lonlat = hospitalfeature[i].geometry.coordinates
-        const lon = lonlat[0]
-        const lat = lonlat[1]
-        const pt = new Point({
-          type: 'point',
-          longitude: lon,
-          latitude: lat
-        })
-        const attr = {
-          Name: hospitalfeature[i].properties.NAME,
-          Addres: hospitalfeature[i].properties.ADDR,
-          Phone: hospitalfeature[i].properties.TELEPHONE
-        }
-
-        const pointGraphic = new Graphic({
-          geometry: pt,
-          symbol: ptsymbol,
-          attributes: attr
-          // popupTemplate: popupTemplate,
-        })
-        const ptGraohicsLayer = new GraohicsLayer()
-        ptGraohicsLayer.add(pointGraphic)
-        // window.map.add(ptGraohicsLayer)
-        window.view.graphics.add(pointGraphic)
+      } else {
+        this.$Message.error('无法获取当前位置')
       }
     },
-     //导航
+    loadHos() {
+      this.locateToCurrentLocation()
+    },
+    async querySearch(query) {
+      const res = await queryExtent(query);
+      console.log(res.data.pois);
+      res.data.pois.map((item)=>{
+         const ptsymbol = {
+              type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+              url: '/hospital.png',
+              width: '64px',
+              height: '64px'
+            }
+
+            let point = {
+              type: 'point',
+              longitude:item.lonlat.split(",")[0], //当底图是投影坐标系时用x,地理坐标系用longitude
+              latitude: item.lonlat.split(",")[1], //当底图是投影坐标系时用y,地理坐标系用latitude
+              spatialReference: this.view.spatialReference //和底图相同的坐标系
+            }
+
+            const polygonAttr = {
+              location:item.lonlat,
+              address:item.address,
+              phone:item.phone,
+              distance:item.distance
+            }
+            const popupTemplate = {
+              title: item.name,
+              content: [
+                {
+                  // Pass in the fields to display
+                  type: 'fields',
+                  fieldInfos: [
+                     {
+                      fieldName: 'address',
+                      label: '地址'
+                    },
+                    {
+                       fieldName: 'phone',
+                      label: '联系方式'
+                    },
+                    {
+                       fieldName: 'distance',
+                      label: '距离'
+                    },
+                    {
+                      fieldName: 'location',
+                      label: '经纬度'
+                    }
+                  ]
+                }
+              ]
+            }
+            let graphic = new Graphic({
+              geometry: point, // Add the geometry created in step 4
+              symbol: ptsymbol, // Add the symbol created in step 5
+              attributes: polygonAttr,
+              popupTemplate: popupTemplate
+            })
+            this.view.graphics.add(graphic)
+      })
+    },
+    //导航
     routePlanning() {
       this.modal = true
     }
-   
   }
 }
 </script>
 <style lang="scss" scoped>
-
 .title {
   color: #000;
 }
