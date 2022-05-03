@@ -19,7 +19,7 @@ const menuRoutes = [
         }
       },
       {
-        path: '/animation',
+        path: '/animation1',
         name: 'animation',
         component: (resolve) => require(['@/views/animation.vue'], resolve),
         meta: {
@@ -100,11 +100,11 @@ const menuRoutes = [
     }
   },
   {
-    path: '/daping',
-    name: 'daping',
-    component: (resolve) => require(['@/views/daping.vue'], resolve),
+    path: '/animation',
+    name: 'animation',
+    component: (resolve) => require(['@/views/animation.vue'], resolve),
     meta: {
-      title: '大屏'
+      title: '照片墙'
     }
   },
   {

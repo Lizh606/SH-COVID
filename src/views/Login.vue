@@ -172,11 +172,12 @@ export default {
               this.$store.commit('set_TimeStamp', nowData)
               this.$store.commit('set_token', result.token)
               const userinfo = await getUserInfo()
+              this.$store.commit('setuserid', userinfo.id)
               this.$store.commit('setuserName', userinfo.username)
               this.$store.commit('setnickName', userinfo.nickName)
               this.$store.commit('setUserImg', userinfo.imgUrl)
               this.setCookie('realname', userinfo.nickName, 7)
-              this.$router.push('/daping')
+              this.$router.push('/animation')
             } else {
               alert('登陆失败')
             }

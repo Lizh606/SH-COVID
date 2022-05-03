@@ -6,20 +6,23 @@
 
 <script>
 import GeoJSONLayer from '@arcgis/core/layers/GeoJSONLayer'
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer'
 import GraohicsLayer from '@arcgis/core/layers/GraphicsLayer'
 import Graphic from '@arcgis/core/Graphic'
 import Color from '@arcgis/core/Color'
 import Polygon from '@arcgis/core/geometry/Polygon'
 import Extent from '@arcgis/core/geometry/Extent'
-
+import FeatureSet from '@arcgis/core/rest/support/FeatureSet'
 import LabelClass from '@arcgis/core/layers/support/LabelClass'
 import FeatureFilter from '@arcgis/core/layers/support/FeatureFilter'
 import FeatureEffect from '@arcgis/core/layers/support/FeatureEffect'
 import Query from '@arcgis/core/tasks/support/Query'
 import QueryTask from '@arcgis/core/tasks/QueryTask'
+import Legend from '@arcgis/core/widgets/Legend'
+import Expand from '@arcgis/core/widgets/Expand'
 
 import shanghai from '@/assets/json/sh.json'
-
+import axios from 'axios'
 export default {
   name: 'GeoJsonLayer',
 
@@ -27,14 +30,9 @@ export default {
     return {
       map: null,
       view: null,
-      level: {
-        levelOne: '',
-        levelTwo: '',
-        levelThree: '',
-        levelFour: '',
-      },
-        shPolygon: shanghai
-
+      data1: null,
+      func1: false,
+      shPolygon: shanghai
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -45,10 +43,7 @@ export default {
           vm.view = window.view
           // vm.handleThematicMap(to.params.collection, to.params.keyId);
           console.log(to.params.collection)
-          vm.level.levelOne = to.params.collection.levelOne
-          vm.level.levelTwo = to.params.collection.levelTwo
-          vm.level.levelThree = to.params.collection.levelThree
-          vm.level.levelFour = to.params.collection.levelFour
+          vm.data1 = to.params.collection
         })
       })
     } else {
@@ -60,10 +55,13 @@ export default {
       setTimeout(() => {
         this.map = this.$refs.mapdata.TdtMap.map
         this.view = this.$refs.mapdata.TdtMap.view
-        console.log(this.map, this.view)
-        this.addGeoJsonLayer()
-        if (this.level.levelOne !== '') {
+        // this.addGeoJsonLayer()
+        //  this.map.basemap.baseLayers.items[0].visible =false;
+        // this.map.basemap.baseLayers.items[1].visible = false
+        if (this.data1) {
           this.loadroute()
+        } else {
+          this.addGeoJsonLayer()
         }
       }, 1000)
     })
@@ -146,7 +144,9 @@ export default {
         this.map.setExtent(e.target.extent.expand(1.2))
         console.log(e.target)
       })
-      this.map.add(geojsonlayer) // adds the layer to the map
+      window.BasemapGalleryVM.source.basemaps.get('items').push(geojsonlayer)
+      this.map.basemap.baseLayers.add(geojsonlayer)
+      // this.map.add(geojsonlayer) // adds the layer to the map
       // geojsonlayer.definitionExpression = "adcode = 310101";
       const statesLabelClass = new LabelClass({
         labelExpressionInfo: { expression: '$feature.name' },
@@ -173,9 +173,6 @@ export default {
       //   excludedEffect: "opacity(50%)"
       // });
       //移除底图
-
-      //    this.map.basemap.baseLayers.items[0].visible =false;
-      // this.map.basemap.baseLayers.items[1].visible =false;
 
       //      geojsonlayer.on("update-end", function(){
 
@@ -204,6 +201,7 @@ export default {
       // }
     },
     loadroute() {
+      let features = []
       for (let j = 0; j < this.shPolygon.features.length; j++) {
         const rings = this.shPolygon.features[j].geometry.coordinates
         // console.log(rings[0]);
@@ -399,269 +397,66 @@ export default {
             [121.627049, 31.444993]
           ])
         }
-        const getmap = this.$refs.mapdata.TdtMap.map
-        getmap.basemap.baseLayers.items[1].visible = false
-        const textGraohicsLayer = new GraohicsLayer()
-        //level one
-        for (let a = 0; a < this.level.levelOne.length; a++) {
-          const level1 = this.level.levelOne[a]
-          console.log[level1]
-          const cname = level1[0]
-          const nowConfirm = level1[1]
-          const confirm = level1[2]
-          const dead = level1[3]
-          const heal = level1[4]
-          const polygonAttr = {
-            Name: cname,
-            nowConfirm: nowConfirm,
-            confirm: confirm,
-            dead: dead,
-            heal: heal
-          }
-
-          const popupTemplate = {
-            title: cname,
-            content: [
-              {
-                // Pass in the fields to display
-                type: 'fields',
-                fieldInfos: [
-                  {
-                    fieldName: 'nowConfirm',
-                    label: '现有确诊'
-                  },
-                  {
-                    fieldName: 'confirm',
-                    label: '累计确诊'
-                  },
-                  {
-                    fieldName: 'dead',
-                    label: '累计死亡'
-                  },
-                  {
-                    fieldName: 'heal',
-                    label: '累计治愈'
-                  }
-                ]
-              }
-            ]
-          }
+        // const getmap = this.$refs.mapdata.TdtMap.map
+        // getmap.basemap.baseLayers.items[1].visible = false
+        // const textGraohicsLayer = new GraohicsLayer()
+        this.data1.map((item) => {
+          const cname = item[0]
+          const nowConfirm = item[1]
+          const confirm = item[2]
+          const dead = item[3]
+          const heal = item[4]
+          const newConfirm = item[5]
           if (this.shPolygon.features[j].properties.name.indexOf(cname) > -1) {
-            const onefillSymbol = {
-              type: 'simple-fill', // autocasts as new SimpleFillSymbol()
-              color: new Color('#F5F500'),
-              style: 'solid',
-              outline: {
-                width: 2,
-                color: [255, 255, 255, 0.5]
-              }
+            const polygonAttr = {
+              Name: cname,
+              newConfirm: newConfirm,
+              nowConfirm: nowConfirm,
+              confirm: confirm,
+              dead: dead,
+              heal: heal
+            }
+            const popupTemplate = {
+              title: cname,
+              content: [
+                {
+                  // Pass in the fields to display
+                  type: 'fields',
+                  fieldInfos: [
+                    {
+                      fieldName: 'newConfirm',
+                      label: '新增确诊'
+                    },
+                    {
+                      fieldName: 'nowConfirm',
+                      label: '现有确诊'
+                    },
+                    {
+                      fieldName: 'confirm',
+                      label: '累计确诊'
+                    },
+                    {
+                      fieldName: 'dead',
+                      label: '累计死亡'
+                    },
+                    {
+                      fieldName: 'heal',
+                      label: '累计治愈'
+                    }
+                  ]
+                }
+              ]
             }
             const onepolygonGraphic = new Graphic({
               //创建面图斑
               geometry: polygon,
-              symbol: onefillSymbol,
               attributes: polygonAttr,
               popupTemplate: popupTemplate
             })
-          //  this.$refs.mapdata.TdtMap.view.graphics.add(onepolygonGraphic)
-            textGraohicsLayer.add(onepolygonGraphic)
+            //  this.$refs.mapdata.TdtMap.view.graphics.add(onepolygonGraphic)
+            features.push(onepolygonGraphic)
           }
-        }
-        //level two
-        for (let a = 0; a < this.level.levelTwo.length; a++) {
-          const level2 = this.level.levelTwo[a]
-          const cname = level2[0]
-          const nowConfirm = level2[1]
-          const confirm = level2[2]
-          const dead = level2[3]
-          const heal = level2[4]
-
-          if (this.shPolygon.features[j].properties.name.indexOf(cname) > -1) {
-            const twofillSymbol = {
-              type: 'simple-fill', // autocasts as new SimpleFillSymbol()
-              color: new Color('#F5A300'),
-              style: 'solid',
-              outline: {
-                width: 2,
-                color: [255, 255, 255, 0.5]
-              }
-            }
-            const polygonAttr2 = {
-              Name: cname,
-              nowConfirm: nowConfirm,
-              confirm: confirm,
-              dead: dead,
-              heal: heal
-            }
-
-            const popupTemplate2 = {
-              title: cname,
-              content: [
-                {
-                  // Pass in the fields to display
-                  type: 'fields',
-                  fieldInfos: [
-                    {
-                      fieldName: 'nowConfirm',
-                      label: '现有确诊'
-                    },
-                    {
-                      fieldName: 'confirm',
-                      label: '累计确诊'
-                    },
-                    {
-                      fieldName: 'dead',
-                      label: '累计死亡'
-                    },
-                    {
-                      fieldName: 'heal',
-                      label: '累计治愈'
-                    }
-                  ]
-                }
-              ]
-            }
-            const twopolygonGraphic = new Graphic({
-              //创建面图斑
-              geometry: polygon,
-              symbol: twofillSymbol,
-              attributes: polygonAttr2,
-              popupTemplate: popupTemplate2
-            })
-          //  this.$refs.mapdata.TdtMap.view.graphics.add(twopolygonGraphic)
-            textGraohicsLayer.add(twopolygonGraphic)
-          }
-        }
-        //level three
-        for (let a = 0; a < this.level.levelThree.length; a++) {
-          const level3 = this.level.levelThree[a]
-          const cname = level3[0]
-          const nowConfirm = level3[1]
-          const confirm = level3[2]
-          const dead = level3[3]
-          const heal = level3[4]
-
-          if (this.shPolygon.features[j].properties.name.indexOf(cname) > -1) {
-            const threefillSymbol = {
-              type: 'simple-fill', // autocasts as new SimpleFillSymbol()
-              color: new Color('#F55200'),
-
-              style: 'solid',
-              outline: {
-                width: 2,
-                color: [255, 255, 255, 0.5]
-              }
-            }
-            const polygonAttr3 = {
-              Name: cname,
-              nowConfirm: nowConfirm,
-              confirm: confirm,
-              dead: dead,
-              heal: heal
-            }
-
-            const popupTemplate3 = {
-              title: cname,
-              content: [
-                {
-                  // Pass in the fields to display
-                  type: 'fields',
-                  fieldInfos: [
-                    {
-                      fieldName: 'nowConfirm',
-                      label: '现有确诊'
-                    },
-                    {
-                      fieldName: 'confirm',
-                      label: '累计确诊'
-                    },
-                    {
-                      fieldName: 'dead',
-                      label: '累计死亡'
-                    },
-                    {
-                      fieldName: 'heal',
-                      label: '累计治愈'
-                    }
-                  ]
-                }
-              ]
-            }
-            const threepolygonGraphic = new Graphic({
-              //创建面图斑
-              geometry: polygon,
-              symbol: threefillSymbol,
-              attributes: polygonAttr3,
-              popupTemplate: popupTemplate3
-            })
-            // this.$refs.mapdata.TdtMap.view.graphics.add(threepolygonGraphic)
-            textGraohicsLayer.add(threepolygonGraphic)
-          }
-        }
-        //level four
-        for (let a = 0; a < this.level.levelFour.length; a++) {
-          const level4 = this.level.levelFour[a]
-          const cname = level4[0]
-          const nowConfirm = level4[1]
-          const confirm = level4[2]
-          const dead = level4[3]
-          const heal = level4[4]
-          if (this.shPolygon.features[j].properties.name.indexOf(cname) > -1) {
-            const fourfillSymbol = {
-              type: 'simple-fill', // autocasts as new SimpleFillSymbol()
-              color: new Color('#FF0000'),
-              style: 'solid',
-              outline: {
-                width: 2,
-                color: [255, 255, 255, 0.5]
-              }
-            }
-            const polygonAttr4 = {
-              Name: cname,
-              nowConfirm: nowConfirm,
-              confirm: confirm,
-              dead: dead,
-              heal: heal
-            }
-
-            const popupTemplate4 = {
-              title: cname,
-              content: [
-                {
-                  // Pass in the fields to display
-                  type: 'fields',
-                  fieldInfos: [
-                    {
-                      fieldName: 'nowConfirm',
-                      label: '现有确诊'
-                    },
-                    {
-                      fieldName: 'confirm',
-                      label: '累计确诊'
-                    },
-                    {
-                      fieldName: 'dead',
-                      label: '累计死亡'
-                    },
-                    {
-                      fieldName: 'heal',
-                      label: '累计治愈'
-                    }
-                  ]
-                }
-              ]
-            }
-            const fourpolygonGraphic = new Graphic({
-              //创建面图斑
-              geometry: polygon,
-              symbol: fourfillSymbol,
-              attributes: polygonAttr4,
-              popupTemplate: popupTemplate4
-            })
-            // this.$refs.mapdata.TdtMap.view.graphics.add(fourpolygonGraphic)
-            textGraohicsLayer.add(fourpolygonGraphic)
-          }
-        }
+        })
         const textSymbol = {
           type: 'text', // autocasts as new TextSymbol()
           color: 'black',
@@ -697,26 +492,188 @@ export default {
         })
 
         // textGraohicsLayer.add(window.textGraphic)
-        getmap.add(textGraohicsLayer)
-        // const statesLabelClass = new LabelClass({
-        //   labelExpressionInfo: { expression: '$feature.name' },
-
-        //   // labelPlacement: "above-left",
-        //   // where: "adcode = 310101",
-        //   symbol: {
-        //     type: 'text', // autocasts as new TextSymbol()
-        //     color: 'black',
-        //     haloSize: 10,
-        //     haloColor: 'white'
-        //     // font: {
-        //     //   // autocasts as new Font()
-        //     //   family: '楷体'
-        //     // }
-        //   }
-        // })
-        // textGraohicsLayer.labelingInfo = [statesLabelClass]
-        // console.log(window.map.basemap.baseLayers)
+        // getmap.add(textGraohicsLayer)
       }
+
+      const fields = [
+        {
+          name: 'ObjectID',
+          alias: 'ObjectID',
+          type: 'oid' //   每个要素必须的字段，字段值必须唯一，当做是整数类型。。。
+        },
+        {
+          name: 'Name',
+          alias: 'Name',
+          type: 'string' //字符串类型
+        },
+        {
+          name: 'size', //可以用来渲染符号大小
+          alias: 'size',
+          type: 'integer' //整数类型
+        }
+      ] //除了上面的三种类型，还有 double、date。。。
+      console.log(features)
+      const res = Object.keys(features[0].attributes)
+      res.map((item1) => {
+        fields.push({
+          name: item1,
+          alias: item1,
+          type: 'string'
+        })
+      })
+      let Symbol1 = {
+        type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+        color: new Color('#F5F500'),
+        style: 'solid',
+        outline: {
+          width: 2,
+          color: [255, 255, 255, 0.5]
+        }
+      }
+      let Symbol2 = {
+        type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+        color: new Color('#F5A300'),
+
+        style: 'solid',
+        outline: {
+          width: 2,
+          color: [255, 255, 255, 0.5]
+        }
+      }
+      let Symbol3 = {
+        type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+        color: new Color('#F55200'),
+
+        style: 'solid',
+        outline: {
+          width: 2,
+          color: [255, 255, 255, 0.5]
+        }
+      }
+      let Symbol4 = {
+        type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+        color: new Color('#FF0000'),
+
+        style: 'solid',
+        outline: {
+          width: 2,
+          color: [255, 255, 255, 0.5]
+        }
+      }
+      const renderer = {
+        type: 'class-breaks',
+        field: 'confirm',
+        classBreakInfos: [
+          {
+            minValue: 0,
+            maxValue: 2000,
+            symbol: Symbol1
+          },
+          {
+            minValue: 2001,
+            maxValue: 4000,
+            symbol: Symbol2
+          },
+          {
+            minValue: 4001,
+            maxValue: 6000,
+            symbol: Symbol3
+          },
+          {
+            minValue: 6001,
+            maxValue: 50000,
+            symbol: Symbol4
+          }
+        ]
+      }
+
+      let featureLayer = new FeatureLayer({
+        source: features,
+        fields: fields,
+        renderer: renderer
+        // popupTemplate: popupTemplate
+        // geometryType: 'polygon',
+        // objectIdField: 'ObjectID'
+      })
+      window.view.on('click', function (evt) {
+        window.view.hitTest(evt).then(function (response) {
+          let result = response.results[0]
+          const Name = result.graphic.attributes.Name
+          const popupTemplate = {
+            title: Name,
+            content: [
+              {
+                // Pass in the fields to display
+                type: 'fields',
+                fieldInfos: [
+                  {
+                    fieldName: 'newConfirm',
+                    label: '新增确诊'
+                  },
+                  {
+                    fieldName: 'nowConfirm',
+                    label: '现有确诊'
+                  },
+                  {
+                    fieldName: 'confirm',
+                    label: '累计确诊'
+                  },
+                  {
+                    fieldName: 'dead',
+                    label: '累计死亡'
+                  },
+                  {
+                    fieldName: 'heal',
+                    label: '累计治愈'
+                  }
+                ]
+              }
+            ]
+          }
+          featureLayer.popupTemplate = popupTemplate
+        })
+      })
+
+      const statesLabelClass = new LabelClass({
+        labelExpressionInfo: { expression: '$feature.name' },
+        symbol: {
+          type: 'text', // autocasts as new TextSymbol()
+          color: 'black',
+          haloSize: 10,
+          haloColor: 'white'
+        }
+      })
+      featureLayer.source.get('items').map((item) => {
+        console.log(item.attributes)
+      })
+      featureLayer.labelingInfo = [statesLabelClass]
+      const getmap = this.$refs.mapdata.TdtMap.map
+      getmap.add(featureLayer)
+      let legend = new Legend({
+        view: window.view,
+        layerInfos: [
+          {
+            layer: featureLayer,
+            title: 'Legend'
+          }
+        ]
+      })
+
+      // window.view.ui.add(legend, 'bottom-right')
+      const legendExpand = new Expand({
+        // view: this.view,
+        // content: legend,
+        view: this.view,
+        mode: 'floating',
+        content: legend,
+        collapseIconClass: 'esri-icon-overview-arrow-bottom-right',
+        collapseTooltip: '隐藏图例',
+        expandIconClass: 'esri-icon-media',
+        expandTooltip: '显示图例'
+      })
+      window.view.ui.add(legendExpand, {
+        position: 'bottom-right'
+      })
     }
   }
 }

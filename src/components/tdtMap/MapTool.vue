@@ -1,6 +1,6 @@
 /* eslint-disable no-control-regex */
 <template>
-  <div>
+  <div class="tools">
     <!-- 切换底图弹窗内容 -->
     <ButtonGroup class="toolbar-container" id="toolbar">
       <Dropdown class="btns-common-style">
@@ -20,6 +20,38 @@
           <IconSvg iconClass="tishishuoming"></IconSvg>
           <span> 属性查询</span>
         </a>
+      </Dropdown>
+      <Dropdown class="btns-common-style">
+        <a href="javascript:void(0)" style="color: #515a6e">
+          <IconSvg iconClass="gongjuxiang"></IconSvg>
+          <span> 疫情服务</span>
+        </a>
+        <DropdownMenu slot="list">
+          <DropdownItem
+            ><div class="btn-dropdown-style" @click="loadHos()">
+              <Icon custom="iconfont icon-ceju" />
+              <span class="btn-item">获取医院</span>
+            </div>
+          </DropdownItem>
+          <DropdownItem
+            ><div class="btn-dropdown-style" @click="routePlanning()">
+              <Icon custom="iconfont icon-cemian" />
+              <span class="btn-item">导航服务</span>
+            </div>
+          </DropdownItem>
+          <DropdownItem
+            ><div class="btn-dropdown-style" @click="clear()">
+              <IconSvg iconClass="qingkong"></IconSvg>
+              <span class="btn-item">一键清除</span>
+            </div>
+          </DropdownItem>
+          <DropdownItem
+            ><div class="btn-dropdown-style" @click="locate()">
+              <IconSvg iconClass="ditu3"></IconSvg>
+              <span class="btn-item">定位街道</span>
+            </div>
+          </DropdownItem>
+        </DropdownMenu>
       </Dropdown>
       <Dropdown class="btns-common-style">
         <a href="javascript:void(0)" style="color: #515a6e">
@@ -110,14 +142,22 @@
     <div ref="exportDiv" class="map-export-div-default"></div>
     <!-- 搜索框 -->
     <Search />
+    <!-- 图例 -->
+    <Card id="legend"><b>图例</b></Card>
+    <!-- 导航窗口 -->
+    <RouterPlanning :modal="modal" />
   </div>
 </template>
 
 <script>
+import Point from '@arcgis/core/geometry/Point'
+import PictureMarkerSymbol from '@arcgis/core/symbols/PictureMarkerSymbol'
+import data from '../../assets/json/data'
+import GraohicsLayer from '@arcgis/core/layers/GraphicsLayer'
+import Graphic from '@arcgis/core/Graphic'
 import * as locator from '@arcgis/core/rest/locator'
 import Draw from '@arcgis/core/views/draw/Draw'
 import Polygon from '@arcgis/core/geometry/Polygon'
-import Graphic from '@arcgis/core/Graphic'
 import Polyline from '@arcgis/core/geometry/Polyline'
 import Search from '@arcgis/core/widgets/Search'
 import Home from '@arcgis/core/widgets/Home'
@@ -130,7 +170,7 @@ import Expand from '@arcgis/core/widgets/Expand'
 import * as watchUtils from '@arcgis/core/core/watchUtils'
 
 import createWmtsLayer from './layers/wmtsLayer'
-
+import routerPlanning from './tools/RouterPlanning.vue'
 import search from './tools/Search.vue'
 import screentake from './tools/Screentake.vue'
 import changemap from './tools/ChangeMap.vue'
@@ -140,7 +180,7 @@ import { getSearch, getCoordinate } from '@/api/tdt_web_api/tdt_api.js'
 
 export default {
   name: 'MapTools',
-  components: { ChangeMap: changemap, Screentake: screentake, Search: search },
+  components: { ChangeMap: changemap, Screentake: screentake, Search: search ,RouterPlanning:routerPlanning},
   inject: ['TdtMap'],
   data() {
     return {
@@ -151,7 +191,9 @@ export default {
       pop: false,
       //坐标定位值
       longitude: 121.477331,
-      latitude: 31.2379
+      latitude: 31.2379,
+      modal:false
+      
     }
   },
   created() {},
@@ -207,7 +249,12 @@ export default {
         //     levelThree: '累计确诊: 10000 ~ 50000人',
         //     levelFour: '累计确诊: 50000 ~ 1000000人'
         //   }
+        // }
+        const legend = document.getElementById('legend')
+        // this.view.ui.add(legend, {
+        //   position: 'bottom-right'
         // })
+
         // legend.style = {
         //   type: 'card',
         //   layout: 'auto'
@@ -758,7 +805,7 @@ export default {
       const tiledjzLayer = createWmtsLayer(tdtjzUrl)
       // this.map.add(tiledjzLayer)
       // this.map.add(imgtiledLayer)
-      const geomap =  this.map.allLayers.get('items')[2]
+      const geomap = this.map.allLayers.get('items')[2]
       const tmap = this.map.basemap.baseLayers
       const swipe = new Swipe({
         leadingLayers: this.map.allLayers,
@@ -835,11 +882,53 @@ export default {
     },
     async getData(data1) {
       await getCoordinate(data1)
+    },
+    loadHos() {
+      const hospitalfeature = data.ThemeData.hospital.features
+
+      for (let i = 0; i < hospitalfeature.length; i++) {
+        const ptsymbol = new PictureMarkerSymbol(
+          require('@/assets/img/hospital.png'),
+          20,
+          20
+        )
+
+        const lonlat = hospitalfeature[i].geometry.coordinates
+        const lon = lonlat[0]
+        const lat = lonlat[1]
+        const pt = new Point({
+          type: 'point',
+          longitude: lon,
+          latitude: lat
+        })
+        const attr = {
+          Name: hospitalfeature[i].properties.NAME,
+          Addres: hospitalfeature[i].properties.ADDR,
+          Phone: hospitalfeature[i].properties.TELEPHONE
+        }
+
+        const pointGraphic = new Graphic({
+          geometry: pt,
+          symbol: ptsymbol,
+          attributes: attr
+          // popupTemplate: popupTemplate,
+        })
+        const ptGraohicsLayer = new GraohicsLayer()
+        ptGraohicsLayer.add(pointGraphic)
+        // window.map.add(ptGraohicsLayer)
+        window.view.graphics.add(pointGraphic)
+      }
+    },
+     //导航
+    routePlanning() {
+      this.modal = true
     }
+   
   }
 }
 </script>
-<style lang="less" scoped>
+<style lang="scss" scoped>
+
 .title {
   color: #000;
 }
@@ -903,10 +992,10 @@ export default {
 .btn-item {
   margin-left: 0.5rem;
 }
-&/deep/.ivu-dropdown-item {
+/deep/.ivu-dropdown-item {
   white-space: nowrap;
 }
-&/deep/.ivu-select-dropdown {
+/deep/.ivu-select-dropdown {
   margin: 5px 0;
 }
 // 导出地图html2canvas
@@ -914,7 +1003,7 @@ export default {
   position: fixed;
   bottom: 24px;
   right: 20px;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+  // box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
   font-size: 14px;
   background-color: #fff;
   color: #6e6e6e;
@@ -966,6 +1055,9 @@ export default {
 .scale {
   width: 130px;
   float: right;
+}
+/deep/.esri-ui-bottom-right .esri-component {
+  margin-left: unset;
 }
 .map-spin-icon-load {
   animation: ani-map-spin 1s linear infinite;

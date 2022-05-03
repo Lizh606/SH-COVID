@@ -59,7 +59,11 @@
 </template>
 <script>
 import { YQDatePathData } from '@/api/sys.js'
-
+import {
+  tdtAdministrative,
+  publicTransportPlanning,
+  getCoordinate
+} from '@/api/tdt_web_api/tdt_api.js'
 import Map from '@arcgis/core/Map'
 import MapView from '@arcgis/core/views/MapView'
 import TileLayer from '@arcgis/core/layers/TileLayer'
@@ -77,10 +81,33 @@ export default {
     }
   },
   async mounted() {
-    //  axios.get('/yq').then((res)=>{
-    //    console.log(res);
-    //  })
-    //  console.log(res);
+      const origin = "玉兰香苑三期" ;
+      const destination ='东方明珠电视塔'
+        const origindata = {
+      ds: { keyWord: origin },
+      tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+    }
+      const destinationata = {
+      ds: { keyWord: destination },
+      tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+    }
+    const orginzuobiao = await getCoordinate(origindata);
+    const destinationzuobiao = await getCoordinate(destinationata)
+    const originloc = orginzuobiao.data.location.lon + ',' + orginzuobiao.data.location.lat
+    const destinationloc = destinationzuobiao.data.location.lon + ',' + destinationzuobiao.data.location.lat
+    console.log(originloc,destinationloc);
+      //公交规划
+    const getbus = {
+      type: 'busline',
+      postStr: {
+        startposition: originloc,
+        endposition: destinationloc,
+        linetype: '1'
+      },
+      tk: '6156b0fb9f9e853e3f64234d82d9abf1'
+    }
+    const res1 = await publicTransportPlanning(getbus)
+     console.log(res1);
   },
   methods: {
     async sure() {

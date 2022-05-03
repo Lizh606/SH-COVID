@@ -154,7 +154,7 @@ export default {
               this.$store.commit('set_token', result.token)
               this.setCookie('user', loginname, 7) //保存帐号到cookie，有效期7天
               this.setCookie('password', loginpwd, 7) //保存密码到cookie，有效期7天
-              this.$router.push('/daping')
+              this.$router.push('/animation')
             } else {
               alert('用户名已存在')
             }

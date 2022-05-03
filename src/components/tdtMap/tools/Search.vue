@@ -1,15 +1,53 @@
 <template>
   <!-- 搜索栏 -->
   <div id="search">
-    <Poptip trigger="focus" placement="bottom" v-model="pop">
+    <Poptip trigger="focus" placement="bottom" v-if="func1" v-model="pop">
       <Input
         v-model="searchValue"
         placeholder="查询地址或地点"
         style="width: auto"
       >
+        <Icon type="md-paper-plane" slot="prefix" @click="changeFunc()" />
+
         <Icon type="ios-search" slot="suffix" @click="getPois()" />
       </Input>
-      <div slot="content" v-if="pop1" @click="locateToCurrentLocation" style="white-space: normal">
+      <div
+        slot="content"
+        v-if="pop1"
+        @click="locateToCurrentLocation"
+        style="white-space: normal"
+      >
+        <IconSvg iconClass="dingwei-" slot="prefix"></IconSvg>
+        {{ searchName }}
+      </div>
+
+      <div slot="content" v-if="pop2" style="white-space: normal">
+        <div
+          class="search_list"
+          v-for="(item, index) in pois"
+          :key="index"
+          @click="locateToLocation(item)"
+        >
+          <IconSvg iconClass="dingwei-" slot="prefix"></IconSvg>
+          {{ item.name }}
+        </div>
+      </div>
+    </Poptip>
+    <Poptip trigger="focus" placement="bottom" v-if="func2" v-model="pop">
+      <Input
+        v-model="searchValue"
+        placeholder="输入查询范围"
+        style="width: auto"
+      >
+        <Icon type="md-arrow-round-back" slot="prefix" @click="changeFunc()" />
+        <Icon type="ios-search" slot="suffix" @click="getPois()" />
+      </Input>
+      <div
+        slot="content"
+        v-if="pop1"
+        @click="locateToCurrentLocation"
+        style="white-space: normal"
+      >
         <IconSvg iconClass="dingwei-" slot="prefix"></IconSvg>
         {{ searchName }}
       </div>
@@ -27,6 +65,7 @@
       </div>
     </Poptip>
   </div>
+  
 </template>
 
 <script>
@@ -44,7 +83,9 @@ export default {
       pop: false,
       pop1: true,
       pop2: false,
-      cureentinfos: []
+      cureentinfos: [],
+      func1:true,
+      func2:false
     }
   },
   computed: {
@@ -94,6 +135,15 @@ export default {
     })
   },
   methods: {
+    changeFunc(){ 
+        if(this.func1 === true){
+          this.func2 = true,
+          this.func1 = false
+        } else {
+          this.func2 = false,
+          this.func1 = true
+        }
+    },
     locate(item) {
       this.view.graphics.removeAll()
       console.log(item)
@@ -292,10 +342,10 @@ export default {
 /deep/.ivu-input-suffix {
   left: auto;
   right: 0;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 30%);
 }
 /deep/.ivu-input-with-suffix {
-    padding-right: 100px;
+  padding-right: 100px;
 }
 #search {
   width: 200pxx;

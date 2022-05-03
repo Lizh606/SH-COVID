@@ -12,6 +12,7 @@ export default new vuex.Store({
     imgUrl: '',
     TimeStamp: '',
     scale: '',
+    id:''
    
   },
   /**修改数据要通过的mutations**/
@@ -24,6 +25,11 @@ export default new vuex.Store({
     del_token(state) {
       state.token = ''
       storage.remove('token')
+    },
+    setuserid(state, id) {
+      state.id = id
+      storage.set('id', id)
+      console.log('store、localstorage保存id成功！')
     },
     setuserName(state, userName) {
       state.userName = userName
@@ -56,6 +62,9 @@ export default new vuex.Store({
   getters: {
     get_token(state) {
       return state.token || storage.get('token') || null
+    },
+    id(state) {
+      return state.id || storage.get('id') || null
     },
     nickName(state) {
       return state.nickName || storage.get('nickName') || null

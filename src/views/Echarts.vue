@@ -17,15 +17,19 @@
       :xdata="xdata"
       :legend="legend"
       :title1="title1"
+
+      :SHqh="SHqh"
+      :qhAdd="qhAdd"
     />
 
     <!-- <Tree class="tree" :data="data1" expand-node></Tree> -->
-    <ButtonGroup>
+    <ButtonGroup class="btn">
       <Button class="btn1" @click="openCard1()">上海疫情<br />新增趋势</Button>
-      <Button class="btn1" @click="openCard2()"
+     
+      <Button class="btn1" @click="openCard3()">上海疫情<br />累计趋势</Button>
+       <Button class="btn1" @click="openCard2()"
         >上海疫情<br />无症状趋势</Button
       >
-      <Button class="btn1" @click="openCard3()">上海疫情<br />累计趋势</Button>
     </ButtonGroup>
     <div
       @click="DataShow"
@@ -34,8 +38,8 @@
       title="数据说明"
     >
       <IconSvg iconClass="bangzhuyushuoming" class="help"></IconSvg>
-         
-      <span class="word" style="color:blue"   >数据说明</span>
+
+      <span class="word" style="color: blue">数据说明</span>
     </div>
     <smModal :modal="modal" @okHandler="okHandler()"></smModal>
   </div>
@@ -46,16 +50,14 @@ import singleEcharts from './YQEcharts/singleEcharts.vue'
 import doubleEcharts from './YQEcharts/doubleEcharts.vue'
 import smModal from '@/components/Modals/smDataModal.vue'
 
-import { YQDatePathData } from '@/api/sys.js'
-import { txGet } from '@/api/yq_api/tx_api.js'
-import { txDateGet } from '@/api/yq_api/tx_api.js'
+import { txDateGet,txGet } from '@/api/yq_api/tx_api.js'
 
 export default {
   name: 'Echarts',
   components: {
     SingleEcharts: singleEcharts,
     DoubleEcharts: doubleEcharts,
-     smModal: smModal
+    smModal: smModal
   },
   data() {
     return {
@@ -84,39 +86,35 @@ export default {
         wzz_add: []
       },
       legend: ['新增本土'],
-      YQdata: []
+      YQdata: [],
+
+      //区数据
+      SHqh:[],
+      qhAdd:[]
     }
   },
   async mounted() {
-    // if (location.href.indexOf("#reloaded") == -1) {
-    //   location.href = location.href + "#reloaded";
-    //   location.reload();
-    // }
-    const param1 = {
-      province: '上海',
-      limit: '60'
-    }
-    const res1 = await txDateGet(param1)
-    console.log(res1)
-    const res = await YQDatePathData()
-    this.YQdata = res.data
     this.getData()
     this.openCard1()
   },
 
   methods: {
     async getData() {
-      const res = await YQDatePathData()
       const param1 = {
         province: '上海',
         limit: '60'
       }
       const res1 = await txDateGet(param1)
-      console.log(res1)
       //截止时间
       this.time = res1.data.data.pop()._mtime
-      console.log(this.time)
-      res1.data.data.map((item) => {
+      const obj = {}
+      const array = res1.data.data.reduce(function (item, next) {
+        obj[next.date] ? '' : (obj[next.date] = true && item.push(next))
+
+        return item
+      }, [])
+      // console.log(data1);
+      array.map((item) => {
         //新增
         this.updateDate.push(item.date)
         this.newAdd.confirm.push(item.confirm_add)
@@ -130,10 +128,34 @@ export default {
         //无症状
         this.wzz.wzz.push(item.wzz)
         this.wzz.wzz_add.push(item.wzz_add)
-      })
+      });
 
-      // this.mycharts();
+      //上海区数据
+       const param = {
+        modules: 'statisGradeCityDetail,diseaseh5Shelf'
+      }
+      const res = await txGet(param)
+      res.data.data.diseaseh5Shelf.areaTree[0].children[2].children.sort(this.compare('today'))
+      console.log(res.data.data.diseaseh5Shelf.areaTree[0].children[2].children);
+      res.data.data.diseaseh5Shelf.areaTree[0].children[2].children.map((item)=>{
+        this.qhAdd.push(item.today.confirm)
+        this.SHqh.push(item.name)
+      });
+      console.log(this.SHqh,this.qhAdd);
     },
+    compare(propertyName) {
+     return  function( object1,  object2) {
+       var value1  = object1[propertyName].confirm;
+       var value2  = object2[propertyName].confirm;
+       if (value2  < value1) {
+         return  -1;
+      }  else  if (value2  > value1) {
+         return  1;
+      }  else {
+         return  0;
+      }
+    }
+  },
     openCard1() {
       this.legend = ['新增确诊', '新增治愈', '新增死亡']
       this.xdata = this.newAdd
@@ -190,7 +212,7 @@ export default {
 //   width: 100%;
 //   height: 100%;
 // }
-/deep/.ivu-btn-group {
+.btn {
   top: 25px;
   left: 400px;
 }
@@ -223,7 +245,6 @@ export default {
   top: 22px;
   left: 478px;
   color: blue;
-
 }
 
 .help {

@@ -213,7 +213,7 @@ export default {
       const data = {
         imgUrl: this.url
       }
-      const res = await changeUserinfo('2', data)
+      const res = await changeUserinfo(this.$store.getters.id, data)
       this.$store.commit('setUserImg', res.data.imgUrl)
     },
     async handleName(info) {
@@ -225,7 +225,7 @@ export default {
             const data = {
               nickName: nickName
             }
-            const res = await changeUserinfo('2', data)
+            const res = await changeUserinfo(this.$store.getters.id, data)
             if (res) {
               this.$store.commit('setnickName', res.data.nickName)
               this.$Message.success('修改成功')
@@ -250,7 +250,7 @@ export default {
             const data = {
               password: password
             }
-            const res = await changeUserinfo('2', data)
+            const res = await changeUserinfo(this.$store.getters.id, data)
             if (res) {
               this.$Message.success('修改成功')
               this.loading = false

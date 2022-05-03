@@ -61,7 +61,7 @@
               </MenuItem>
               <MenuItem name="shanghai" @click.native="toSH">
                 <IconSvg
-                  iconClass="ditu4"
+                  iconClass="ditu3"
                   class="sider-item-icon-son"
                 ></IconSvg>
                 <span class="sider-item-word-son">上海底图</span>
@@ -155,9 +155,7 @@ export default {
     this.info = getinfo
     // 使页面更新后导航菜单的active-name与页面内容匹配
     this.$nextTick(() => {
-      console.log(this.info)
       this.userinfos.userName = this.info.username
-
       this.userinfos.nickName = this.info.nickName
       this.userinfos.imgUrl = this.info.imgUrl
       let path = this.$route.path.split('/')
@@ -178,18 +176,8 @@ export default {
       tk: '6156b0fb9f9e853e3f64234d82d9abf1'
     }
     const res = await tdtAdministrative(getAdministrative)
-    // console.log(res)
-    //公交规划
-    const getbus = {
-      type: 'busline',
-      postStr: {
-        startposition: '116.427562,39.939677',
-        endposition: '116.349329,39.939132',
-        linetype: '1'
-      },
-      tk: '6156b0fb9f9e853e3f64234d82d9abf1'
-    }
-    const res1 = await publicTransportPlanning(getbus)
+    console.log(res)
+   
     // console.log(res1)
     //地名获取坐标
     const data = {
@@ -248,7 +236,7 @@ export default {
     async GoHome() {
       const res = await getUserInfo()
       this.userinfos.imgUrl = res.imgUrl
-      this.$router.push('/animation')
+      this.$router.push('/animation1')
       // await logintext()
     },
     welcome() {

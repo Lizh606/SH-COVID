@@ -62,7 +62,6 @@ export default {
       setTimeout(() => {
         this.map = this.TdtMap.map;
         this.view = this.TdtMap.view;
-        console.log(this.map);
         const swapmap = document.getElementById("swapmap");
         this.view.ui.add(swapmap)
       }, 60);

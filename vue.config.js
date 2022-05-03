@@ -10,7 +10,7 @@ const productionGzip = true
 
 module.exports = {
   //打包不生成map文件
-  productionSourceMap:false ,
+  productionSourceMap: false,
   // publicPath: '/SH-COVID-19/',
   lintOnSave: false,
   chainWebpack: (config) => {
@@ -43,7 +43,7 @@ module.exports = {
 
   devServer: {
     // 调试端口
-    host: '0.0.0.0',
+    host: 'localhost',
     port: 8080,
     open: true,
     hot: true,
@@ -57,7 +57,15 @@ module.exports = {
         changeOrigin: true,
         secure: false,
         pathRewrite: {
-          '^/yq': '/' 
+          '^/yq': '/'
+        }
+      },
+      '/text': {
+        target: 'http://typhoon.zjwater.gov.cn/Api/TyphoonInfo',
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: {
+          '^/text': '/'
         }
       },
       '/api': {
@@ -79,10 +87,10 @@ module.exports = {
       process.env.NODE_ENV === 'production'
         ? [
             new CompressionPlugin({
-              filename: "[path].gz[query]",
-              algorithm: "gzip",
+              filename: '[path].gz[query]',
+              algorithm: 'gzip',
               test: new RegExp(
-                "\\.(" + productionGzipExtensions.join("|") + ")$"
+                '\\.(' + productionGzipExtensions.join('|') + ')$'
               ),
               threshold: 10240,
               minRatio: 0.8

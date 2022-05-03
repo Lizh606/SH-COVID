@@ -229,6 +229,9 @@ export default {
   height: 100%;
   position: relative;
 }
+.map-tools{
+  // z-index:99
+}
 //鹰眼
 #overviewDiv {
   position: relative;

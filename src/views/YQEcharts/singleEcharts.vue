@@ -4,102 +4,97 @@
 
 <script>
 export default {
-  name: "Echarts",
+  name: 'Echarts',
   data() {
-    return {};
+    return {}
   },
   props: {
     updateDate: {
       type: Array,
       default: function () {
-        return [];
-      },
+        return []
+      }
     },
     xdata: {
       type: Object,
-      default:()=>{}
-    }, 
-     legend: {
-          type: Array,
-      default:()=>[]
+      default: () => {}
+    },
+    legend: {
+      type: Array,
+      default: () => []
     },
     title1: {
       type: String,
-      default: "",
-    },
+      default: ''
+    }
   },
-  watch:{
-    xdata:{
+  watch: {
+    xdata: {
       // immediate:true,
       handler(val) {
-         if (
+        if (
           this.myCharts != null &&
-          this.myCharts != "" &&
+          this.myCharts != '' &&
           this.myCharts != undefined
         ) {
-          this.myCharts.dispose(); //解决echarts dom已经加载的报错
+          this.myCharts.dispose() //解决echarts dom已经加载的报错
         }
-         this.xdata = val
-        this.mycharts(this.myCharts);
-
+        this.xdata = val
+        this.mycharts(this.myCharts)
       },
       deep: true // 深度监听父组件传过来对象变化
     }
   },
   mounted() {
-    let myCharts;
-    if (myCharts != null && myCharts != "" && myCharts != undefined) {
-      myCharts.dispose(); //解决echarts dom已经加载的报错
+    let myCharts
+    if (myCharts != null && myCharts != '' && myCharts != undefined) {
+      myCharts.dispose() //解决echarts dom已经加载的报错
     }
 
-    this.mycharts(myCharts);
+    this.mycharts(myCharts)
   },
 
   methods: {
     mycharts(myCharts) {
-      myCharts = this.$echarts.init(document.getElementById("echarts"));
+      myCharts = this.$echarts.init(document.getElementById('echarts'))
 
       myCharts.setOption({
         title: {
           text: this.title1,
-          textStyle: {
-            color: "#525A6F",
-            fontFamily: "楷体",
+            color: '#525A6F',
+            fontFamily: '楷体',
             fontSize: 16,
             marginLeft: 20,
-          },
-          padding: [10, 0, 0, 250],
+          padding: [10, 0, 0, 250]
         },
         tooltip: {
-          trigger: "axis",
-          fontSize: 16,
+          trigger: 'axis',
+          fontSize: 16
         }, //鼠标放到上面出现数据
-        color: ["red", "orange", "black"],
+        color: ['red', 'orange', 'black'],
         grid: {
-          top: "10%",
-          left: "20%",
-          right: "20%",
-          bottom: "5%",
-          containLabel: true,
+          top: '10%',
+          left: '20%',
+          right: '20%',
+          bottom: '5%',
+          containLabel: true
         },
         legend: {
-          x: "right",
+          x: 'right',
           data: this.legend,
           padding: [35, 280, 0, 0],
-          textStyle: {
-            color: "#525A6F",
-            fontFamily: "楷体",
-            fontSize: 14,
-          },
+              color: '#525A6F',
+              fontFamily: '楷体',
+              fontSize: 14
         },
         xAxis: {
           data: this.updateDate,
-          type: "category", //类目轴，显示所有项目
+          type: 'category', //类目轴，显示所有项目
           boundaryGap: true, //两边六百
           padding: [20, 0, 0, 0],
 
           axisTick: {
-            alignWithLabel: true,
+            alignWithLabel: true
           },
           axisLabel: {
             show: true,
@@ -108,34 +103,30 @@ export default {
             rotate: 45, //倾斜度 -90 至 90 默认为0
             margin: 2,
 
-            textStyle: {
-              color: "#525A6F",
-              fontFamily: "楷体",
-              fontSize: 16,
-            },
+              color: '#525A6F',
+              fontFamily: '楷体',
+              fontSize: 16
           },
           axisLine: {
             show: true, //这里的show用于设置是否显示x轴那一条线 默认为true
             lineStyle: {
               //lineStyle里面写x轴那一条线的样式
-              color: "#6FC6F3",
-              width: 2, //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
-            },
-          },
+              color: '#6FC6F3',
+              width: 2 //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+            }
+          }
         },
 
         yAxis: [
           {
-            type: "value",
-            name: "单位:例",
-            position: "left",
+            type: 'value',
+            name: '单位:例',
+            position: 'left',
             axisLabel: {
               show: true, //这里的show用于设置是否显示y轴下的字体 默认为true
-              textStyle: {
-                color: "#525A6F",
-                fontFamily: "楷体",
-                fontSize: 14,
-              },
+                color: '#525A6F',
+                fontFamily: '楷体',
+                fontSize: 14
             },
             // textStyle: {
             //   //textStyle里面写y轴下的字体的样式
@@ -148,33 +139,59 @@ export default {
               show: true, //这里的show用于设置是否显示y轴那一条线 默认为true
               lineStyle: {
                 //lineStyle里面写y轴那一条线的样式
-                color: "#6FC6F3",
-                width: 2, //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
-              },
-            },
-          },
+                color: '#6FC6F3',
+                width: 2 //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+              }
+            }
+          }
         ],
 
         series: [
           {
-            name:this.legend[0], 
-            type: "bar", //图类型
+            name: this.legend[0],
+            type: 'bar', //图类型
             smooth: true,
-            data: this.xdata.wzz_add,
+            data: this.xdata.wzz_add
             // yAxisIndex: 0,
           },
           {
-            name: this.legend[1], 
-            type: "line", //图类型
+            name: this.legend[1],
+            type: 'line', //图类型
             smooth: true,
-            data: this.xdata.wzz,
+            data: this.xdata.wzz
             // yAxisIndex: 1,
-          },
-        ],
-      });
-    },
-  },
-};
+          }
+        ]
+      }),
+        myCharts.on('click', function (params) {
+          // console.log(params)
+        }),
+        myCharts.getZr().off('click')
+      myCharts.getZr().on('click', function (params) {
+        console.log(params)
+
+        let point = [params.offsetX, params.offsetY]
+
+        if (myCharts.containPixel('grid', point)) {
+          let pointInGrid = myCharts.convertFromPixel(
+            { seriesIndex: 0 },
+            point
+          )[0]
+          let handleIndex = Number(pointInGrid)
+          let op = myCharts.getOption()
+          let handleVal = []
+          op.series.map((item) => {
+            let yVal = item.data[handleIndex]
+            handleVal.push(yVal)
+          })
+          let date = op.xAxis[0].data[handleIndex]
+          handleVal.push(date)
+          console.log(handleVal)
+        }
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

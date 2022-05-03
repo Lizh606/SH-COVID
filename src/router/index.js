@@ -29,7 +29,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     if (to.path == '/' || to.path == '/register') {
-      next('/daping')
+      next('/animation')
     } else {
       next()
     }
