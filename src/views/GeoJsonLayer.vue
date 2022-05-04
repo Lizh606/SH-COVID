@@ -16,7 +16,7 @@ import FeatureSet from '@arcgis/core/rest/support/FeatureSet'
 import LabelClass from '@arcgis/core/layers/support/LabelClass'
 import FeatureFilter from '@arcgis/core/layers/support/FeatureFilter'
 import FeatureEffect from '@arcgis/core/layers/support/FeatureEffect'
-import Query from '@arcgis/core/tasks/support/Query'
+import Query from '@arcgis/core/rest/support/Query'
 import QueryTask from '@arcgis/core/tasks/QueryTask'
 import Legend from '@arcgis/core/widgets/Legend'
 import Expand from '@arcgis/core/widgets/Expand'
@@ -41,8 +41,6 @@ export default {
         vm.$nextTick(() => {
           vm.map = window.map
           vm.view = window.view
-          // vm.handleThematicMap(to.params.collection, to.params.keyId);
-          // console.log(to.params.collection)
           vm.data1 = to.params.collection
         })
       })
@@ -52,7 +50,8 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      setTimeout(() => {
+      // setTimeout(() => {
+        this.$refs.mapdata.TdtMap.map.add(this.$store.getters.featureLayer)
         this.map = this.$refs.mapdata.TdtMap.map
         this.view = this.$refs.mapdata.TdtMap.view
         // this.addGeoJsonLayer()
@@ -63,7 +62,7 @@ export default {
         } else {
           this.addGeoJsonLayer()
         }
-      }, 1000)
+      // }, 1000)
     })
   },
   methods: {
@@ -186,21 +185,12 @@ export default {
       query.outFields = ['name']
 
       geojsonlayer.queryFeatures(query).then(function (response) {
-        // console.log(response)
-
-        // returns a feature set with features containing the following attributes
-        // STATE_NAME, COUNTY_NAME, POPULATION, POP_DENSITY
       })
-
-      // if (field) {
-      //   console.log(field.name); // SomeField
-      // }
     },
     loadroute() {
       let features = []
       for (let j = 0; j < this.shPolygon.features.length; j++) {
         const rings = this.shPolygon.features[j].geometry.coordinates
-        // console.log(rings[0]);
         const polygon = new Polygon({
           rings: rings[0]
         })
@@ -393,9 +383,6 @@ export default {
             [121.627049, 31.444993]
           ])
         }
-        // const getmap = this.$refs.mapdata.TdtMap.map
-        // getmap.basemap.baseLayers.items[1].visible = false
-        // const textGraohicsLayer = new GraohicsLayer()
         this.data1.map((item) => {
           const cname = item[0]
           const nowConfirm = item[1]
@@ -481,11 +468,11 @@ export default {
           ymax: 31.99,
           spatialReference: this.view.spatialReference
         })
-        this.view.goTo({
-          //移动地图视点
-          target: extent // target:point
-          //zoom:13
-        })
+        // this.view.goTo({
+        //   //移动地图视点
+        //   target: extent // target:point
+        //   //zoom:13
+        // })
 
         // textGraohicsLayer.add(window.textGraphic)
         // getmap.add(textGraohicsLayer)
@@ -710,7 +697,6 @@ export default {
         }
       })
       featureLayer.source.get('items').map((item) => {
-        // console.log(item.attributes)
       })
       featureLayer.labelingInfo = [statesLabelClass]
       const getmap = this.$refs.mapdata.TdtMap.map
@@ -732,6 +718,8 @@ export default {
         view: this.view,
         mode: 'floating',
         content: legend,
+        autoCollapse:true,
+        expanded:true,
         collapseIconClass: 'esri-icon-overview-arrow-bottom-right',
         collapseTooltip: '隐藏图例',
         expandIconClass: 'esri-icon-media',
@@ -743,8 +731,8 @@ export default {
         //监听
         featureLayer.on('click', function (evt) {
           //获取图层属性信息
-          // console.log(evt)
-        })
+        }),
+        this.$store.commit('setfeatureLayer',featureLayer)
     }
   }
 }

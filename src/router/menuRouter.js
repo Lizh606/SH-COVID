@@ -20,7 +20,7 @@ const menuRoutes = [
       },
       {
         path: '/animation1',
-        name: 'animation',
+        name: 'animation1',
         component: (resolve) => require(['@/views/animation.vue'], resolve),
         meta: {
           title: '照片墙'

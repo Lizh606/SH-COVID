@@ -155,7 +155,6 @@ export default {
   },
 
   async mounted() {
-    console.log(this.userinfos.imgUrl)
     this.currentTime()
     const getinfo = await getUserInfo()
     this.info = getinfo
@@ -182,7 +181,6 @@ export default {
       tk: '6156b0fb9f9e853e3f64234d82d9abf1'
     }
     const res = await tdtAdministrative(getAdministrative)
-    console.log(res)
     // 120.878948,31.882906,121.97232,30.690742999999998
 // http://api.tianditu.gov.cn/v2/search?postStr={%22keyWord%22:%22%E5%8C%BB%E9%99%A2%22,%22level%22:11,%22queryRadius%22:5000,%22pointLonlat%22:%22121.63269,31.20122%22,%22queryType%22:3,%22start%22:0,%22count%22:10}
     const hosdata = {
@@ -199,7 +197,6 @@ export default {
       tk: '6156b0fb9f9e853e3f64234d82d9abf1'
     }
     const re = await queryExtent(hosdata)
-    console.log(re, 1111)
 
     // console.log(res1)
     //地名获取坐标

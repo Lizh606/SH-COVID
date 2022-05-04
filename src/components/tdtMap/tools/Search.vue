@@ -127,7 +127,6 @@ export default {
       setTimeout(() => {
         this.map = this.TdtMap.map
         this.view = this.TdtMap.view
-        console.log(this.map)
         //搜索栏
         const search = document.getElementById('search')
         this.view.ui.add(search)
@@ -146,11 +145,10 @@ export default {
     },
     locate(item) {
       this.view.graphics.removeAll()
-      console.log(item)
       let center = [this.lng, this.lat]
       const ptsymbol = {
         type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-        url: '/定位.png',
+        url: '/目的地.png',
         width: '64px',
         height: '64px'
       }
@@ -222,7 +220,6 @@ export default {
         // regular get location
         navigator.geolocation.watchPosition(
           (position) => {
-            console.log(position)
             // 纬度
             this.lat = position.coords.latitude
             // 经度
@@ -241,7 +238,7 @@ export default {
 
             const ptsymbol = {
               type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-              url: '/定位.png',
+              url: '/目的地.png',
               width: '64px',
               height: '64px'
             }
@@ -298,18 +295,15 @@ export default {
     async getData(data1) {
       const res3 = await getCoordinate(data1)
       this.cureentinfos = res3.data
-      console.log(this.cureentinfos)
     },
     locateToLocation(item) {
       const res = item.lonlat.split(/\s+/)
-      console.log(res)
       this.lng = parseFloat(res[0])
       this.lat = parseFloat(res[1])
 
       this.locate(item)
     },
     async getPois() {
-      console.log(this.searchValue)
       //地名获取坐标
       const data = {
         postStr: {
@@ -324,12 +318,10 @@ export default {
         tk: '6156b0fb9f9e853e3f64234d82d9abf1'
       }
       const res = await getSearch(data)
-      console.log(res)
       this.pois = []
       for (let i = 0; i < res.data.pois.length; i++) {
         this.pois.push(res.data.pois[i])
       }
-      console.log(this.pois)
       this.pop = true
       this.pop2 = true
       return res.data.pois

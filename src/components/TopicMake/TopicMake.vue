@@ -49,7 +49,6 @@
         <FormItem label="时间" prop="curTime" class="black">
           <DatePicker
             v-model="formValidate.curTime"
-            @on-change="changeHandler"
             type="month"
             style="width: 100%"
           ></DatePicker>
@@ -68,16 +67,15 @@
         <FormItem label="指北针" class="grey">
           <i-switch v-model="showNorth" />
         </FormItem>
-        <FormItem label="比例尺" class="grey">
+        <!-- <FormItem label="比例尺" class="grey">
           <i-switch v-model="showScaleBar" />
-        </FormItem>
+        </FormItem> -->
         <FormItem class="confirm">
           <Button
             class="legend-btn confirm-btn"
             v-bind:disabled="disabled"
             :loading="disabled"
             type="primary"
-            @click="filterLegend()"
             >图例整理</Button
           >
           <Button
@@ -96,13 +94,22 @@
         <p :style="{ 'font-size': wordSize }" class="map-title">
           {{ formValidate.title }}
         </p>
-        <tdt-map
+        <IconSvg
+          iconClass="zhibeizhen"
+          class="zhibeizhen"
+          v-if="showNorth"
+        ></IconSvg>
+
+        <GeoJSONLayer
           v-if="showBase"
           ref="mapdata"
           :style="mapStyle"
           class="tdtmap"
-        ></tdt-map>
-        <div class="map-bottom-left">2000国家大地坐标系</div>
+        />
+        <!-- <tdt-map
+         
+        ></tdt-map> -->
+        <div class="map-bottom-left">WGS84坐标系</div>
         <div class="map-bottom">
           <div class="bottom-title">{{ dept }}</div>
           <div class="bottom-time">{{ time }}</div>
@@ -113,54 +120,64 @@
         </div>
         <div
           v-if="showLegend"
+          id="legendDiv"
           class="pre-map-legend"
           ref="prevLegendPanel"
           :style="preLegendStyle"
         >
-          <p class="legend-title">图例</p>
-          <ul v-if="renderType !== 'mult'">
-            <li class="item" v-for="(item, index) in legendList" :key="index">
-              <img :src="item.img" v-if="item.img" />
-              <div
-                v-if="item.color"
-                class="render-item-color"
-                :style="'background-color:' + item.color"
-              ></div>
-              <span class="legend-label">{{
-                item.label || item.index || item.quota
-              }}</span>
-            </li>
-          </ul>
-          <div v-if="renderType == 'mult'" class="mult-legend">
-            <div v-for="(item, index) in legendList" :key="index">
-              <div class="render-item-index">{{ item.layerName }}</div>
-              <div
-                v-for="(render, index) in item.children"
-                :key="index"
-                :class="
-                  item.type === 'circle' ? 'render-circle-item' : 'render-item'
-                "
-              >
-                <!-- <div
-                  :class="(item.type === 'circle')?'render-circle-item-color':'render-item-color'"
-                  :style="'background-color:' + render.color"
-                ></div> -->
-                <!-- `data:image/png;base64,${imgInfo.color}` -->
-                <img
-                  :src="'data:image/png;base64,' + render.color"
-                  v-if="render.color"
-                />
-                <span
-                  :class="
-                    item.type === 'circle'
-                      ? 'render-circle-item-value'
-                      : 'render-item-value'
-                  "
-                  >{{ render.name || render.index || render.quota }}</span
-                >
-              </div>
-            </div>
-          </div>
+          <p>图例</p>
+          <p>
+            <span
+              style="
+                background: #f5f500;
+                top: 27px;
+                left: 4.5px;
+                width: 10px;
+                height: 10px;
+                position: absolute;
+              "
+            ></span>
+            <span> 0~2000</span>
+          </p>
+          <p>
+            <span
+              style="
+                background: #f5a300;
+                top: 50px;
+                left: 4.5px;
+                width: 10px;
+                height: 10px;
+                position: absolute;
+              "
+            ></span>
+            <span> 2000~4000</span>
+          </p>
+          <p>
+            <span
+              style="
+                background: #f55200;
+                top: 72px;
+                left: 4.5px;
+                width: 10px;
+                height: 10px;
+                position: absolute;
+              "
+            ></span>
+            <span> 4000~6000</span>
+          </p>
+          <p>
+            <span
+              style="
+                background: #ff0000;
+                top: 96px;
+                left: 4.5px;
+                width: 10px;
+                height: 10px;
+                position: absolute;
+              "
+            ></span>
+            <span> >6000</span>
+          </p>
         </div>
       </div>
     </div>
@@ -170,6 +187,9 @@
 </template>
 
 <script>
+import Legend from '@arcgis/core/widgets/Legend'
+import html2canvas from 'html2canvas'
+
 import {
   getPrevMapSize,
   getTemplateInnerSize,
@@ -177,13 +197,17 @@ import {
   dataURItoBlob
 } from './utils'
 import DayJs from 'dayjs'
+import GeoJSONLayer from '@/views/GeoJsonLayer.vue'
 export default {
   name: 'TopicMake',
+  components: {
+    GeoJSONLayer: GeoJSONLayer
+  },
   data() {
     return {
       formValidate: {
         maptemplete: 'A4H',
-        title: '上海市新冠疫情可视化专题图',
+        title: '上海市各区累计确诊专题图',
         basemap: 'normal',
         // mapScale: '123',
         curTime: new Date()
@@ -205,13 +229,13 @@ export default {
           }
         ],
 
-        mapScale: [
-          {
-            required: true,
-            message: '选择输出比例尺',
-            trigger: 'blur'
-          }
-        ],
+        // mapScale: [
+        //   {
+        //     required: true,
+        //     message: '选择输出比例尺',
+        //     trigger: 'blur'
+        //   }
+        // ],
 
         curTime: [
           {
@@ -387,32 +411,50 @@ export default {
     }
   },
   watch: {
-    "$store.state.scale":{
-    deep:true,//深度监听设置为 true
-    handler:function(newVal,oldVal){
-      console.log("数据发生变化啦"); //修改数据时，能看到输出结果
-      console.log(newVal,oldVal);
-      this.mapScaleValue =newVal;
-      console.log(this.mapScaleValue);
+    '$store.state.scale': {
+      deep: true, //深度监听设置为 true
+      handler: function (newVal, oldVal) {
+        // console.log('数据发生变化啦') //修改数据时，能看到输出结果
+        // console.log(newVal, oldVal)
+        this.mapScaleValue = newVal
+        // console.log(this.mapScaleValue)
+      }
     }
-  }
   },
   mounted() {
-      // let esriUi = document.querySelector('.esri-ui')
-      // this.cloneEsriUi = esriUi.cloneNode(true)
-      // this.$refs.mapdata.appendChild(this.cloneEsriUi)
-      setTimeout(() => {
-        console.log(this.$refs.mapdata.TdtMap.view.scale.toFixed(2))
-        this.mapScaleValue = this.$refs.mapdata.TdtMap.view.scale;
-        console.log(this.mapScaleValue)
-      }, 2000)
-      document.querySelector('.esri-ui-corner-container').style.display = 'none';
-
-    
+    // let esriUi = document.querySelector('.esri-ui')
+    // this.cloneEsriUi = esriUi.cloneNode(true)
+    // this.$refs.mapdata.appendChild(this.cloneEsriUi)
+    setTimeout(() => {
+      // console.log(this.$refs.mapdata.TdtMap.view.scale.toFixed(2))
+      this.mapScaleValue = this.$refs.mapdata.$refs.mapdata.TdtMap.view.scale
+      // console.log(this.mapScaleValue)
+    }, 2000)
+    // document.querySelector('.esri-ui-corner-container').style.display = 'none'
+    let legend = new Legend({
+      view: this.$refs.mapdata.$refs.mapdata.TdtMap.view,
+      layerInfos: [
+        {
+          layer: this.$store.getters.featureLayer,
+          title: 'Legend'
+        }
+      ]
+    })
+    this.$refs.mapdata.$refs.mapdata.TdtMap.view.ui.add(legend, 'bottom-right')
+     HTMLCanvasElement.prototype.getContext = (function (origFn) {
+      return function (type, attributes) {
+        if (type === 'webgl') {
+          attributes = Object.assign({}, attributes, {
+            preserveDrawingBuffer: true
+          })
+        }
+        return origFn.call(this, type, attributes)
+      }
+    })(HTMLCanvasElement.prototype.getContext)
   },
   methods: {
     back() {
-      this.$router.push('/TianDiTu')
+      this.$router.push('/GeoJsonLayer')
     },
     showMap() {
       if (this.showBase === 'true') {
@@ -421,37 +463,94 @@ export default {
         this.showBase = true
       }
     },
-      handleSubmit(name) {
-        this.formValidate.curTime = DayJs(this.formValidate.curTime).format(
-          "YYYY-MM"
-        );
-        this.$refs[name].validate(valid => {
-          if (valid) {
-            this.$Spin.show({
-              render: h => {
-                return h("div", [
-                  h("Icon", {
-                    class: "map-spin-icon-load",
-                    props: {
-                      type: "ios-loading",
-                      size: 38
-                    }
-                  }),
-                  h(
-                    "div",
-                    {
-                      class: "map-load-text"
-                    },
-                    "正在保存地图图片..."
-                  )
-                ]);
-              }
-            });
-          } else {
-            this.$Message.error("有必填信息未填写!");
-          }
+    async handleSubmit(name) {
+      this.formValidate.curTime = DayJs(this.formValidate.curTime).format(
+        'YYYY-MM'
+      )
+   
+          this.$Spin.show({
+            render: (h) => {
+              return h('div', [
+                h('Icon', {
+                  class: 'map-spin-icon-load',
+                  props: {
+                    type: 'ios-loading',
+                    size: 38
+                  }
+                }),
+                h(
+                  'div',
+                  {
+                    class: 'map-load-text'
+                  },
+                  '正在保存地图图片...'
+                )
+              ])
+            }
+          })
+          // this.$refs.mapCon.classList.remove('map-export-div-default')
+          // this.$refs.mapCon.classList.add('map-export-div')
+
+          // let esriUi = document.querySelector('.esri-ui')
+          // this.cloneEsriUi = esriUi.cloneNode(true)
+          // this.$refs.mapCon.appendChild(this.cloneEsriUi)
+          // document.querySelector('.esri-ui-corner-container').style.display =
+          //   'none'
+          // // const canvas = document.getElement("canvas");
+          // const resCanvas =  await this.$refs.mapdata.$refs.mapdata.TdtMap.view.takeScreenshot(false)
+          // let dataURL = resCanvas.dataUrl
+          // let blob = this.dataURItoBlob(dataURL)
+
+          // let aLink = document.createElement('a')
+          // let evt = document.createEvent('HTMLEvents')
+          // evt.initEvent('click', true, true) // initEvent 不加后两个参数在FF下会报错  事件类型，是否冒泡，是否阻止浏览器的默认行为
+          // aLink.download = 'map.png'
+          // aLink.href = URL.createObjectURL(blob)
+
+          // aLink.dispatchEvent(
+          //   new MouseEvent('click', {
+          //     bubbles: true,
+          //     cancelable: true,
+          //     view: window
+          //   })
+          // ) // 兼容火狐
+          // this.$refs.mapCon.classList.remove('map-export-div')
+          // this.$refs.mapCon.classList.add('map-export-div-default')
+          // document.querySelector('.esri-ui-corner-container').style.display =
+          //   'none'
+          // if (this.cloneEsriUi) {
+          //   this.$refs.mapCon.removeChild(this.cloneEsriUi)
+          //   this.cloneEsriUi = null
+          // }
+           html2canvas(this.$refs.mapCon, {
+          async: false, // 同步执行
+          allowTaint: true, // 是否允许跨域图片污染画布
+          imageTimeout: 0, // 禁用加载图像的超时时间
+          taintTest: false, // 污染检查
+          useCORS: true, // 用CORS服务从某服务中加载图片
+        }).then(function (canvas) {
+          let dataURL = canvas.toDataURL("image/png",1);
+          let a = document.createElement("a");
+          document.body.appendChild(a);
+          a.href = dataURL;
+          a.download ='专题图';
+          a.click();
         });
-    }
+     
+          this.$Spin.hide()
+        } ,
+         dataURItoBlob(dataURI) {
+      let byteString = atob(dataURI.split(',')[1])
+      let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+      let ab = new ArrayBuffer(byteString.length)
+      let dw = new DataView(ab)
+      for (let i = 0; i < byteString.length; i++) {
+        dw.setUint8(i, byteString.charCodeAt(i))
+      }
+      return new Blob([ab], { type: mimeString })
+    },
+
+
   }
 }
 </script>
@@ -460,6 +559,10 @@ export default {
 /deep/.tdtmap #map {
   height: 100%;
 }
+/deep/.ivu-card {
+  display: none;
+}
+
 /deep/.esri-ui-corner-container {
   display: none;
 }
@@ -556,7 +659,7 @@ export default {
 
 .map-con {
   position: absolute;
-  top: -600px;
+  top: -532px;
   left: 0;
   bottom: 0;
   right: 0;
@@ -721,9 +824,25 @@ export default {
 
 .pre-map-legend {
   /* @include legend-panel; */
-
+  width: 114px;
+  height: 131px;
+  position: relative;
+  right: -60px;
+  margin-top: -7.5rem;
+  float: right;
+  font-size: 1.2rem;
+  text-align: center;
+  background: white;
   .item {
     margin: 3px;
   }
+}
+.zhibeizhen {
+  position: absolute;
+  width: 40px;
+  height: 55px;
+  right: 40px;
+  top: 53px;
+  z-index: 99;
 }
 </style>

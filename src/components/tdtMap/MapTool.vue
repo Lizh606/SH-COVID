@@ -145,7 +145,7 @@
     <!-- 图例 -->
     <Card id="legend"><b>图例</b></Card>
     <!-- 导航窗口 -->
-    <RouterPlanning :modal="modal" />
+    <RouterPlanning :modal="modal" @okHandler="okHandler "/>
   </div>
 </template>
 
@@ -854,7 +854,7 @@ export default {
         }
         const ptsymbol = {
           type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-          url: '/定位.png',
+          url: '/目的地.png',
           width: '64px',
           height: '64px'
         }
@@ -894,21 +894,11 @@ export default {
         // regular get location
         navigator.geolocation.watchPosition(
           (position) => {
-            // performance
             this.view.graphics.removeAll()
             this.center = [position.coords.longitude, position.coords.latitude]
-            //   //坐标获取地名
-            //   const data1 = {
-            //     postStr: { lon: this.lng, lat: this.lat, ver: 1 },
-            //     type: 'geocode',
-            //     tk: '6156b0fb9f9e853e3f64234d82d9abf1'
-            //   }
-            //  this.getData(data1);
-            //     console.log(this.cureentinfos.length >0)
-
             const ptsymbol = {
               type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-              url: '/定位.png',
+              url: '/目的地.png',
               width: '64px',
               height: '64px'
             }
@@ -949,17 +939,16 @@ export default {
             this.view.goTo(
               {
                 center: this.center,
-                zoom: 16
+                zoom: 11
               },
               2000
             )
-            console.log( this.center[0] + "," + this.center[1]);
             const query = {
               postStr: {
                 keyWord: '医院',
                 level: 11,
                 queryRadius: 8000,
-                pointLonlat:"121.63269,31.20122",
+                pointLonlat:this.center[0] + "," + this.center[1],
                 queryType: 3,
                 start: 0,
                 count: 10
@@ -982,13 +971,12 @@ export default {
     },
     async querySearch(query) {
       const res = await queryExtent(query);
-      console.log(res.data.pois);
       res.data.pois.map((item)=>{
          const ptsymbol = {
               type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
               url: '/hospital.png',
-              width: '64px',
-              height: '64px'
+              width: '32px',
+              height: '32px'
             }
 
             let point = {
@@ -1043,6 +1031,9 @@ export default {
     //导航
     routePlanning() {
       this.modal = true
+    },
+    okHandler(){
+       this.modal = false
     }
   }
 }

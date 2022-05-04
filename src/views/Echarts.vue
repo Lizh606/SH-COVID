@@ -113,7 +113,6 @@ export default {
 
         return item
       }, [])
-      // console.log(data1);
       array.map((item) => {
         //新增
         this.updateDate.push(item.date)

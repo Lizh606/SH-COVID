@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "17581858",
+      "name": "指北针",
+      "font_class": "zhibeizhen",
+      "unicode": "ec7a",
+      "unicode_decimal": 60538
+    },
+    {
+      "icon_id": "3410453",
+      "name": "目的地",
+      "font_class": "mudedi",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "21161873",
+      "name": "目的地",
+      "font_class": "mudedi1",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    },
+    {
       "icon_id": "672036",
       "name": "下拉",
       "font_class": "xiala",

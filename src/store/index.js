@@ -12,7 +12,8 @@ export default new vuex.Store({
     imgUrl: '',
     TimeStamp: '',
     scale: '',
-    id:''
+    id:'',
+    featureLayer:null
    
   },
   /**修改数据要通过的mutations**/
@@ -20,7 +21,12 @@ export default new vuex.Store({
     set_token(state, token) {
       state.token = token
       storage.set('token', token)
-      console.log('store、localstorage保存token成功！')
+      // console.log('store、localstorage保存token成功！')
+    },
+    setfeatureLayer(state, featureLayer) {
+      state.featureLayer = featureLayer
+      storage.set('featureLayer', featureLayer)
+      // console.log('store、localstorage保存featureLayer成功！')
     },
     del_token(state) {
       state.token = ''
@@ -29,23 +35,23 @@ export default new vuex.Store({
     setuserid(state, id) {
       state.id = id
       storage.set('id', id)
-      console.log('store、localstorage保存id成功！')
+      // console.log('store、localstorage保存id成功！')
     },
     setuserName(state, userName) {
       state.userName = userName
       storage.set('userName', userName)
-      console.log('store、localstorage保存username成功！')
+      // console.log('store、localstorage保存username成功！')
     },
     // 可选
     setnickName(state, nickName) {
       state.nickName = nickName
       storage.set('nickName', nickName)
-      console.log('store、localstorage保存nickName成功！')
+      // console.log('store、localstorage保存nickName成功！')
     },
     setUserImg(state, imgUrl) {
       state.userName = imgUrl
       storage.set('imgUrl', imgUrl)
-      console.log('store、localstorage保存imgUrl成功！')
+      // console.log('store、localstorage保存imgUrl成功！')
     },
     //时间戳
     set_TimeStamp(state, TimeStamp) {
@@ -74,6 +80,9 @@ export default new vuex.Store({
     },
     imgUrl(state) {
       return state.imgUrl || storage.get('imgUrl') || null
+    },
+    featureLayer(state) {
+      return state.featureLayer || storage.get('featureLayer') || null
     }
   },
 

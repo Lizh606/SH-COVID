@@ -1,54 +1,51 @@
 <template>
   <div>
-    <Header>
-      <Menu mode="horizontal" theme="primary">
-        <!-- <div class="time-item">{{ nowDate }}</div> -->
-        <MenuItem name="user" class="user-item">
-          <Dropdown class="menu-item-word">
-            <IconSvg iconClass="bianji" class="menu-item-icon"></IconSvg>
-            <a href="javascript:void(0)">
-              <span class="menu-item-word">系统说明</span>
-            </a>
-          </Dropdown>
-        </MenuItem>
-        <MenuItem name="feedback" class="feedback-item">
-          <Dropdown class="menu-item-word">
-            <IconSvg iconClass="pinglun" class="menu-item-icon"></IconSvg>
-            <a href="javascript:void(0)">
-              <span class="menu-item-word">问题反馈</span>
-            </a>
-          </Dropdown>
-        </MenuItem>
-        <MenuItem name="logout" class="logout-item">
-          <Dropdown class="menu-item-word">
-            <IconSvg iconClass="zhanghao1" class="menu-item-icon"></IconSvg>
-            <a href="javascript:void(0)">
-              <span class="menu-item-word">{{ username }}</span>
-            </a>
-            <DropdownMenu slot="list">
-              <DropdownItem>个人中心</DropdownItem>
-              <DropdownItem>修改密码</DropdownItem>
-              <DropdownItem>
-                <!-- <IconSvg iconClass="tuichu"></IconSvg> -->
-                <div @click="ToLogin()">退出登录</div></DropdownItem
-              >
-            </DropdownMenu>
-          </Dropdown>
-        </MenuItem>
-        <MenuItem name="system" class="system-item">
-          <IconSvg iconClass="ziyuan" class="system-icon"></IconSvg>
-          <span class="system-name" @click="GoHome"
-            >上海市新冠疫情可视化系统</span
-          >
-        </MenuItem>
-      </Menu>
-    </Header>
+        <Header>
+        <Menu mode="horizontal" class="layout-header">
+          <MenuItem name="logout" class="menu-item-word">
+            <Dropdown>
+              <a href="javascript:void(0)">
+                <span>
+                  <span style="color: aliceblue" class="info_name">{{
+                    userinfos.nickName
+                  }}</span>
+                  <img
+                    :src="userinfos.imgUrl"
+                    style="height: 50px; border-radius: 50%"
+                    class="menu-item-icon"
+                    @click="GoHome"
+                  />
+                  <!-- <IconSvg iconClass="xiala" class="xiala-icon"></IconSvg> -->
+                </span>
+              </a>
+              <DropdownMenu slot="list">
+                <DropdownItem>个人中心</DropdownItem>
+                <DropdownItem
+                  ><div @click="changeInfos()">修改信息</div></DropdownItem
+                >
+                <DropdownItem>
+                  <!-- <IconSvg iconClass="tuichu"></IconSvg> -->
+                  <div @click="ToLogin()">退出登录</div></DropdownItem
+                >
+              </DropdownMenu>
+            </Dropdown>
+          </MenuItem>
+          <MenuItem name="system" class="system-item">
+            <IconSvg iconClass="ziyuan" class="system-icon"></IconSvg>
+            <span class="system-name" @click="welcome()"
+              >上海市新冠疫情动态分布可视化系统</span
+            >
+          </MenuItem>
+        </Menu>
+      </Header>
    <!-- <middle /> -->
     <TopicMake />
   </div>
 </template>
 
 <script>
+import { getUserInfo } from '@/api/login.js'
+
 import middle from "./middle.vue"
 import TopicMake from "./TopicMake.vue";
 export default {
@@ -59,15 +56,24 @@ export default {
   },
   data () {
     return {
-      username:""
+      userinfos: {
+        userName: '',
+        nickName: '',
+        imgUrl: '',
+    }
     }
   },
-  mounted () {
-     this.$nextTick(() => {
-      this.username = window.localStorage
-        .getItem("userName")
-        .replaceAll('"', "");
-    });
+  async mounted () {
+     const getinfo = await getUserInfo()
+    this.info = getinfo
+    // 使页面更新后导航菜单的active-name与页面内容匹配
+    this.$nextTick(() => {
+      this.userinfos.userName = this.info.username
+      this.userinfos.nickName = this.info.nickName
+      this.userinfos.imgUrl = this.info.imgUrl
+      let path = this.$route.path.split('/')
+      this.changeActiveName(path)
+    })
   },
   methods: {
       GoHome() {
@@ -84,8 +90,7 @@ export default {
   }
 };
 </script>
-
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .layout-first {
   // border: 1px solid #d7dde4;
   background: #f5f7f9;
@@ -97,59 +102,47 @@ export default {
 /deep/.ivu-menu-horizontal {
   background-color: #00bec9;
 }
-/deep/ .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item-active, .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item:hover, .ivu-menu-light.ivu-menu-horizontal .ivu-menu-submenu-active, .ivu-menu-light.ivu-menu-horizontal .ivu-menu-submenu:hover{
+/deep/ .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item-active,
+.ivu-menu-light.ivu-menu-horizontal .ivu-menu-item:hover,
+.ivu-menu-light.ivu-menu-horizontal .ivu-menu-submenu-active,
+.ivu-menu-light.ivu-menu-horizontal .ivu-menu-submenu:hover {
   color: #fff;
-    border-bottom: none;
+  border-bottom: none;
 }
-.time-item {
-  float: left !important;
-  color: #ffffff;
-  right: 125px;
-  width: 200px;
-}
-.user-item {
-  right: 125px;
-}
-.feedback-item {
-  right: -38px;
-}
-.logout-item {
-  right: -200px;
-}
-.user-item,
-.feedback-item,
-.logout-item {
-  width: 100px;
-  top: 13px;
-  font-size: 14px;
-  float: right !important;
-}
+
 .menu-item-icon {
-  margin: 0 auto;
+  float: right !important;
   position: relative;
-  display: block;
-  font-size: 25px;
+  top: 7px;
+  // font-size: 25px;
+  right: 60px;
+  font-size: 32px;
+}
+.info_name {
+  position: relative;
+  right: 65px;
 }
 .menu-item-word {
+  float: right !important;
+  position: relative;
+  right: -70px;
   text-align: center;
-  color: white;
-  line-height: 40px;
-  display: block;
+  font-size: 20px;
 }
-&/deep/.ivu-select-dropdown {
-  margin: -10px 0;
+
+.xiala-icon {
+  font-size: 20px;
+  color: #f5f7f9;
 }
 .system-item {
   left: 0px;
   height: 70px;
 }
-// &/deep/.ivu-menu-light {
-//   margin-top: 5px;
-// }
-&/deep/.ivu-layout-header {
+
+/deep/.ivu-layout-header {
   padding: 0;
 }
-&/deep/.ivu-menu-horizontal {
+/deep/.ivu-menu-horizontal {
   height: 70px;
   line-height: 70px;
 }
@@ -168,10 +161,81 @@ export default {
   font-weight: bold;
 }
 
-&/deep/.ivu-icon-ios-arrow-down {
-  display: none;
+.layout-sider {
+  position: relative;
+  // top: -3px;
+  flex: 1 1 100% !important;
+}
+.sider {
+  background: white;
+  width: 74px !important;
+  min-width: 74px !important;
+  max-width: 74px !important;
+  flex-basis: 100% !important;
+}
+.sider:hover {
+  background: white;
+  width: 170px !important;
+  min-width: 170px !important;
+  max-width: 170px !important;
+  flex-basis: 100% !important;
+}
+.sider-menu {
+  top: 5px;
+  width: 74px !important;
+  height: 100%;
 }
 
+.sider-menu:hover {
+  width: 170px !important;
+  .sider-item-word,
+  .sider-item-word-son {
+    display: inline-block;
+    text-align: center;
+  }
+}
+.sider-item-svg,
+.sider-item-word,
+.sider-item-word-son {
+  vertical-align: middle;
+  line-height: initial;
+  display: none;
+}
+.sider-item-icon {
+  font-size: 22px;
+  left: -3px;
+  position: relative;
+}
+.sider-item-icon-son {
+  font-size: 18px;
+  left: -15px;
+  position: relative;
+}
+
+.sider-item-word {
+  left: 6px;
+  top: -3px;
+  position: relative;
+  font-weight: bold;
+}
+.sider-item-word-son {
+  top: -3px;
+  left: -3px;
+  position: relative;
+  font-weight: bold;
+}
+/deep/.ivu-icon-ios-arrow-down {
+  display: none;
+}
+.content {
+  position: flex;
+  left: 150px;
+  height: 100%;
+}
+#layout-content {
+  height: 100%;
+  overflow: unset;
+}
 #layout {
   width: 100%;
   height: 100%;

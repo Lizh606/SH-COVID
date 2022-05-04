@@ -60,14 +60,6 @@ module.exports = {
           '^/yq': '/'
         }
       },
-      '/text': {
-        target: 'http://typhoon.zjwater.gov.cn/Api/TyphoonInfo',
-        changeOrigin: true,
-        secure: false,
-        pathRewrite: {
-          '^/text': '/'
-        }
-      },
       '/api': {
         target: 'http://112.74.95.70:83'
       }

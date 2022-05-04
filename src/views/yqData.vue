@@ -2,8 +2,9 @@
   <!-- <div></div> -->
   <div style="background: #eee; padding: 20px height:100%">
     <Card :bordered="false" class="card">
+      <div v-if="china">
       <p slot="title">
-        <b class="title" style="color: #00bec9">全国新冠疫情数据总览</b>
+        <b class="title" style="color: #00bec9" @click="change">全国新冠疫情数据总览</b>
         <span>数据统计截止至 {{ time }} </span>
         <img
           src="https://n.sinaimg.cn/finance/cece9e13/20200321/0320_intro_icon02.png?a=1"
@@ -13,7 +14,7 @@
         />
       </p>
 
-      <Row>
+      <Row style="margin-top:30px;">
         <Col span="3" offset="0.9">
           <Card style="background-color: #fffaf7" class="cnCard">
             <b class="cntitle" style="color: #7c7c7c"
@@ -101,6 +102,96 @@
           </Card>
         </Col>
       </Row>
+      </div>
+        <div v-if="sh">
+      <p slot="title">
+        <b class="title" style="color: #00bec9"  @click="change">上海新冠疫情数据总览</b>
+        <span>数据统计截止至 {{ shinfos.mtime }} </span>
+        <img
+          src="https://n.sinaimg.cn/finance/cece9e13/20200321/0320_intro_icon02.png?a=1"
+          class="img"
+          alt="数据说明"
+          @click="showModal"
+        />
+      </p>
+
+      <Row style="margin-top:30px;">
+       
+      
+        <Col span="3" offset="2">
+          <Card style="background-color: #fff4f4" class="cnCard">
+            <b class="cntitle" style="color: #7c7c7c"
+              >较上日<span style="color: #b10000"
+                >+{{ shAddinfos.confirm }}</span
+              ></b
+            ><br />
+
+            <b style="color: #b10000" class="cndata animated bounce">{{
+              shinfos.confirm
+            }}</b
+            ><br />
+            <b class="cntitle">累计确诊</b>
+          </Card>
+        </Col>
+        <Col span="3" offset="1">
+          <Card style="background-color: #fef7ff" class="cnCard">
+            <b class="cntitle" style="color: #7c7c7c"
+              >较上日<span style="color: #ae3ac6"
+                >+{{ shAddinfos.wzz_add }}</span
+              ></b
+            ><br />
+
+            <b style="color: #ae3ac6" class="cndata animated bounce">{{
+              shinfos.wzz
+            }}</b
+            ><br />
+            <b class="cntitle">无症状感染者</b>
+          </Card>
+        </Col>
+          <Col span="3" offset="1">
+          <Card style="background-color: #fff8f8" class="cnCard">
+                       <b class="cntitle">现有确诊</b>
+
+            <br />
+
+            <b style="color: #ff3535;padding-top:50px;" class="cndata animated bounce">{{
+             shinfos.nowConfirm
+            }}</b
+            ><br />
+            <br />
+
+            <b></b>
+          </Card>
+        </Col>
+        <Col span="3" offset="1">
+          <Card style="background-color: #e9f7ec;" class="cnCard" >
+            <b class="cntitle">累计治愈</b>
+
+          <br />
+
+            <b style="color: #13b593 " class="cndata animated bounce">{{
+              shinfos.heal
+            }}</b
+            ><br />
+            <br />
+
+          </Card>
+        </Col>
+        <Col span="3" offset="1">
+          <Card style="background-color: #f3f6f8" class="cnCard">
+            <b class="cntitle">累计死亡</b>
+
+        <br />
+             
+            <b style="color: #666666" class="cndata animated bounce">{{
+               shinfos.dead
+            }}</b
+            ><br />
+            <br />
+          </Card>
+        </Col>
+      </Row>
+      </div>
       <Card :bordered="false" class="table" dis-hover>
         <p slot="title">
           <b class="title" style="color: #00bec9">近期31省区市本土病例</b>
@@ -302,7 +393,9 @@ export default {
       ],
       data1: [],
       loading: false,
-      tableHeight: 430,
+      tableHeight: 450,
+      china:true,
+      sh:false,
       shData: {},
       time: '',
       modal: false,
@@ -313,6 +406,9 @@ export default {
       deathtotal: '',
       localConfirm: '',
       wzz: '',
+      //上海数据
+      shinfos:{},
+      shAddinfos:{},
       //新增数据
       chinaAdd: {}
     }
@@ -321,6 +417,15 @@ export default {
     next()
   },
   methods: {
+     change(){
+      if(this.china ===true ){
+        this.china = false
+        this.sh = true
+      } else{
+        this.china = true
+        this.sh = false
+      }
+    },
     async getYQData() {
       this.loading = true
       //表格数据处理
@@ -337,11 +442,12 @@ export default {
       this.localConfirm = res.data.data.diseaseh5Shelf.chinaTotal.localConfirm
 
       this.data1 = [res.data.data.diseaseh5Shelf.areaTree[0]]
-      console.log(this.data1[0].children)
+      this.shinfos = this.data1[0].children[2].total
+      this.shAddinfos = this.data1[0].children[2].today
       this.data1[0].children.map((item) => {
         if (item.name !== '上海') {
           delete item.children
-        }
+        } 
       })
       let key = '_showChildren'
       let value = 'true'
@@ -376,11 +482,11 @@ export default {
           let heal = cityInfos.total.heal
           groupCollection.push([
             cityName,
-            nowConfirm,
-            confirm,
-            dead,
-            heal,
-            newConfirm
+            nowConfirm.toString(),
+            confirm.toString(),
+            dead.toString(),
+            heal.toString(),
+            newConfirm.toString()
           ])
         }
         // 返回地图界面
@@ -417,10 +523,10 @@ export default {
     }
   },
   mounted() {
+   
     // 设置表格高度
     // this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop
     this.getYQData()
-    console.log(this.data1)
   }
 }
 </script>

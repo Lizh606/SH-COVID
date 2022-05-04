@@ -56,7 +56,6 @@ import { service } from "./request";
     withCredentials = true,
     onUploadProgress
   ) => {
-    // console.log(params);
     return new Promise((resolve, reject) => {
       axiosInstance({
         url,

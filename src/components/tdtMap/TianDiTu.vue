@@ -59,9 +59,9 @@ export default {
     //   location.reload()
     // }
     this.$nextTick(() => {
-      setTimeout(() => {
+      // setTimeout(() => {
         this.createMap()
-      }, 10)
+      // }, 10)
     })
   },
 
@@ -134,7 +134,7 @@ export default {
         view.on('click', function (event) {
           view.hitTest(event).then(function (event) {
             let results = event.results.filter(function (result) {
-              console.log(result) //attributes are contained in result.graphic.attributes
+              // console.log(result) //attributes are contained in result.graphic.attributes
               //you can do data processing here, or bind this result to a data
             })
           })
@@ -229,9 +229,9 @@ export default {
   height: 100%;
   position: relative;
 }
-.map-tools{
-  // z-index:99
-}
+// .map-tools{
+//   // z-index:99
+// }
 //鹰眼
 #overviewDiv {
   position: relative;
